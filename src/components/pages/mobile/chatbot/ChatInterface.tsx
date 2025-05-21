@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import ChatMessage from '@/components/common/mobile/ChatMessage';
 import ChatInput from '@/components/common/mobile/ChatInput';
-import { fetchChatbotResponse, ChatHistoryItem } from '@/data/chatbot'; // 수정된 import
+import { fetchChatbotResponse, ChatHistoryItem } from '@/data/chatbot';
 
 export interface Message {
   id: string;
@@ -19,7 +19,7 @@ const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null); // 타이핑 효과를 위한 타이머 참조
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setMessages(
@@ -74,9 +74,8 @@ const ChatInterface: React.FC = () => {
           )
         );
         charIndex++;
-        typingTimeoutRef.current = setTimeout(typeChar, 50); // 타이핑 속도 (ms)
+        typingTimeoutRef.current = setTimeout(typeChar, 50); 
       } else {
-        // 타이핑 완료 후 추가 작업 (예: timestamp 업데이트 등)
         setMessages((prev) =>
           prev.map((msg) =>
             msg.id === botMessageId ? { ...msg, timestamp: new Date().toLocaleTimeString() } : msg
@@ -88,7 +87,7 @@ const ChatInterface: React.FC = () => {
   };
 
   const handleSendMessage = async (text: string) => {
-    if (typingTimeoutRef.current) { // 이전 타이핑 효과 중지
+    if (typingTimeoutRef.current) { 
       clearTimeout(typingTimeoutRef.current);
     }
 
@@ -107,7 +106,6 @@ const ChatInterface: React.FC = () => {
       id: botMessageId,
       text: '…', 
       sender: 'bot',
-      // timestamp는 simulateTyping 완료 후 설정
     };
     setMessages((prevMessages) => [...prevMessages, tempBotMessage]);
 
@@ -124,10 +122,9 @@ const ChatInterface: React.FC = () => {
 
     try {
       const answer = await fetchChatbotResponse(historyForApi, text);
-      // 기존 tempBotMessage를 즉시 answer로 업데이트하지 않고, 타이핑 효과 시작
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === botMessageId ? { ...msg, text: '' } : msg // 텍스트를 비우고 타이핑 시작 준비
+          msg.id === botMessageId ? { ...msg, text: '' } : msg 
         )
       );
       simulateTyping(botMessageId, answer);
@@ -146,7 +143,7 @@ const ChatInterface: React.FC = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', flexGrow: 1 }}>
-      <Box ref={chatContainerRef} sx={{ flexGrow: 1, overflowY: 'auto', p: 2, pb: '70px' }}>
+      <Box ref={chatContainerRef} sx={{ flexGrow: 1, overflowY: 'auto', p: 2, pb: '100px' }}>
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg.text} sender={msg.sender} timestamp={msg.timestamp} />
         ))}

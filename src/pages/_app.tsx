@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { LangType, LanguageContext } from '@/context/LanguageContext';
 import { Noto_Sans } from 'next/font/google';
 
+
 const NotoSans = Noto_Sans({ subsets: ['latin'] });
 
 export type NextPageWithLayout = NextPage & {

@@ -25,13 +25,13 @@ instance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (error.response && error.response.status === 401) {
+    const originalRequest = error.config;
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // 재시도 플래그 설정
       const refreshToken = getTokens().refreshToken;
 
-      // refreshToken이 있는 경우
       if (refreshToken) {
-        console.log('refreshToken이 있는 경우');
-        // refreshToken으로 accessToken 을 받아오는 것에 성공한 경우
+        console.log('refreshToken으로 accessToken 재발급 시도');
         try {
           const res = await axios.post(
             `${process.env.NEXT_PUBLIC_SERVER_URL}/refresh`,
@@ -43,29 +43,26 @@ instance.interceptors.response.use(
             }
           );
 
-          const accessToken = res.data.accessToken;
-
-          console.log('token 받기 성공 > ', accessToken);
-
-          setAccessToken(accessToken);
-
-          error.config.headers.Authorization = `Bearer ${accessToken}`;
-
-          return instance(error.config);
+          const newAccessToken = res.data.accessToken;
+          console.log('새로운 accessToken 발급 성공: ', newAccessToken);
+          setAccessToken(newAccessToken);
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return instance(originalRequest); // 원래 요청 재시도
         } catch (err) {
-          console.log('token 재발급 실패');
-          // refreshToken으로 accessToken을 받아오는 것에 실패한 경우
+          console.log('accessToken 재발급 실패', err);
           removeTokens();
-          return error;
+          // window.location.href = '/login'; // 로그인 페이지로 리디렉션 또는 다른 처리
+          return Promise.reject(err); // 에러를 reject하여 호출부의 catch에서 처리하도록 함
         }
-      } //
-      // refreshToken이 없는 경우
-      else {
-        console.log('refreshToken이 없는 경우');
+      } else {
+        console.log('refreshToken 없음, 로그인 필요');
         removeTokens();
-        return error;
+        // window.location.href = '/login';
+        return Promise.reject(error); // 에러를 reject
       }
     }
+    // 401 에러가 아니거나, 다른 종류의 오류는 그대로 reject
+    return Promise.reject(error);
   }
 );
 
