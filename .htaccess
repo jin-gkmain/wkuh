@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} ^dev\.tsp-live\.com [NC]
+RewriteRule ^(.*)$ https://dev.tsp-live.com/$1 [R=301,L]

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>carePlanInfo</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      .form {
+        margin: auto;
+        margin-top: 20px;
+        width: 740px;
+      }
+
+      .container {
+        border: 1px solid black;
+      }
+
+      .title {
+        height: 30px;
+        line-height: 30px;
+        margin: 0 auto;
+        text-align: center;
+        background-color: rgb(242, 242, 242);
+        border-right: 1px solid black;
+        border-left: 1px solid black;
+      }
+
+      .title:first-child {
+        border-top: 1px solid black;
+      }
+
+      .flex {
+        display: flex;
+      }
+
+      .flex-1 {
+        flex: 1;
+      }
+
+      .container .row:not(:last-child) {
+        border-bottom: 1px solid black;
+      }
+
+      .br-r {
+        border-right: 1px solid black;
+      }
+
+      .item {
+        display: flex;
+      }
+
+      .item span:first-child {
+        width: 25%;
+        text-align: center;
+      }
+
+      .item span:last-child {
+        width: 75%;
+        padding-left: 10px;
+        box-sizing: border-box;
+      }
+
+      .fixed-item {
+        height: 35px;
+        line-height: 35px;
+      }
+
+      .fixed-item:first-child {
+        width: 110px !important;
+      }
+
+      .fixed-item:last-child {
+        flex: 1 !important;
+      }
+
+      span {
+        display: inline-block;
+      }
+
+      .flex-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .align-center {
+        display: flex;
+        align-items: center;
+      }
+
+      .input-l {
+        min-height: 110px;
+      }
+
+      .input-m {
+        min-height: 80px;
+      }
+
+      .input-s {
+        min-height: 40px;
+      }
+
+      .input-m,
+      .input-s,
+      .input-l {
+        /* white-space: normal; */
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
+      .form-title {
+        margin: 0;
+        padding: 0px 0px 20px 0px;
+        text-align: center;
+        border-bottom: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form">
+      <h2 class="form-title">치료계획서</h2>
+      <h4 class="title">환자정보</h4>
+      <section class="container">
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">이름</span>
+            <span class="br-r fixed-item">{{name}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">국적</span>
+            <span class="fixed-item">{{country}}</span>
+          </div>
+        </div>
+
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">성별</span>
+            <span class="br-r fixed-item">{{gender}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">생년월일</span>
+            <span class="fixed-item">{{birth}}</span>
+          </div>
+        </div>
+
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="input-m br-r fixed-item flex-center">환자상태</span>
+            <span class="input-m fixed-item align-center"
+              >{{ca_patient_status_summary}}</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <h4 class="title">치료계획</h4>
+      <section class="container">
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">의사</span>
+          <span class="input-s align-center">{{ca_doctor_name}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">진료과</span>
+          <span class="input-s align-center">{{ca_department}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">진단내용</span>
+          <span class="input-m align-center">{{ca_diagnosis}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">치료계획</span>
+          <span class="input-l align-center">{{ca_plan}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">기간 및 예상비용</span>
+          <span class="input-s align-center">{{ca_period_cost}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">주의사항</span>
+          <span class="input-m align-center">{{ca_caution}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">비용내역</span>
+          <span class="input-m align-center"> {{ca_cost_detail}}</span>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

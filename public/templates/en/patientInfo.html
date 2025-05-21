@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>patientInfo</title>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      .form {
+        margin: auto;
+        margin-top: 20px;
+        width: 90dvw;
+      }
+
+      .container {
+        border: 1px solid black;
+      }
+
+      .title {
+        height: 30px;
+        line-height: 30px;
+        margin: 0 auto;
+        text-align: center;
+        background-color: rgb(242, 242, 242);
+        border-right: 1px solid black;
+        border-left: 1px solid black;
+      }
+
+      .title:first-child {
+        border-top: 1px solid black;
+      }
+
+      .flex {
+        display: flex;
+      }
+
+      .flex-1 {
+        flex: 1;
+      }
+
+      .container .row:not(:last-child) {
+        border-bottom: 1px solid black;
+      }
+
+      .br-r {
+        border-right: 1px solid black;
+      }
+
+      .item {
+        display: flex;
+      }
+
+      .fixed-item {
+        height: 35px;
+        line-height: 35px;
+      }
+
+      .fixed-item:first-child {
+        width: 110px !important;
+      }
+
+      .fixed-item:last-child {
+        flex: 1 !important;
+      }
+
+      .item span:first-child {
+        width: 25%;
+        text-align: center;
+      }
+
+      .item span:last-child {
+        width: 75%;
+        padding-left: 10px;
+        box-sizing: border-box;
+      }
+
+      span {
+        display: inline-block;
+      }
+
+      .flex-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .align-center {
+        display: flex;
+        align-items: center;
+      }
+
+      .input-m {
+        min-height: 80px;
+      }
+
+      .input-s {
+        min-height: 40px;
+      }
+
+      .input-m,
+      .input-s {
+        /* white-space: normal; */
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
+      .form-title {
+        margin: 0;
+        padding: 0px 0px 20px 0px;
+        text-align: center;
+        border-bottom: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form">
+      <h2>Patient info</h2>
+      <h4 class="title">Patient demographics</h4>
+      <section class="container">
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">Name</span>
+            <span class="br-r fixed-item">{{name}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">Age</span>
+            <span class="fixed-item">{{age}}</span>
+          </div>
+        </div>
+
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">Gender</span>
+            <span class="br-r fixed-item">{{gender}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">Birth</span>
+            <span class="fixed-item">{{birth}}</span>
+          </div>
+        </div>
+
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item"> Height(cm)</span>
+            <span class="br-r fixed-item">{{height}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">Weight(kg)</span>
+            <span class="fixed-item">{{weight}}</span>
+          </div>
+        </div>
+      </section>
+
+      <h4 class="title">Medical staff in charge</h4>
+      <section class="container">
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">Doctor</span>
+            <span class="br-r fixed-item">{{doctorKor}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">Nurse</span>
+            <span class="fixed-item">{{nurseKor}}</span>
+          </div>
+        </div>
+
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">Doctor</span>
+            <span class="br-r fixed-item">{{doctorMn}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">Nurse</span>
+            <span class="fixed-item">{{nurseMn}}</span>
+          </div>
+        </div>
+      </section>
+
+      <h4 class="title">Patient's medical information</h4>
+      <section class="container">
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">Symptoms</span>
+          <span class="input-m align-center">{{pa_symptoms}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">Diagnosis</span>
+          <span class="input-s align-center">{{pa_diagnosis}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center"
+            >Treatment the patient has received so far</span
+          >
+          <span class="input-s align-center">{{pa_care_sofar}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center"
+            >Treatment the patient wants to receive in Korea</span
+          >
+          <span class="input-s align-center">{{pa_care_korea}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">Family history</span>
+          <span class="input-s align-center">{{familyHistory}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">Past history</span>
+          <span class="input-s align-center">{{pastHistory}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">Surgical history</span>
+          <span class="input-s align-center"> {{pa_surgical_history}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">Medication history </span>
+          <span class="input-s align-center"> {{pa_medicine_history}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">Allergy information</span>
+          <span class="input-s align-center"> {{pa_allergy}}</span>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

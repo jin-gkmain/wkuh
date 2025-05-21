@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>환자정보</title>
+
+    <style>
+      /* @font-face {
+        font-family: 'NanumGothic';
+        src: url('/fonts/NanumGothic-Regular.ttf') format('truetype');
+      } */
+
+      @font-face {
+        font-family: 'Noto Sans KR', sans-serif;
+        src: url('https://dev.tsp-live.com/fonts/NotoSansKR-Regular.ttf')
+          format('truetype');
+      }
+
+      body {
+        margin: 0;
+        /* font-family: 'Nanum Gothic', sans-serif;
+        font-weight: 400;
+        font-style: normal; */
+
+        font-family: 'Noto Sans KR', sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .form {
+        margin: auto;
+        margin-top: 20px;
+        width: 90dvw;
+      }
+
+      .container {
+        border: 1px solid black;
+      }
+
+      .title {
+        height: 30px;
+        line-height: 30px;
+        margin: 0 auto;
+        text-align: center;
+        background-color: rgb(242, 242, 242);
+        border-right: 1px solid black;
+        border-left: 1px solid black;
+        margin: 0;
+        font-family: 'Nanum Gothic', sans-serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .title:first-child {
+        border-top: 1px solid black;
+      }
+
+      .flex {
+        display: flex;
+      }
+
+      .flex-1 {
+        flex: 1;
+      }
+
+      .container .row:not(:last-child) {
+        border-bottom: 1px solid black;
+      }
+
+      .br-r {
+        border-right: 1px solid black;
+      }
+
+      .fixed-item {
+        height: 35px;
+        line-height: 35px;
+      }
+
+      .fixed-item:first-child {
+        width: 110px !important;
+      }
+
+      .fixed-item:last-child {
+        flex: 1 !important;
+      }
+
+      .item {
+        display: flex;
+      }
+
+      .item span:first-child {
+        width: 25%;
+        text-align: center;
+      }
+
+      .item span:last-child {
+        width: 75%;
+        padding-left: 10px;
+        box-sizing: border-box;
+      }
+
+      span {
+        display: inline-block;
+      }
+
+      .flex-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .align-center {
+        display: flex;
+        align-items: center;
+      }
+
+      .input-m {
+        min-height: 80px;
+      }
+
+      .input-s {
+        min-height: 40px;
+      }
+
+      .input-m,
+      .input-s {
+        /* white-space: normal; */
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
+      .form-title {
+        margin: 0;
+        padding: 0px 0px 20px 0px;
+        text-align: center;
+        border-bottom: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form">
+      <h2 class="form-title">환자정보</h2>
+      <h4 class="title">환자 기본정보</h4>
+      <section class="container">
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">이름</span>
+            <span class="br-r fixed-item">{{name}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">나이</span>
+            <span class="fixed-item">{{age}}</span>
+          </div>
+        </div>
+
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">성별</span>
+            <span class="br-r fixed-item">{{gender}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">생년월일</span>
+            <span class="fixed-item">{{birth}}</span>
+          </div>
+        </div>
+
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">키</span>
+            <span class="br-r fixed-item">{{height}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">몸무게(kg)</span>
+            <span class="fixed-item">{{weight}}</span>
+          </div>
+        </div>
+      </section>
+
+      <h4 class="title">진료 기본정보</h4>
+      <section class="container">
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">의사</span>
+            <span class="br-r fixed-item">{{doctorKor}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">간호사</span>
+            <span class="fixed-item">{{nurseKor}}</span>
+          </div>
+        </div>
+
+        <div class="flex row">
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">의사</span>
+            <span class="br-r fixed-item">{{doctorMn}}</span>
+          </div>
+
+          <div class="flex-1 item">
+            <span class="br-r fixed-item">간호사</span>
+            <span class="fixed-item">{{nurseMn}}</span>
+          </div>
+        </div>
+      </section>
+
+      <h4 class="title">환자 의료정보</h4>
+      <section class="container">
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">증상</span>
+          <span class="input-m align-center">{{pa_symptoms}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">진단명</span>
+          <span class="input-s align-center" style="white-space: pre-wrap"
+            >{{pa_diagnosis}}</span
+          >
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">그동안 받은 치료</span>
+          <span class="input-s align-center">{{pa_care_sofar}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">한국에서 받기 원하는 치료</span>
+          <span class="input-s align-center">{{pa_care_korea}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">가족력</span>
+          <span class="input-s align-center"> {{familyHistory}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">과거력</span>
+          <span class="input-s align-center">{{pastHistory}} </span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">수술력</span>
+          <span class="input-s align-center"> {{pa_surgical_history}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">약물력</span>
+          <span class="input-s align-center">{{pa_medicine_history}}</span>
+        </div>
+
+        <div class="flex-1 item row">
+          <span class="br-r flex-center">알러지 정보</span>
+          <span class="input-s align-center"> {{pa_allergy}}</span>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
