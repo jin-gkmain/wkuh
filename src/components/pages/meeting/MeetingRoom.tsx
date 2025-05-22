@@ -1,11 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import PatientView from '@/components/modal/WorkflowModal';
+import { PatientView } from '@/components/modal/WorkflowModalTabs';
 import { MeetingInfo } from '@/pages/meeting/[id]';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import registAlert, { getAlertList } from '@/data/alert';
 import ArrowRightLine from '@/components/common/icons/ArrowRightLine';
 import ArrowLeftLine from '@/components/common/icons/ArrowLeftLine';
+import { LanguageContext } from '@/context/LanguageContext';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 type Poprs = {
   meetingInfo: MeetingInfo | null;
@@ -30,6 +36,7 @@ export default function MeetingRoom({
 }: Poprs) {
   const [err, setErr] = useState(false);
   const [patientViewOpened, setPatientViewOpened] = useState(true);
+  const { lang, setLang } = useContext(LanguageContext);
 
   const handleLeave = async () => {
     if (!userInfo || !chartInfo || !patientInfo) return;
@@ -85,14 +92,22 @@ export default function MeetingRoom({
             <div
               className={`patient-info-area ${patientViewOpened ? '' : 'hide'}`}
             >
-              <PatientView
-                lang="en"
-                org={null}
-                chartInfo={chartInfo}
-                patientInfo={patientInfo}
-                userInfo={userInfo}
-                view
-              />
+              {/* <PatientView
+              chartInfo={chartInfo}
+              patientInfo={patientInfo}
+              lang={lang}
+              handleInputChange={handleInputChange}
+              handleSelect={handleSelect}
+              org={org}
+              userInfo={userInfo}
+              handleTopBtnClick={handleTopBtnClick}
+              patient={!!(userInfo && userInfo.p_idx)}
+              filesData={filesData}
+              getFileGubun={getFileGubun}
+              onRemove={onRemove}
+              tabType={tabType}
+              handleSetFiles={handleSetFiles}
+              /> */}
             </div>
           )}
 

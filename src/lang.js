@@ -1,14 +1,14 @@
 import ko from '@/lang/ko';
 import en from '@/lang/en';
-import ka from '@/lang/ka';
-import mo from '@/lang/mo';
+import kk from '@/lang/kk';
+import mn from '@/lang/mn';
 
 
 const lang = {
   ko,
   en,
-  ka,
-  mo
+  kk,
+  mn
 };
 
 export default lang;

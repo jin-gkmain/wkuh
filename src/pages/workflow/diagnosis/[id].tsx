@@ -145,20 +145,14 @@ export default function DiagnosisPage() {
   };
   
   const addVideo = async () => {
-    console.log('[addVideo] 함수 시작');
     if (!confirm(langFile[lang].VIDEO_MODAL_CONFIRM_ADD_VIDEO)) {
-      console.log('[addVideo] 영상 등록 취소');
       return;
     }
-    console.log('[addVideo] 영상 등록 확인');
 
     if (!patientInfo) {
-      console.error('[addVideo] 환자 정보가 없습니다.');
       return;
     }
-    console.log('[addVideo] patientInfo 확인:', patientInfo);
 
-    console.log('[addVideo] registVideo 호출 전, p_idx:', patientInfo.p_idx);
     const res = await registVideo({
       di_hospital: '',
       di_doctor: '',
@@ -166,24 +160,17 @@ export default function DiagnosisPage() {
       di_memo: '',
       p_idx: patientInfo.p_idx,
     });
-    console.log('[addVideo] registVideo 응답:', res);
 
     if (res.message === 'SUCCESS' && res.v_idx) {
-      console.log('[addVideo] registVideo 성공, getVideo 호출 전, v_idx:', res.v_idx);
       const videoData = await getVideo(res.v_idx);
-      console.log('[addVideo] getVideo 응답:', videoData);
 
       if (videoData !== 'ServerError') {
         setVideos((prev) => {
           const newState = [videoData, ...prev];
-          console.log('[addVideo] setVideos 후 상태:', newState);
           return newState;
         });
-        console.log('[addVideo] setSelectedVideo 호출 전, videoData:', videoData);
         setSelectedVideo(videoData);
-        console.log('[addVideo] openVideoModal 호출 직전');
         openVideoModal();
-        console.log('[addVideo] openVideoModal 호출 완료');
       } else {
         console.error('[addVideo] 등록된 영상 정보 불러오기 실패');
       }

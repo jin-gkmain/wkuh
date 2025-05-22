@@ -741,16 +741,16 @@ const lang = {
   DELETE_FILE_CONFIRM_TEXT: 'Are you sure you want to delete this file?',
 
   MOBILE_INDEX_TITLE: "Health care, easily and smartly",
-  MOBILE_INDEX_DESC: "From remote teleconsultation schedule management to pre-consultation questionnaire writing, receive health care and various medical information easily and smartly with AI chatbot.",
-  MOBILE_INDEX_SCHEDULE_TITLE: "Check your schedule",
-  MOBILE_INDEX_SCHEDULE_DESC: "Check your reserved remote teleconsultation schedule at a glance and prepare the necessary information in advance.",
-  MOBILE_INDEX_SCHEDULE_BUTTON: "Check schedule",
+  MOBILE_INDEX_DESC: "From pre-consultation questionnaire writing to AI chatbot, receive health care and various medical information easily and smartly.",
   MOBILE_INDEX_PAPERWEIGHT_TITLE: "Write a questionnaire",
   MOBILE_INDEX_PAPERWEIGHT_DESC: "Write a simple questionnaire before the consultation to provide accurate information to the medical staff.",
-  MOBILE_INDEX_PAPERWEIGHT_BUTTON: "Write a questionnaire",
+  MOBILE_INDEX_PAPERWEIGHT_BUTTON: "Write",
   MOBILE_INDEX_CHATBOT_TITLE: "Chat with AI",
   MOBILE_INDEX_CHATBOT_DESC: "Ask about health, disease, nutrition information easily and smartly with AI.",
-  MOBILE_INDEX_CHATBOT_BUTTON: "Chat with AI",
+  MOBILE_INDEX_CHATBOT_BUTTON: "Chat",
+
+  MOBILE_CHATBOT_INTRO: "Do you have any questions about your symptoms? AI will explain medical, health, and nutrition information to you kindly.",
+  MOBILE_CHATBOT_INPUT_PLACEHOLDER: "Input your message...",
 };
 
 export default lang;

@@ -5,9 +5,10 @@ import SendIcon from '@mui/icons-material/Send';
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
   disabled?: boolean;
+  placeholder?: string;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled, placeholder }) => {
   const [inputValue, setInputValue] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,7 +40,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled }) => {
           fullWidth
           variant="outlined"
           size="small"
-          placeholder="메시지를 입력하세요..."
+          placeholder={placeholder}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           disabled={disabled}

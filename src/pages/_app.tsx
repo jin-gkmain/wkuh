@@ -9,6 +9,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { LangType, LanguageContext } from '@/context/LanguageContext';
 import { Noto_Sans } from 'next/font/google';
+import SendBirdCall from 'sendbird-calls';
 
 
 const NotoSans = Noto_Sans({ subsets: ['latin'] });
@@ -39,6 +40,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   };
 
   useEffect(() => {
+    SendBirdCall.init(process.env.NEXT_PUBLIC_SENDBIRD_APP_ID!);
     if (typeof window !== 'undefined') {
         const webLang = navigator.language.slice(0, 2);
         const sessionLang = sessionStorage.getItem('lang');

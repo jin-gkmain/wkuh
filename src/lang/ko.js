@@ -714,13 +714,16 @@ const lang = {
   DELETE_FILE_CONFIRM_TEXT: '파일을 삭제하시겠습니까?',
 
   MOBILE_INDEX_TITLE: "건강 케어, 쉽게 스마트하게",
-  MOBILE_INDEX_DESC: "원격 협진 일정 관리부터 사전 문진표 작성,\n AI 챗봇으로 건강 상담과 다양한 의료 정보를\n 간편하고 똑똑하게 받아보세요.",
+  MOBILE_INDEX_DESC: "사전 문진표 작성,\n AI 챗봇으로 건강 상담과 다양한 의료 정보를\n 간편하고 똑똑하게 받아보세요.",
   MOBILE_INDEX_PAPERWEIGHT_TITLE: "문진표 작성",
   MOBILE_INDEX_PAPERWEIGHT_DESC: "진료 전, 간단한 문진표를 작성해\n 의료진에게정확한 정보를 전달하세요.",
   MOBILE_INDEX_PAPERWEIGHT_BUTTON: "작성하기",
   MOBILE_INDEX_CHATBOT_TITLE: "챗봇 상담",
   MOBILE_INDEX_CHATBOT_DESC: "궁금한 건강, 질병, 영양 정보를\n AI가 쉽고 정확하게 알려드립니다.",
   MOBILE_INDEX_CHATBOT_BUTTON: "상담하기",
+
+  MOBILE_CHATBOT_INTRO: "궁금한 증상이 있나요? AI가 의료, 건강, 영양정보까지 친절하게 알려드릴게요😊",
+  MOBILE_CHATBOT_INPUT_PLACEHOLDER: "메시지를 입력하세요...",
 };
 
 export default lang;
