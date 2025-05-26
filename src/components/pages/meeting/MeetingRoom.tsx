@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import dynamic from 'next/dynamic';
-import { PatientView } from '@/components/modal/WorkflowModalTabs';
-import { MeetingInfo } from '@/pages/meeting/[id]';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-import registAlert, { getAlertList } from '@/data/alert';
-import ArrowRightLine from '@/components/common/icons/ArrowRightLine';
-import ArrowLeftLine from '@/components/common/icons/ArrowLeftLine';
-import { LanguageContext } from '@/context/LanguageContext';
+import React, { useContext, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import { PatientView } from "@/components/modal/WorkflowModalTabs/PatientView";
+import { MeetingInfo } from "@/pages/meeting/[id]";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import registAlert, { getAlertList } from "@/data/alert";
+import ArrowRightLine from "@/components/common/icons/ArrowRightLine";
+import ArrowLeftLine from "@/components/common/icons/ArrowLeftLine";
+import { LanguageContext } from "@/context/LanguageContext";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -22,7 +22,7 @@ type Poprs = {
 };
 
 const WherebyMeeting = dynamic(
-  () => import('@/components/pages/meeting/WherebyMeeting'),
+  () => import("@/components/pages/meeting/WherebyMeeting"),
   { ssr: false }
 );
 
@@ -44,12 +44,12 @@ export default function MeetingRoom({
     let alert = false;
     let time = false;
 
-    const alertList = await getAlertList(chartInfo.w_idx, 'status');
+    const alertList = await getAlertList(chartInfo.w_idx, "status");
 
-    if (alertList !== 'ServerError') {
+    if (alertList !== "ServerError") {
       if (alertList) {
         if (
-          !alertList.find((i) => i.gubun === 'te' && i.status === 'complete')
+          !alertList.find((i) => i.gubun === "te" && i.status === "complete")
         ) {
           alert = true;
         }
@@ -59,7 +59,7 @@ export default function MeetingRoom({
     }
 
     let local =
-      userInfo.country === 'korea' ? 'Asia/Seoul' : 'Asia/Ulaanbaatar';
+      userInfo.country === "korea" ? "Asia/Seoul" : "Asia/Ulaanbaatar";
 
     const now = dayjs(new Date().toISOString()).tz(local);
     const start_date = dayjs(chartInfo.te_date).tz(local);
@@ -70,7 +70,7 @@ export default function MeetingRoom({
     }
 
     if (alert && time) {
-      const res = await registAlert(chartInfo.w_idx, 'te', 'complete');
+      const res = await registAlert(chartInfo.w_idx, "te", "complete");
     }
   };
 
@@ -90,7 +90,7 @@ export default function MeetingRoom({
         <div className="teleconsulting-area">
           {patientInfo && chartInfo && (
             <div
-              className={`patient-info-area ${patientViewOpened ? '' : 'hide'}`}
+              className={`patient-info-area ${patientViewOpened ? "" : "hide"}`}
             >
               {/* <PatientView
               chartInfo={chartInfo}
@@ -115,8 +115,8 @@ export default function MeetingRoom({
             <div
               className={`meeting-area relative ${
                 !patientInfo || !chartInfo || !patientViewOpened
-                  ? 'full-view'
-                  : ''
+                  ? "full-view"
+                  : ""
               }`}
             >
               <button
@@ -134,7 +134,7 @@ export default function MeetingRoom({
 
               <WherebyMeeting
                 onLeave={handleLeave}
-                roomUrl={meetingInfo.hostRoomUrl + '&logo=off'}
+                roomUrl={meetingInfo.hostRoomUrl + "&logo=off"}
                 userName={name}
                 meetingId={meetingInfo.meetingId}
               />

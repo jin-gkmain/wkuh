@@ -1,15 +1,13 @@
-import React from 'react';
-import langFile from '@/lang';
-import { LangType } from '@/context/LanguageContext';
-import { ChangeEvent, ReactNode } from 'react';
-import Send from '../common/icons/Send';
-import FlagKoreaSq from '../common/icons/FlagKoreaSq';
-import SelectInput from '../common/inputs/SelectInput';
-import FlagMongolSq from '../common/icons/FlagMongolSq';
-import dayjs from 'dayjs';
-import DropFileInput from '../common/inputs/DropFileInput';
-
-
+import React from "react";
+import langFile from "@/lang";
+import { LangType } from "@/context/LanguageContext";
+import { ChangeEvent, ReactNode } from "react";
+import Send from "../../common/icons/Send";
+import FlagKoreaSq from "../../common/icons/FlagKoreaSq";
+import SelectInput from "../../common/inputs/SelectInput";
+import FlagMongolSq from "../../common/icons/FlagMongolSq";
+import dayjs from "dayjs";
+import DropFileInput from "../../common/inputs/DropFileInput";
 
 type PatientViewProps = {
   lang: LangType;
@@ -28,9 +26,7 @@ type PatientViewProps = {
   getFileGubun: (tabType: string) => string;
   onRemove: (id: string, type: string) => void;
   tabType: string;
-
 };
-
 
 export function PatientView({
   lang,
@@ -53,7 +49,7 @@ export function PatientView({
   return (
     <div
       className={`main-tab-section relative flex flex-col ${
-        view ? 'patient-view' : ''
+        view ? "patient-view" : ""
       }`}
     >
       {!view && (
@@ -69,12 +65,12 @@ export function PatientView({
             // 환자정보 다운로드
           </button> */}
 
-          {userInfo && userInfo.country !== 'korea' && (
+          {userInfo && userInfo.country !== "korea" && (
             <button
               className="primary-btn"
               type="button"
               onClick={() => {
-                handleTopBtnClick('confirm');
+                handleTopBtnClick("confirm");
               }}
             >
               {langFile[lang].WORKFLOW_MODAL_CONFIRM_PT_INFO} <Send />
@@ -103,7 +99,7 @@ export function PatientView({
               <input
                 readOnly
                 autoComplete="off"
-                value={patientInfo?.u_name_eng || ''}
+                value={patientInfo?.u_name_eng || ""}
                 disabled={true}
                 type="text"
                 className="input input-disabled"
@@ -122,10 +118,10 @@ export function PatientView({
                 value={
                   patientInfo?.birthday
                     ? dayjs()
-                        .subtract(dayjs(patientInfo?.birthday).year(), 'year')
+                        .subtract(dayjs(patientInfo?.birthday).year(), "year")
                         .year()
                         .toString()
-                    : '-'
+                    : "-"
                 }
                 disabled
                 type="text"
@@ -142,7 +138,7 @@ export function PatientView({
               </label>
               <input
                 readOnly
-                value={patientInfo?.sex || ''}
+                value={patientInfo?.sex || ""}
                 disabled
                 type="text"
                 className="input input-disabled"
@@ -162,8 +158,8 @@ export function PatientView({
                 readOnly
                 value={
                   patientInfo?.birthday
-                    ? dayjs(patientInfo?.birthday).format('YYYY/MM/DD')
-                    : ''
+                    ? dayjs(patientInfo?.birthday).format("YYYY/MM/DD")
+                    : ""
                 }
                 disabled
                 type="text"
@@ -180,7 +176,7 @@ export function PatientView({
               </label>
               <input
                 readOnly
-                value={patientInfo?.tall || ''}
+                value={patientInfo?.tall || ""}
                 disabled
                 type="text"
                 className="input input-disabled"
@@ -196,7 +192,7 @@ export function PatientView({
               </label>
               <input
                 readOnly
-                value={patientInfo?.weight || ''}
+                value={patientInfo?.weight || ""}
                 disabled
                 type="text"
                 className="input input-disabled"
@@ -233,10 +229,10 @@ export function PatientView({
                 onSelect={handleSelect}
                 selected={
                   chartInfo.nurse1_idx
-                    ? lang === 'ko'
+                    ? lang === "ko"
                       ? chartInfo.nurse1_name_kor
                       : chartInfo.nurse1_name_eng
-                    : ''
+                    : ""
                 }
               />
             </div>
@@ -254,10 +250,10 @@ export function PatientView({
                 onSelect={handleSelect}
                 selected={
                   chartInfo.doctor1_idx
-                    ? lang === 'ko'
-                      ? chartInfo.doctor1_name_kor || ''
-                      : chartInfo.doctor1_name_eng || ''
-                    : ''
+                    ? lang === "ko"
+                      ? chartInfo.doctor1_name_kor || ""
+                      : chartInfo.doctor1_name_eng || ""
+                    : ""
                 }
                 disabled={view || patient}
               />
@@ -277,7 +273,7 @@ export function PatientView({
                 usersJobType="nurse"
                 o_idx={
                   userInfo
-                    ? userInfo.country === 'korea'
+                    ? userInfo.country === "korea"
                       ? userInfo.o_idx
                       : org?.parent_o_idx || 0
                     : 0
@@ -286,10 +282,10 @@ export function PatientView({
                 onSelect={handleSelect}
                 selected={
                   chartInfo.nurse2_idx
-                    ? lang === 'ko'
-                      ? chartInfo.nurse2_name_kor || ''
-                      : chartInfo.nurse2_name_eng || ''
-                    : ''
+                    ? lang === "ko"
+                      ? chartInfo.nurse2_name_kor || ""
+                      : chartInfo.nurse2_name_eng || ""
+                    : ""
                 }
                 disabled={view || patient}
               />
@@ -304,7 +300,7 @@ export function PatientView({
                 usersJobType="doctor"
                 o_idx={
                   userInfo
-                    ? userInfo.country === 'korea'
+                    ? userInfo.country === "korea"
                       ? userInfo.o_idx
                       : org?.parent_o_idx || 0
                     : 0
@@ -313,10 +309,10 @@ export function PatientView({
                 onSelect={handleSelect}
                 selected={
                   chartInfo.doctor2_idx
-                    ? lang === 'ko'
-                      ? chartInfo.doctor2_name_kor || ''
-                      : chartInfo.doctor2_name_eng || ''
-                    : ''
+                    ? lang === "ko"
+                      ? chartInfo.doctor2_name_kor || ""
+                      : chartInfo.doctor2_name_eng || ""
+                    : ""
                 }
                 disabled={view || patient}
               />
@@ -348,7 +344,7 @@ export function PatientView({
               id="pa_symptoms"
               className="input"
               onChange={handleInputChange}
-              value={chartInfo.pa_symptoms || ''}
+              value={chartInfo.pa_symptoms || ""}
             />
           </div>
 
@@ -360,7 +356,7 @@ export function PatientView({
             <textarea
               disabled={view}
               autoComplete="off"
-              value={chartInfo.pa_diagnosis || ''}
+              value={chartInfo.pa_diagnosis || ""}
               onChange={handleInputChange}
               name="pa_diagnosis"
               id="pa_diagnosis"
@@ -376,7 +372,7 @@ export function PatientView({
             <textarea
               disabled={view}
               autoComplete="off"
-              value={chartInfo.pa_care_sofar || ''}
+              value={chartInfo.pa_care_sofar || ""}
               onChange={handleInputChange}
               name="pa_care_sofar"
               id="pa_care_sofar"
@@ -392,7 +388,7 @@ export function PatientView({
             <textarea
               disabled={view}
               autoComplete="off"
-              value={chartInfo.pa_care_korea || ''}
+              value={chartInfo.pa_care_korea || ""}
               onChange={handleInputChange}
               name="pa_care_korea"
               id="pa_care_korea"
@@ -418,8 +414,8 @@ export function PatientView({
                       type="checkbox"
                       name="pa_medical_history11"
                       id="pa_medical_history11"
-                      value={chartInfo.pa_medical_history11 || 'n'}
-                      checked={chartInfo.pa_medical_history11 === 'y'}
+                      value={chartInfo.pa_medical_history11 || "n"}
+                      checked={chartInfo.pa_medical_history11 === "y"}
                       onChange={handleInputChange}
                     />
                     <label htmlFor="pa_medical_history11" className="shrink-0">
@@ -433,8 +429,8 @@ export function PatientView({
                       type="checkbox"
                       name="pa_medical_history12"
                       id="pa_medical_history12"
-                      value={chartInfo.pa_medical_history12 || 'n'}
-                      checked={chartInfo.pa_medical_history12 === 'y'}
+                      value={chartInfo.pa_medical_history12 || "n"}
+                      checked={chartInfo.pa_medical_history12 === "y"}
                       onChange={handleInputChange}
                     />
                     <label htmlFor="pa_medical_history12" className="shrink-0">
@@ -448,8 +444,8 @@ export function PatientView({
                       type="checkbox"
                       name="pa_medical_history13"
                       id="pa_medical_history13"
-                      value={chartInfo.pa_medical_history13 || 'n'}
-                      checked={chartInfo.pa_medical_history13 === 'y'}
+                      value={chartInfo.pa_medical_history13 || "n"}
+                      checked={chartInfo.pa_medical_history13 === "y"}
                       onChange={handleInputChange}
                     />
                     <label htmlFor="pa_medical_history13" className="shrink-0">
@@ -463,8 +459,8 @@ export function PatientView({
                       type="checkbox"
                       name="pa_medical_history14"
                       id="pa_medical_history14"
-                      value={chartInfo.pa_medical_history14 || 'n'}
-                      checked={chartInfo.pa_medical_history14 === 'y'}
+                      value={chartInfo.pa_medical_history14 || "n"}
+                      checked={chartInfo.pa_medical_history14 === "y"}
                       onChange={handleInputChange}
                     />
                     <label htmlFor="pa_medical_history14" className="shrink-0">
@@ -478,8 +474,8 @@ export function PatientView({
                       type="checkbox"
                       name="pa_medical_history15"
                       id="pa_medical_history15"
-                      value={chartInfo.pa_medical_history15 || 'n'}
-                      checked={chartInfo.pa_medical_history15 === 'y'}
+                      value={chartInfo.pa_medical_history15 || "n"}
+                      checked={chartInfo.pa_medical_history15 === "y"}
                       onChange={handleInputChange}
                     />
                     <label htmlFor="pa_medical_history15" className="shrink-0">
@@ -492,7 +488,7 @@ export function PatientView({
                       type="text"
                       name="pa_medical_history16"
                       className="check-input flex-1"
-                      value={chartInfo.pa_medical_history16 || ''}
+                      value={chartInfo.pa_medical_history16 || ""}
                       onChange={handleInputChange}
                     />
                   </span>
@@ -511,8 +507,8 @@ export function PatientView({
                       type="checkbox"
                       name="pa_medical_history21"
                       id="pa_medical_history21"
-                      value={chartInfo.pa_medical_history21 || 'n'}
-                      checked={chartInfo.pa_medical_history21 === 'y'}
+                      value={chartInfo.pa_medical_history21 || "n"}
+                      checked={chartInfo.pa_medical_history21 === "y"}
                       onChange={handleInputChange}
                     />
                     <label htmlFor="pa_medical_history21" className="shrink-0">
@@ -526,8 +522,8 @@ export function PatientView({
                       type="checkbox"
                       name="pa_medical_history22"
                       id="pa_medical_history22"
-                      value={chartInfo.pa_medical_history22 || 'n'}
-                      checked={chartInfo.pa_medical_history22 === 'y'}
+                      value={chartInfo.pa_medical_history22 || "n"}
+                      checked={chartInfo.pa_medical_history22 === "y"}
                       onChange={handleInputChange}
                     />
                     <label htmlFor="pa_medical_history22" className="shrink-0">
@@ -541,8 +537,8 @@ export function PatientView({
                       type="checkbox"
                       name="pa_medical_history23"
                       id="pa_medical_history23"
-                      value={chartInfo.pa_medical_history23 || 'n'}
-                      checked={chartInfo.pa_medical_history23 === 'y'}
+                      value={chartInfo.pa_medical_history23 || "n"}
+                      checked={chartInfo.pa_medical_history23 === "y"}
                       onChange={handleInputChange}
                     />
                     <label htmlFor="pa_medical_history23" className="shrink-0">
@@ -556,8 +552,8 @@ export function PatientView({
                       type="checkbox"
                       name="pa_medical_history24"
                       id="pa_medical_history24"
-                      value={chartInfo.pa_medical_history24 || 'n'}
-                      checked={chartInfo.pa_medical_history24 === 'y'}
+                      value={chartInfo.pa_medical_history24 || "n"}
+                      checked={chartInfo.pa_medical_history24 === "y"}
                       onChange={handleInputChange}
                     />
                     <label htmlFor="pa_medical_history24" className="shrink-0">
@@ -571,8 +567,8 @@ export function PatientView({
                       type="checkbox"
                       name="pa_medical_history25"
                       id="pa_medical_history25"
-                      value={chartInfo.pa_medical_history25 || 'n'}
-                      checked={chartInfo.pa_medical_history25 === 'y'}
+                      value={chartInfo.pa_medical_history25 || "n"}
+                      checked={chartInfo.pa_medical_history25 === "y"}
                       onChange={handleInputChange}
                     />
                     <label htmlFor="pa_medical_history25" className="shrink-0">
@@ -585,7 +581,7 @@ export function PatientView({
                       type="text"
                       name="pa_medical_history26"
                       className="check-input flex-1"
-                      value={chartInfo.pa_medical_history26 || ''}
+                      value={chartInfo.pa_medical_history26 || ""}
                       onChange={handleInputChange}
                     />
                   </span>
@@ -605,7 +601,7 @@ export function PatientView({
               name="pa_surgical_history"
               id="pa_surgical_history"
               className="input"
-              value={chartInfo.pa_surgical_history || ''}
+              value={chartInfo.pa_surgical_history || ""}
               onChange={handleInputChange}
             />
           </div>
@@ -621,7 +617,7 @@ export function PatientView({
               name="pa_medicine_history"
               id="pa_medicine_history"
               className="input"
-              value={chartInfo.pa_medicine_history || ''}
+              value={chartInfo.pa_medicine_history || ""}
               onChange={handleInputChange}
             />
           </div>
@@ -637,7 +633,7 @@ export function PatientView({
               name="pa_allergy"
               id="pa_allergy"
               className="input"
-              value={chartInfo.pa_allergy || ''}
+              value={chartInfo.pa_allergy || ""}
               onChange={handleInputChange}
             />
           </div>
@@ -649,20 +645,19 @@ export function PatientView({
             </span>
             <DropFileInput
               labelText
-                disabled={false}
-                type="첨부"
-                files={filesData[getFileGubun(tabType)]['첨부']}
-                onRemove={onRemove}
-                setFiles={handleSetFiles}
-                dropFile={() => {}}
-              />
+              disabled={false}
+              type="첨부"
+              files={filesData[getFileGubun(tabType)]["첨부"]}
+              onRemove={onRemove}
+              setFiles={handleSetFiles}
+              dropFile={() => {}}
+            />
           </div>
         </div>
       </div>
     </div>
   );
 }
-
 
 type OpinionViewProps = {
   userInfo: StoredUser | null;
@@ -692,11 +687,11 @@ export function OpinionView({
   return (
     <div className="main-tab-section relative flex flex-col">
       <div className="flex gap-5 header-buttons">
-        {userInfo && userInfo.country === 'korea' && !userInfo.p_idx && (
+        {userInfo && userInfo.country === "korea" && !userInfo.p_idx && (
           <button
             className="primary-btn"
             type="button"
-            onClick={() => handleTopBtnClick('confirm')}
+            onClick={() => handleTopBtnClick("confirm")}
           >
             {langFile[lang].WORKFLOW_MODAL_CONFIRM_OPINION_BUTTON_TEXT}
             <Send />
@@ -725,7 +720,7 @@ export function OpinionView({
             autoComplete="off"
             name="op_contents"
             id="op_contents"
-            value={chartInfo.op_contents || ''}
+            value={chartInfo.op_contents || ""}
             onChange={handleInputChange}
           ></textarea>
         </div>
@@ -738,7 +733,7 @@ export function OpinionView({
           <DropFileInput
             disabled={!!(userInfo && userInfo.p_idx)}
             labelText
-            files={filesData[getFileGubun(tabType)]['첨부']}
+            files={filesData[getFileGubun(tabType)]["첨부"]}
             onRemove={onRemove}
             setFiles={handleSetFiles}
             type="첨부"
@@ -748,5 +743,3 @@ export function OpinionView({
     </div>
   );
 }
-
-  

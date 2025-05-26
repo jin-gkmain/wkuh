@@ -7,44 +7,44 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
-import ModalFrame from './ModalFrame';
-import Send from '../common/icons/Send';
-import Clip from '../common/icons/Clip';
-import { useAppDispatch, useAppSelector } from '@/store';
-import { shallowEqual } from 'react-redux';
+} from "react";
+import ModalFrame from "./ModalFrame";
+import Send from "../common/icons/Send";
+import Clip from "../common/icons/Clip";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { shallowEqual } from "react-redux";
 import {
   Gubun,
   WorkflowTabType,
   workflowModalActions,
-} from '@/store/modules/workflowModalSlice';
-import SelectInput from '../common/inputs/SelectInput';
-import DropFileInput from '../common/inputs/DropFileInput';
-import useAlertModal from '@/hooks/useAlertModal';
-import ConfirmAlertBox from '../common/ConfirmAlertBox';
-import CheckAlertbox from '../common/CheckAlertBox';
-import DateInput, { Value } from '../common/inputs/DateInput';
-import { LangType, LanguageContext } from '@/context/LanguageContext';
-import TableHead from '../common/table/TableHead';
-import TableRow from '../common/table/TableRow';
-import useModal from '@/hooks/useModal';
-import Download from '../common/icons/Download';
-import Plus from '../common/icons/Plus';
-import Check from '../common/icons/Check';
-import Document from '../common/icons/Document';
-import { TeleconsultingModalContext } from '@/context/TeleconsultingContext';
-import langFile from '@/lang';
-import getTableRowMenuOptions from '@/utils/table';
-import FlagKoreaSq from '../common/icons/FlagKoreaSq';
-import FlagMongolSq from '../common/icons/FlagMongolSq';
-import FlagKoreaRd from '@/components/common/icons/FlagKoreaRd';
-import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
-import 'dayjs/locale/ko';
-import { convertChatTime, convertTimeToStr } from '@/utils/date';
-import CopyLink from '../common/icons/CopyLInk';
-import { getPatient } from '@/data/patient';
+} from "@/store/modules/workflowModalSlice";
+import SelectInput from "../common/inputs/SelectInput";
+import DropFileInput from "../common/inputs/DropFileInput";
+import useAlertModal from "@/hooks/useAlertModal";
+import ConfirmAlertBox from "../common/ConfirmAlertBox";
+import CheckAlertbox from "../common/CheckAlertBox";
+import DateInput, { Value } from "../common/inputs/DateInput";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
+import TableHead from "../common/table/TableHead";
+import TableRow from "../common/table/TableRow";
+import useModal from "@/hooks/useModal";
+import Download from "../common/icons/Download";
+import Plus from "../common/icons/Plus";
+import Check from "../common/icons/Check";
+import Document from "../common/icons/Document";
+import { TeleconsultingModalContext } from "@/context/TeleconsultingContext";
+import langFile from "@/lang";
+import getTableRowMenuOptions from "@/utils/table";
+import FlagKoreaSq from "../common/icons/FlagKoreaSq";
+import FlagMongolSq from "../common/icons/FlagMongolSq";
+import FlagKoreaRd from "@/components/common/icons/FlagKoreaRd";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import "dayjs/locale/ko";
+import { convertChatTime, convertTimeToStr } from "@/utils/date";
+import CopyLink from "../common/icons/CopyLInk";
+import { getPatient } from "@/data/patient";
 import {
   deletePostPrescription,
   editPostPrescription,
@@ -53,16 +53,17 @@ import {
   getPostPrescriptions,
   getWorkflow,
   registPostPrescription,
-} from '../../data/workflow';
-import { getOrg } from '@/data/org';
-import getFiles, { deleteFile, uploadFiles } from '@/data/file';
-import { MeetingInfo } from '@/pages/meeting/[id]';
-import registAlert, { getAlertList } from '@/data/alert';
-import { Alert, ChatAlert } from '@/types/alert';
-import AlertIcon from '../common/AlertIcon';
-import { getSystemAlertText } from '@/utils/alert';
-import { disconnectSocket, emitEvent, onEvent } from '@/utils/socket';
-import { OpinionView, PatientView } from './WorkflowModalTabs';
+} from "../../data/workflow";
+import { getOrg } from "@/data/org";
+import getFiles, { deleteFile, uploadFiles } from "@/data/file";
+import { MeetingInfo } from "@/pages/meeting/[id]";
+import registAlert, { getAlertList } from "@/data/alert";
+import { Alert, ChatAlert } from "@/types/alert";
+import AlertIcon from "../common/AlertIcon";
+import { getSystemAlertText } from "@/utils/alert";
+import { disconnectSocket, emitEvent, onEvent } from "@/utils/socket";
+import { OpinionView, PatientView } from "./WorkflowModalTabs/PatientView";
+import { PreliminaryView } from "./WorkflowModalTabs/PreliminaryView";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -83,7 +84,7 @@ export default function WorkflowModal({ closeModal }: Props) {
   const { lang } = useContext(LanguageContext);
   const tds = getTableHeadData(lang);
   const [tableMenuOptions, setTableMenuOptions] = useState(() =>
-    getTableRowMenuOptions('remove', lang)
+    getTableRowMenuOptions("remove", lang)
   );
   const tabs = getTabs(lang);
   const selectedId = useRef<string>();
@@ -215,10 +216,10 @@ export default function WorkflowModal({ closeModal }: Props) {
 
   const [prescriptions, setPrescriptions] = useState<PostPrescription[]>([]);
 
-  const [modalType, setModalType] = useState<ModalType>('download');
+  const [modalType, setModalType] = useState<ModalType>("download");
   const [prescriptionModalType, setPrescriptionModalType] = useState<
-    'new' | 'manage'
-  >('new');
+    "new" | "manage"
+  >("new");
 
   const { AlertModalPortal, openAlertModal, closeAlertModal } = useAlertModal();
   const {
@@ -287,7 +288,7 @@ export default function WorkflowModal({ closeModal }: Props) {
     let copy = { ...chartInfo };
 
     switch (key) {
-      case 'nurse1': {
+      case "nurse1": {
         copy = {
           ...copy,
           nurse1_idx: u_idx,
@@ -296,7 +297,7 @@ export default function WorkflowModal({ closeModal }: Props) {
         };
         break;
       }
-      case 'nurse2': {
+      case "nurse2": {
         copy = {
           ...copy,
           nurse2_idx: u_idx,
@@ -305,7 +306,7 @@ export default function WorkflowModal({ closeModal }: Props) {
         };
         break;
       }
-      case 'doctor1': {
+      case "doctor1": {
         copy = {
           ...copy,
           doctor1_idx: u_idx,
@@ -314,7 +315,7 @@ export default function WorkflowModal({ closeModal }: Props) {
         };
         break;
       }
-      case 'doctor2': {
+      case "doctor2": {
         copy = {
           ...copy,
           doctor2_idx: u_idx,
@@ -323,7 +324,7 @@ export default function WorkflowModal({ closeModal }: Props) {
         };
         break;
       }
-      case 'ca_doctor': {
+      case "ca_doctor": {
         copy = {
           ...copy,
           ca_doctor_idx: u_idx,
@@ -341,36 +342,36 @@ export default function WorkflowModal({ closeModal }: Props) {
   const getFileGubun = (tabType: WorkflowTabType) => {
     let gubun1: Gubun1;
     switch (tabType) {
-      case 'patient': {
-        gubun1 = '환자정보';
+      case "patient": {
+        gubun1 = "환자정보";
         break;
       }
-      case 'opinion': {
-        gubun1 = '소견서정보';
+      case "opinion": {
+        gubun1 = "소견서정보";
         break;
       }
-      case 'carePlans': {
-        gubun1 = '치료계획서';
+      case "carePlans": {
+        gubun1 = "치료계획서";
         break;
       }
-      case 'visitForm': {
-        gubun1 = '내원준비';
+      case "visitForm": {
+        gubun1 = "내원준비";
         break;
       }
-      case 'visitInfo': {
-        gubun1 = '내원상담';
+      case "visitInfo": {
+        gubun1 = "내원상담";
         break;
       }
-      case 'visitResult': {
-        gubun1 = '내원결과';
+      case "visitResult": {
+        gubun1 = "내원결과";
         break;
       }
-      case 'postConsulting': {
-        gubun1 = '사후상담';
+      case "postConsulting": {
+        gubun1 = "사후상담";
         break;
       }
-      case 'postPrescript': {
-        gubun1 = '사후처방';
+      case "postPrescript": {
+        gubun1 = "사후처방";
         break;
       }
     }
@@ -383,7 +384,7 @@ export default function WorkflowModal({ closeModal }: Props) {
     let gubun1 = getFileGubun(tabType);
     const formData = new FormData();
     files.forEach((f) => {
-      formData.append('files', f);
+      formData.append("files", f);
     });
     const res = await uploadFiles(
       formData,
@@ -394,25 +395,25 @@ export default function WorkflowModal({ closeModal }: Props) {
       chartId
     );
 
-    if (res === 'SUCCESS') {
-      console.log('파일 업로드 성공 > ', gubun1, gubun2);
+    if (res === "SUCCESS") {
+      console.log("파일 업로드 성공 > ", gubun1, gubun2);
       const files = await getFiles(patientInfo.o_idx, gubun1, gubun2, chartId);
-      if (files !== 'ServerError') {
-        console.log('업로드 후 파일 목록 불러오기 성공');
+      if (files !== "ServerError") {
+        console.log("업로드 후 파일 목록 불러오기 성공");
         setFilesData((prev) => ({
           ...prev,
           [gubun1]: { ...prev[gubun1], [gubun2]: files },
         }));
       }
     } else {
-      console.log('파일 업로드 실패');
+      console.log("파일 업로드 실패");
     }
   };
 
   // 파일 삭제
   const onRemove = async (id: string, type: string) => {
     const res = await deleteFile(parseInt(id));
-    if (res === 'SUCCESS') {
+    if (res === "SUCCESS") {
       const gubun1 = getFileGubun(tabType);
       setFilesData((prev) => ({
         ...prev,
@@ -432,7 +433,7 @@ export default function WorkflowModal({ closeModal }: Props) {
       lang,
       info: {},
     };
-    if (type === 'patient') {
+    if (type === "patient") {
       let {
         nurse1_name_eng,
         nurse1_name_kor,
@@ -469,8 +470,8 @@ export default function WorkflowModal({ closeModal }: Props) {
           });
           count += 1;
         }
-        console.log('arr > ', arr);
-        arr = arr.filter((i) => i.value === 'y');
+        console.log("arr > ", arr);
+        arr = arr.filter((i) => i.value === "y");
         arr = arr.map((i) => i.key);
         if (arr.includes(langFile[lang].WORKFLOW_MODAL_PT_ECT)) {
           arr.push(chartInfo[`pa_medical_history${count}`]);
@@ -486,10 +487,10 @@ export default function WorkflowModal({ closeModal }: Props) {
         age: new Date().getFullYear() - new Date(birthday).getFullYear(),
         birth: birthday,
         weight,
-        doctorKor: lang === 'ko' ? doctor2_name_kor : doctor2_name_eng,
-        doctorMn: lang === 'ko' ? doctor1_name_kor : doctor1_name_eng,
-        nurseKor: lang === 'ko' ? nurse2_name_kor : nurse2_name_eng,
-        nurseMn: lang === 'ko' ? nurse1_name_kor : nurse1_name_eng,
+        doctorKor: lang === "ko" ? doctor2_name_kor : doctor2_name_eng,
+        doctorMn: lang === "ko" ? doctor1_name_kor : doctor1_name_eng,
+        nurseKor: lang === "ko" ? nurse2_name_kor : nurse2_name_eng,
+        nurseMn: lang === "ko" ? nurse1_name_kor : nurse1_name_eng,
         pa_diagnosis,
         pa_symptoms,
         pa_care_sofar,
@@ -514,11 +515,11 @@ export default function WorkflowModal({ closeModal }: Props) {
       } = chartInfo;
       body.info = {
         name: u_name_eng,
-        birth: birthday || '',
+        birth: birthday || "",
         gender: sex,
         country: langFile[lang].COUNTRY_MONGOLIA,
         ca_patient_status_summary,
-        ca_doctor_name: lang === 'ko' ? ca_doctor_name_kor : ca_doctor_name_eng,
+        ca_doctor_name: lang === "ko" ? ca_doctor_name_kor : ca_doctor_name_eng,
         ca_department,
         ca_diagnosis,
         ca_plan,
@@ -528,7 +529,7 @@ export default function WorkflowModal({ closeModal }: Props) {
       };
     }
 
-    console.log('body : ', body);
+    console.log("body : ", body);
     return body;
   };
 
@@ -536,76 +537,76 @@ export default function WorkflowModal({ closeModal }: Props) {
     const body = getDownloadBody(type);
 
     const response = await fetch(`/api/download/pdf`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         ...body,
-        type: type === 'patient' ? 'patient' : 'carePlan',
+        type: type === "patient" ? "patient" : "carePlan",
       }),
     });
 
     if (response.ok) {
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      console.log('url > ', url);
-      const link = document.createElement('a');
+      console.log("url > ", url);
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', `${patientInfo.u_name_eng}.pdf`);
+      link.setAttribute("download", `${patientInfo.u_name_eng}.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
-      return 'SUCCESS';
+      return "SUCCESS";
     } else {
       const data = await response.json();
-      console.log('data > ', data);
-      return 'FAIL';
+      console.log("data > ", data);
+      return "FAIL";
     }
   };
 
   const handleRegistAlert = async (
     type: ModalType,
-    statusType?: 'regist' | 'complete' | 'save'
+    statusType?: "regist" | "complete" | "save"
   ) => {
     const tab = tabType;
-    let status: 'regist' | 'complete' | 'save' = statusType
+    let status: "regist" | "complete" | "save" = statusType
       ? statusType
-      : 'regist';
+      : "regist";
 
     let gubun: Gubun;
     switch (tab) {
-      case 'patient':
-        gubun = 'pa';
+      case "patient":
+        gubun = "pa";
         break;
-      case 'opinion':
-        gubun = 'op';
+      case "opinion":
+        gubun = "op";
         break;
-      case 'teleconsulting':
-        gubun = 'te';
+      case "teleconsulting":
+        gubun = "te";
         break;
-      case 'carePlans':
-        gubun = 'ca';
+      case "carePlans":
+        gubun = "ca";
         break;
-      case 'visitForm':
-        gubun = 'vif';
+      case "visitForm":
+        gubun = "vif";
         break;
-      case 'visitInfo':
-        gubun = 'vii';
-        break;
-
-      case 'visitResult':
-        gubun = 'vir';
+      case "visitInfo":
+        gubun = "vii";
         break;
 
-      case 'postConsulting':
-        gubun = 'poc';
+      case "visitResult":
+        gubun = "vir";
         break;
 
-      case 'postPrescript': {
-        gubun = 'pp';
-        if (type === 'completed') {
-          status = 'complete';
+      case "postConsulting":
+        gubun = "poc";
+        break;
+
+      case "postPrescript": {
+        gubun = "pp";
+        if (type === "completed") {
+          status = "complete";
         }
       }
     }
@@ -615,16 +616,16 @@ export default function WorkflowModal({ closeModal }: Props) {
   };
 
   const fetchAlertList = async () => {
-    const res = await getAlertList(chartId, 'status');
-    if (res !== 'ServerError') {
+    const res = await getAlertList(chartId, "status");
+    if (res !== "ServerError") {
       const filtered = res.filter(
         (i) =>
-          !(i.status === 'complete' && i.gubun === 'vir') &&
-          !(i.status === 'complete' && i.gubun === 'te') &&
-          !(i.status === 'save' && i.gubun === 'update')
+          !(i.status === "complete" && i.gubun === "vir") &&
+          !(i.status === "complete" && i.gubun === "te") &&
+          !(i.status === "save" && i.gubun === "update")
       );
       setAlertList(filtered);
-      console.log('상태 목록', res);
+      console.log("상태 목록", res);
     }
   };
 
@@ -632,35 +633,35 @@ export default function WorkflowModal({ closeModal }: Props) {
   const handleConfirmButton = async () => {
     let pass = true;
 
-    if (modalType === 'confirm') {
+    if (modalType === "confirm") {
       const res = await handleRegistAlert(modalType);
-      if (res === 'SUCCESS') {
-        if (tabType === 'visitResult') {
+      if (res === "SUCCESS") {
+        if (tabType === "visitResult") {
           const isCompleted = alertList.find(
-            (i) => i.gubun === 'vir' && i.status === 'complete'
+            (i) => i.gubun === "vir" && i.status === "complete"
           );
-          console.log('isCompleted > ', isCompleted);
+          console.log("isCompleted > ", isCompleted);
           if (!isCompleted) {
-            const res = await handleRegistAlert(modalType, 'complete');
+            const res = await handleRegistAlert(modalType, "complete");
           }
         }
         // 알람 요청 성공시, 알람 목록 재설정
         fetchAlertList();
       } else {
-        console.log('실패...');
+        console.log("실패...");
         pass = false;
       }
     } //
-    else if (modalType === 'download') {
+    else if (modalType === "download") {
       const res = await downloadPdf(tabType);
-      if (res === 'FAIL') {
+      if (res === "FAIL") {
         pass = false;
       }
     } //
-    else if (modalType === 'remove') {
+    else if (modalType === "remove") {
       // 처방 요청 목록 삭제
       const res = await deletePp(parseInt(selectedId.current));
-      if (res === 'FAIL') {
+      if (res === "FAIL") {
         pass = false;
       }
     }
@@ -684,34 +685,34 @@ export default function WorkflowModal({ closeModal }: Props) {
     setModalType(type);
 
     const res = await handleRegistAlert(type);
-    if (res === 'SUCCESS') {
-      console.log('알람 등록 성공');
+    if (res === "SUCCESS") {
+      console.log("알람 등록 성공");
       // 알람 요청 성공시, 알람 목록 재설정
       fetchAlertList();
       closePrescriptionModal();
       openAlertModal();
     } else {
-      console.log('알람 등록 실패');
+      console.log("알람 등록 실패");
     }
   };
 
   // 처방 요청 모달 열기
-  const openPsModal = (type: 'new' | 'manage') => {
+  const openPsModal = (type: "new" | "manage") => {
     setPrescriptionModalType(type);
-    if (type === 'new') {
-      selectedId.current = '';
+    if (type === "new") {
+      selectedId.current = "";
     }
     openPrescriptionModal();
   };
 
   // 처방요청 등록, 수정이 완료된 경우
   const onPrescriptComplete = async (data: PostPrescriptionModal | number) => {
-    if (prescriptionModalType === 'new') {
+    if (prescriptionModalType === "new") {
       // ✨ 처방전 등록 api 통신...
       // 성공시 처방전 정보를 리스트에 추가한다.
-      if (typeof data === 'number') {
+      if (typeof data === "number") {
         const pp = await getPostPrescription(data);
-        if (pp !== 'ServerError' && pp) {
+        if (pp !== "ServerError" && pp) {
           const formatted: PostPrescription = {
             ...pp,
             regist_name_kor: pp.regist_u_name_kor,
@@ -719,20 +720,20 @@ export default function WorkflowModal({ closeModal }: Props) {
           };
           setPrescriptions((prev) => [formatted, ...prev]);
 
-          const res = await handleRegistAlert(type, 'save');
-          if (res === 'SUCCESS') {
-            console.log('알람 등록 성공');
+          const res = await handleRegistAlert(type, "save");
+          if (res === "SUCCESS") {
+            console.log("알람 등록 성공");
             fetchAlertList();
           } else {
-            console.log('알람 등록 실패');
+            console.log("알람 등록 실패");
           }
         } else {
-          console.log('약처방 등록 성공시 해당 약처방 목록 추가 실패');
+          console.log("약처방 등록 성공시 해당 약처방 목록 추가 실패");
         }
       }
     } else {
-      if (typeof data !== 'number') {
-        setModalType('manage');
+      if (typeof data !== "number") {
+        setModalType("manage");
         setPrescriptions((prev) =>
           prev.map((p) => (p.pp_idx === data.pp_idx ? { ...p, ...data } : p))
         );
@@ -743,29 +744,29 @@ export default function WorkflowModal({ closeModal }: Props) {
   };
 
   const createMeeting = async (startDate: string) => {
-    console.log('createMeeting');
+    console.log("createMeeting");
     let endDate = dayjs(startDate)
-      .add(30, 'minutes')
-      .tz('Asia/Seoul')
+      .add(30, "minutes")
+      .tz("Asia/Seoul")
       .toISOString();
 
     const body = {
       startDate,
       endDate,
-      fields: ['hostRoomUrl', 'viewerRoomUrl'],
+      fields: ["hostRoomUrl", "viewerRoomUrl"],
     };
 
-    const response = await fetch('/api/meeting', {
-      method: 'POST',
+    const response = await fetch("/api/meeting", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
 
     if (response.ok) {
       const data: MeetingInfo = await response.json();
-      console.log('미팅 생성 성공! > ', data);
+      console.log("미팅 생성 성공! > ", data);
       return data.meetingId;
     } else {
       return null;
@@ -774,13 +775,13 @@ export default function WorkflowModal({ closeModal }: Props) {
 
   const deleteMeeting = async (meetingId: string) => {
     const res = await fetch(`/api/meeting/${meetingId}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
 
     if (res.ok) {
-      console.log('미팅 삭제 성공');
-      return 'SUCCESS';
-    } else return 'FAIL';
+      console.log("미팅 삭제 성공");
+      return "SUCCESS";
+    } else return "FAIL";
   };
 
   // 워크플로우 저장
@@ -962,8 +963,8 @@ export default function WorkflowModal({ closeModal }: Props) {
       if (te_date !== prevChartInfo.current.te_date) {
         if (te_link) {
           const prevMeetingId = te_link.slice(
-            te_link.lastIndexOf('/') + 1,
-            te_link.lastIndexOf('?')
+            te_link.lastIndexOf("/") + 1,
+            te_link.lastIndexOf("?")
           );
 
           if (prevMeetingId) {
@@ -982,7 +983,7 @@ export default function WorkflowModal({ closeModal }: Props) {
     }
 
     const res = await editWorkflow(chartId, userInfo.u_idx, body);
-    if (res === 'SUCCESS') {
+    if (res === "SUCCESS") {
       await fetchAlertList();
       prevChartInfo.current = { ...chartInfo, te_link: body.te_link };
       setLoading(false);
@@ -990,15 +991,15 @@ export default function WorkflowModal({ closeModal }: Props) {
 
       dispatch(workflowModalActions.edit());
     } else {
-      console.log('워크플로우 저장 실패');
+      console.log("워크플로우 저장 실패");
       if (meetingId) {
         const res = await fetch(`/api/meeting/${meetingId}`, {
-          method: 'DELETE',
+          method: "DELETE",
         });
         if (res.ok) {
-          console.log('워크플로우 저장 실패로 인한 회의 삭제');
+          console.log("워크플로우 저장 실패로 인한 회의 삭제");
         } else {
-          console.log('회의 삭제 실패');
+          console.log("회의 삭제 실패");
         }
       }
     }
@@ -1006,13 +1007,13 @@ export default function WorkflowModal({ closeModal }: Props) {
 
   const formatCost = (number: string) => {
     // 숫자와 구분기호(,)를 제외한 모든 문자를 제거
-    let cleanNumber = number.replace(/[^\d,]/g, '');
+    let cleanNumber = number.replace(/[^\d,]/g, "");
 
     // 구분기호(,)를 제거하고 숫자만 남김
-    let numericValue = cleanNumber.replace(/,/g, '');
+    let numericValue = cleanNumber.replace(/,/g, "");
 
     // 숫자 부분에 천 단위 구분 기호를 추가
-    return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   // input 변경된 값 반영
@@ -1020,11 +1021,11 @@ export default function WorkflowModal({ closeModal }: Props) {
     ev: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = ev.target;
-    if (ev.target.type === 'checkbox') {
-      setChartInfo((prev) => ({ ...prev, [name]: value === 'n' ? 'y' : 'n' }));
+    if (ev.target.type === "checkbox") {
+      setChartInfo((prev) => ({ ...prev, [name]: value === "n" ? "y" : "n" }));
     } else {
       let val = value;
-      if (name === 'vii_cost') {
+      if (name === "vii_cost") {
         val = formatCost(value);
       }
       setChartInfo((prev) => ({ ...prev, [name]: val }));
@@ -1035,12 +1036,12 @@ export default function WorkflowModal({ closeModal }: Props) {
   const setSchedule = (ev: ChangeEvent<HTMLInputElement>) => {
     const { name } = ev.target;
 
-    if (name === 'teleconsultingDate') {
+    if (name === "teleconsultingDate") {
       setChartInfo((prev) => ({
         ...prev,
         te_date: ev.target.value ? new Date(ev.target.value) : null,
       }));
-    } else if (name === 'visitDate') {
+    } else if (name === "visitDate") {
       setChartInfo((prev) => ({
         ...prev,
         vii_tad: ev.target.value ? new Date(ev.target.value) : null,
@@ -1051,9 +1052,9 @@ export default function WorkflowModal({ closeModal }: Props) {
   const handleScheduleBlur = (ev) => {
     console.log(prevChartInfo.current.te_date !== chartInfo.te_date);
     console.log(
-      'prev> ',
+      "prev> ",
       prevChartInfo.current.te_date,
-      'cur',
+      "cur",
       chartInfo.te_date
     );
 
@@ -1086,19 +1087,19 @@ export default function WorkflowModal({ closeModal }: Props) {
   // 처방 요청정보 삭제
   const deletePp = async (pp_idx: number) => {
     const res = await deletePostPrescription(pp_idx);
-    if (res === 'SUCCESS') {
+    if (res === "SUCCESS") {
       setPrescriptions((prev) => prev.filter((p) => p.pp_idx !== pp_idx));
-      return 'SUCCESS';
+      return "SUCCESS";
     } else {
-      console.log('처방 요청정보 목록 삭제 실패');
-      return 'FAIL';
+      console.log("처방 요청정보 목록 삭제 실패");
+      return "FAIL";
     }
   };
 
   // 진료목록 table menu에서 option을 선택한 경우
   const handleClickTableMenu = (type: string, pp_idx: number) => {
-    if (userInfo.country !== 'korea' || userInfo.permission !== 'admin') return;
-    if (type === 'remove') {
+    if (userInfo.country !== "korea" || userInfo.permission !== "admin") return;
+    if (type === "remove") {
       setModalType(type);
       selectedId.current = pp_idx.toString();
       openConfirmModal();
@@ -1109,52 +1110,52 @@ export default function WorkflowModal({ closeModal }: Props) {
   useEffect(() => {
     (async () => {
       const p = await getPatient(patientId);
-      if (p !== 'ServerError') {
+      if (p !== "ServerError") {
         setPatientInfo(p);
       } else {
-        console.log('환자정보 불러오기 실패 / 500');
+        console.log("환자정보 불러오기 실패 / 500");
       }
 
-      if (userInfo && userInfo.country !== 'korea') {
+      if (userInfo && userInfo.country !== "korea") {
         const org = await getOrg(userInfo.o_idx);
-        if (org !== 'ServerError') {
+        if (org !== "ServerError") {
           setOrg(org);
         } else {
-          console.log('기관정보 불러오기 실패');
+          console.log("기관정보 불러오기 실패");
         }
       }
 
       const pp = await getPostPrescriptions(chartId);
-      if (pp !== 'ServerError') {
+      if (pp !== "ServerError") {
         setPrescriptions(pp);
       } else {
-        console.log('처방 요청정보 목록 불러오기 실패');
+        console.log("처방 요청정보 목록 불러오기 실패");
       }
     })();
   }, []);
 
   // 진료정보 불러오기
   useEffect(() => {
-    if (type === 'manage') {
+    if (type === "manage") {
       (async () => {
         const res = await getWorkflow(chartId);
-        if (res && res !== 'ServerError') {
+        if (res && res !== "ServerError") {
           setChartInfo(res);
           prevChartInfo.current = res;
         } else {
-          console.log('진료 정보 불러오기 실패');
+          console.log("진료 정보 불러오기 실패");
         }
       })();
-    } else if (type === 'new' && !prevChartInfo.current) {
+    } else if (type === "new" && !prevChartInfo.current) {
       prevChartInfo.current = chartInfo;
     }
   }, [type]);
 
   // 언어, 사용자 권한에 따른 처방 요청정보 삭제 권한 제한
   useEffect(() => {
-    let m = getTableRowMenuOptions('remove', lang);
+    let m = getTableRowMenuOptions("remove", lang);
     m = m.map((i) =>
-      userInfo.country === 'korea' && userInfo.permission === 'admin'
+      userInfo.country === "korea" && userInfo.permission === "admin"
         ? { ...i, allowed: true }
         : { ...i, allowed: false }
     );
@@ -1189,7 +1190,7 @@ export default function WorkflowModal({ closeModal }: Props) {
               chartId
             );
 
-            if (files !== 'ServerError') {
+            if (files !== "ServerError") {
               filesDataCopy = {
                 ...filesDataCopy,
                 [gubun1]: { ...filesDataCopy[gubun1], [gubun2]: files },
@@ -1281,7 +1282,7 @@ export default function WorkflowModal({ closeModal }: Props) {
 
       <ModalFrame
         completeBtnText={
-          lang !== 'ko' ? langFile[lang].MODAL_MANAGE_COMPLETE_BUTTON_TEXT : ''
+          lang !== "ko" ? langFile[lang].MODAL_MANAGE_COMPLETE_BUTTON_TEXT : ""
         }
         chatting={<Chatting tab={tabType} alertList={alertList} />}
         onComplete={saveWorkflow}
@@ -1295,15 +1296,15 @@ export default function WorkflowModal({ closeModal }: Props) {
             <li
               key={value + idx}
               data-tab={value}
-              className={tabType === value ? 'selected' : ''}
+              className={tabType === value ? "selected" : ""}
             >
               {key}
             </li>
           ))}
         </ul>
-          {tabType === 'patient' && (
-            <PatientView
-              chartInfo={chartInfo}
+        {tabType === "patient" && (
+          <PatientView
+            chartInfo={chartInfo}
             patientInfo={patientInfo}
             lang={lang}
             handleInputChange={handleInputChange}
@@ -1319,8 +1320,56 @@ export default function WorkflowModal({ closeModal }: Props) {
             handleSetFiles={handleSetFiles}
           />
         )}
+        {tabType === "preliminary" && (
+          <PreliminaryView
+            preliminaryInfo={
+              {
+                pw_idx: 0,
+                p_chart_no: "",
+                pw_date: new Date(),
+                pw_weight: 0,
+                pw_height: 0,
+                pw_bmi: 0,
+                pw_memo: "",
+                pw_registdate_utc: new Date(),
+                pw_registdate_local: new Date(),
+              } as Preliminary
+            }
+            patientInfo={patientInfo}
+            lang={lang}
+            userInfo={userInfo}
+            handleTopBtnClick={handleTopBtnClick}
+            handleInputChange={handleInputChange}
+            org={{
+              o_idx: 0,
+              u_idx: 0,
+              o_code: "",
+              parent_o_idx: 0,
+              o_name_kor: "",
+              o_name_eng: "",
+              country: "",
+              domain: "",
+              contract_sd: "",
+              contract_ed: "",
+              contract_email: "",
+              contract_tel: "",
+              note: "",
+              registdate_local: undefined,
+              registdate_utc: undefined,
+              completed_tele_number: 0,
+              completed_visit_number: 0,
+              u_number: 0,
+              p_number: 0,
+              u_name_kor: "",
+              u_name_eng: "",
+              use_ch: "n",
+              qr_code: "",
+            }}
+            chartInfo={undefined}
+          />
+        )}
 
-        {tabType === 'opinion' && (
+        {tabType === "opinion" && (
           <OpinionView
             chartInfo={chartInfo}
             lang={lang}
@@ -1335,15 +1384,15 @@ export default function WorkflowModal({ closeModal }: Props) {
           />
         )}
 
-        {tabType === 'teleconsulting' && (
+        {tabType === "teleconsulting" && (
           <div className="teleconsultation-tab relative">
             <div className="flex gap-5 header-buttons">
-              {userInfo && userInfo.country !== 'korea' && (
+              {userInfo && userInfo.country !== "korea" && (
                 <button
                   className="primary-btn"
                   type="button"
                   onClick={() => {
-                    handleTopBtnClick('confirm');
+                    handleTopBtnClick("confirm");
                   }}
                 >
                   {langFile[lang].WORKFLOW_MODAL_REQUEST_SCHEDULING_BUTTON_TEXT}
@@ -1373,16 +1422,16 @@ export default function WorkflowModal({ closeModal }: Props) {
                     {/* 협진일시 */}
                   </label>
                   <input
-                    disabled={userInfo.country !== 'korea'}
+                    disabled={userInfo.country !== "korea"}
                     value={
                       chartInfo.te_date
                         ? convertTimeToStr(
-                            'korea',
+                            "korea",
                             chartInfo.te_date.toString(),
                             null,
-                            'YYYY-MM-DDTHH:mm:ss'
+                            "YYYY-MM-DDTHH:mm:ss"
                           )
-                        : ''
+                        : ""
                     }
                     onBlur={handleScheduleBlur}
                     onChange={setSchedule}
@@ -1396,7 +1445,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                 <div className="input-col-wrap flex-1">
                   <span className="label flex gap-3 align-center">
                     <FlagMongolSq />
-                    {langFile[lang].WORKFLOW_MODAL_TELE_DATE} {'  '}
+                    {langFile[lang].WORKFLOW_MODAL_TELE_DATE} {"  "}
                     {/* 협진일시 */}
                     <span className="desc">
                       ({langFile[lang].WORKFLOW_MODAL_TELE_DATE_META_INFO})
@@ -1406,12 +1455,12 @@ export default function WorkflowModal({ closeModal }: Props) {
                   <div className="input input-disabled">
                     {chartInfo.te_date
                       ? convertTimeToStr(
-                          'mongolia',
+                          "mongolia",
                           chartInfo.te_date.toString(),
                           null,
-                          'YYYY-MM-DD,a hh:mm'
+                          "YYYY-MM-DD,a hh:mm"
                         )
-                      : ''}
+                      : ""}
                   </div>
                 </div>
               </div>
@@ -1434,7 +1483,7 @@ export default function WorkflowModal({ closeModal }: Props) {
           </div>
         )}
 
-        {tabType === 'carePlans' && (
+        {tabType === "carePlans" && (
           <div className="care-plans-tab relative">
             <div className="flex gap-10 header-buttons">
               {/* <button
@@ -1446,11 +1495,11 @@ export default function WorkflowModal({ closeModal }: Props) {
                 // 치료계획서 다운로드
                 <Download />
               </button> */}
-              {userInfo && userInfo.country === 'korea' && !userInfo.p_idx && (
+              {userInfo && userInfo.country === "korea" && !userInfo.p_idx && (
                 <button
                   className="primary-btn"
                   type="button"
-                  onClick={() => handleTopBtnClick('confirm')}
+                  onClick={() => handleTopBtnClick("confirm")}
                 >
                   {langFile[lang].WORKFLOW_MODAL_CONFIRM_CP}
                   <Send />
@@ -1479,8 +1528,8 @@ export default function WorkflowModal({ closeModal }: Props) {
                       autoComplete="off"
                       value={
                         patientInfo?.birthday
-                          ? dayjs(patientInfo?.birthday).format('YYYY/MM/DD')
-                          : ''
+                          ? dayjs(patientInfo?.birthday).format("YYYY/MM/DD")
+                          : ""
                       }
                       disabled={true}
                       type="text"
@@ -1497,7 +1546,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     </label>
                     <input
                       autoComplete="off"
-                      value={patientInfo?.sex || ''}
+                      value={patientInfo?.sex || ""}
                       disabled
                       type="text"
                       name="p_sex"
@@ -1534,7 +1583,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     name="ca_patient_status_summary"
                     id="ca_patient_status_summary"
                     className="textarea-m"
-                    value={chartInfo.ca_patient_status_summary || ''}
+                    value={chartInfo.ca_patient_status_summary || ""}
                     onChange={handleInputChange}
                   ></textarea>
                 </div>
@@ -1561,7 +1610,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       <SelectInput
                         o_idx={
                           userInfo
-                            ? userInfo.country === 'korea'
+                            ? userInfo.country === "korea"
                               ? userInfo.o_idx
                               : org?.parent_o_idx || 0
                             : 0
@@ -1570,10 +1619,10 @@ export default function WorkflowModal({ closeModal }: Props) {
                         onSelect={handleSelect}
                         selected={
                           chartInfo.ca_doctor_idx
-                            ? lang === 'ko'
-                              ? chartInfo.ca_doctor_name_kor || ''
-                              : chartInfo.ca_doctor_name_eng || ''
-                            : ''
+                            ? lang === "ko"
+                              ? chartInfo.ca_doctor_name_kor || ""
+                              : chartInfo.ca_doctor_name_eng || ""
+                            : ""
                         }
                         disabled={!!(userInfo && userInfo.p_idx)}
                       />
@@ -1591,7 +1640,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                         name="ca_department"
                         id="ca_department"
                         className="input"
-                        value={chartInfo.ca_department || ''}
+                        value={chartInfo.ca_department || ""}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -1608,7 +1657,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       className="textarea-m"
                       name="ca_diagnosis"
                       id="ca_diagnosis"
-                      value={chartInfo.ca_diagnosis || ''}
+                      value={chartInfo.ca_diagnosis || ""}
                       onChange={handleInputChange}
                     ></textarea>
                   </div>
@@ -1624,7 +1673,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       name="ca_plan"
                       id="ca_plan"
                       className="textarea-l"
-                      value={chartInfo.ca_plan || ''}
+                      value={chartInfo.ca_plan || ""}
                       onChange={handleInputChange}
                     ></textarea>
                   </div>
@@ -1640,7 +1689,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       name="ca_period_cost"
                       id="ca_period_cost"
                       className="textarea-s"
-                      value={chartInfo.ca_period_cost || ''}
+                      value={chartInfo.ca_period_cost || ""}
                       onChange={handleInputChange}
                     ></textarea>
                   </div>
@@ -1656,7 +1705,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       name="ca_caution"
                       id="ca_caution"
                       className="textarea-m"
-                      value={chartInfo.ca_caution || ''}
+                      value={chartInfo.ca_caution || ""}
                       onChange={handleInputChange}
                     ></textarea>
                   </div>
@@ -1672,7 +1721,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       name="ca_cost_detail"
                       id="ca_cost_detail"
                       className="textarea-m"
-                      value={chartInfo.ca_cost_detail || ''}
+                      value={chartInfo.ca_cost_detail || ""}
                       onChange={handleInputChange}
                     ></textarea>
                   </div>
@@ -1686,7 +1735,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       labelText
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="첨부"
-                      files={filesData[getFileGubun(tabType)]['첨부']}
+                      files={filesData[getFileGubun(tabType)]["첨부"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -1698,14 +1747,14 @@ export default function WorkflowModal({ closeModal }: Props) {
           </div>
         )}
 
-        {tabType === 'visitForm' && (
+        {tabType === "visitForm" && (
           <div className="visit-form-tab relative">
             <div className="flex gap-10 header-buttons">
-              {userInfo && userInfo.country !== 'korea' && !userInfo.p_idx && (
+              {userInfo && userInfo.country !== "korea" && !userInfo.p_idx && (
                 <button
                   className="primary-btn"
                   type="button"
-                  onClick={() => handleTopBtnClick('confirm')}
+                  onClick={() => handleTopBtnClick("confirm")}
                 >
                   {langFile[lang].WORKFLOW_RQ_CONFIRMATION_OF_VI}
                   <Send />
@@ -1744,7 +1793,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                             id="hospitalization"
                             value="y"
                             onChange={handleInputChange}
-                            checked={chartInfo.vif_ho === 'y'}
+                            checked={chartInfo.vif_ho === "y"}
                           />
                           <label htmlFor="hospitalization" className="label">
                             {langFile[lang].WORKFLOW_MODAL_VF_HOSPITALIZATION}
@@ -1760,7 +1809,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                             id="outPatient"
                             value="n"
                             onChange={handleInputChange}
-                            checked={chartInfo.vif_ho === 'n'}
+                            checked={chartInfo.vif_ho === "n"}
                           />
                           <label htmlFor="outPatient" className="label">
                             {langFile[lang].WORKFLOW_MODAL_VF_OUTPATIENT}
@@ -1785,7 +1834,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                             id="basic"
                             value="y"
                             onChange={handleInputChange}
-                            checked={chartInfo.vif_pr === 'y'}
+                            checked={chartInfo.vif_pr === "y"}
                           />
                           <label htmlFor="basic" className="label">
                             {langFile[lang].WORKFLOW_MODAL_VF_BASIC_ROOM}
@@ -1801,7 +1850,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                             id="primium"
                             value="n"
                             onChange={handleInputChange}
-                            checked={chartInfo.vif_pr === 'n'}
+                            checked={chartInfo.vif_pr === "n"}
                           />
                           <label htmlFor="primium" className="label">
                             {langFile[lang].WORKFLOW_MODAL_VF_PREMIUM_ROOM}
@@ -1826,7 +1875,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                             id="use"
                             value="y"
                             onChange={handleInputChange}
-                            checked={chartInfo.vif_ve === 'y'}
+                            checked={chartInfo.vif_ve === "y"}
                           />
                           <label htmlFor="use" className="label">
                             {langFile[lang].WORKFLOW_MODAL_VF_REQUIRED}
@@ -1842,7 +1891,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                             id="noUse"
                             value="n"
                             onChange={handleInputChange}
-                            checked={chartInfo.vif_ve === 'n'}
+                            checked={chartInfo.vif_ve === "n"}
                           />
                           <label htmlFor="noUse" className="label">
                             {langFile[lang].WORKFLOW_MODAL_VF_UNNECESSARY}
@@ -1869,7 +1918,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                             id="with"
                             value="y"
                             onChange={handleInputChange}
-                            checked={chartInfo.vif_with === 'y'}
+                            checked={chartInfo.vif_with === "y"}
                           />
                           <label htmlFor="with" className="label">
                             {langFile[lang].WORKFLOW_MODAL_VF_YES}
@@ -1885,7 +1934,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                             id="without"
                             value="n"
                             onChange={handleInputChange}
-                            checked={chartInfo.vif_with === 'n'}
+                            checked={chartInfo.vif_with === "n"}
                           />
                           <label htmlFor="without" className="label">
                             {langFile[lang].WORKFLOW_MODAL_VF_NO}
@@ -1908,7 +1957,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     name="vif_other"
                     id="vif_other"
                     className="textarea-m"
-                    value={chartInfo.vif_other || ''}
+                    value={chartInfo.vif_other || ""}
                     onChange={handleInputChange}
                   ></textarea>
                 </div>
@@ -1935,9 +1984,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_11"
                           id="vif_health_screening_11"
-                          value={chartInfo.vif_health_screening_11 || 'n'}
+                          value={chartInfo.vif_health_screening_11 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_11 === 'y'}
+                          checked={chartInfo.vif_health_screening_11 === "y"}
                         />
                         <label htmlFor="vif_health_screening_11">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_P_BASIC}
@@ -1950,9 +1999,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_12"
                           id="vif_health_screening_12"
-                          value={chartInfo.vif_health_screening_12 || 'n'}
+                          value={chartInfo.vif_health_screening_12 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_12 === 'y'}
+                          checked={chartInfo.vif_health_screening_12 === "y"}
                         />
                         <label htmlFor="vif_health_screening_12">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_P_DIGESTIVE}
@@ -1965,9 +2014,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_13"
                           id="vif_health_screening_13"
-                          value={chartInfo.vif_health_screening_13 || 'n'}
+                          value={chartInfo.vif_health_screening_13 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_13 === 'y'}
+                          checked={chartInfo.vif_health_screening_13 === "y"}
                         />
                         <label htmlFor="vif_health_screening_13">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_P_CARDIAC}
@@ -1980,9 +2029,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_14"
                           id="vif_health_screening_14"
-                          value={chartInfo.vif_health_screening_14 || 'n'}
+                          value={chartInfo.vif_health_screening_14 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_14 === 'y'}
+                          checked={chartInfo.vif_health_screening_14 === "y"}
                         />
                         <label htmlFor="vif_health_screening_14">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_P_PULMONARY}
@@ -1995,9 +2044,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_15"
                           id="vif_health_screening_15"
-                          value={chartInfo.vif_health_screening_15 || 'n'}
+                          value={chartInfo.vif_health_screening_15 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_15 === 'y'}
+                          checked={chartInfo.vif_health_screening_15 === "y"}
                         />
                         <label htmlFor="vif_health_screening_15">
                           {
@@ -2013,9 +2062,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_16"
                           id="vif_health_screening_16"
-                          value={chartInfo.vif_health_screening_16 || 'n'}
+                          value={chartInfo.vif_health_screening_16 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_16 === 'y'}
+                          checked={chartInfo.vif_health_screening_16 === "y"}
                         />
                         <label htmlFor="vif_health_screening_16">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_P_GYNECOLOGICAL}
@@ -2028,9 +2077,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_17"
                           id="vif_health_screening_17"
-                          value={chartInfo.vif_health_screening_17 || 'n'}
+                          value={chartInfo.vif_health_screening_17 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_17 === 'y'}
+                          checked={chartInfo.vif_health_screening_17 === "y"}
                         />
                         <label htmlFor="vif_health_screening_17">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_P_PREMIUM}
@@ -2052,9 +2101,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_21"
                           id="vif_health_screening_21"
-                          value={chartInfo.vif_health_screening_21 || 'n'}
+                          value={chartInfo.vif_health_screening_21 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_21 === 'y'}
+                          checked={chartInfo.vif_health_screening_21 === "y"}
                         />
                         <label htmlFor="vif_health_screening_21">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_CT_BR}
@@ -2067,9 +2116,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_22"
                           id="vif_health_screening_22"
-                          value={chartInfo.vif_health_screening_22 || 'n'}
+                          value={chartInfo.vif_health_screening_22 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_22 === 'y'}
+                          checked={chartInfo.vif_health_screening_22 === "y"}
                         />
                         <label htmlFor="vif_health_screening_22">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_CT_CH}
@@ -2082,9 +2131,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_23"
                           id="vif_health_screening_23"
-                          value={chartInfo.vif_health_screening_23 || 'n'}
+                          value={chartInfo.vif_health_screening_23 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_23 === 'y'}
+                          checked={chartInfo.vif_health_screening_23 === "y"}
                         />
                         <label htmlFor="vif_health_screening_23">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_CT_AB_PE}
@@ -2098,9 +2147,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_24"
                           id="vif_health_screening_24"
-                          value={chartInfo.vif_health_screening_24 || 'n'}
+                          value={chartInfo.vif_health_screening_24 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_24 === 'y'}
+                          checked={chartInfo.vif_health_screening_24 === "y"}
                         />
                         <label htmlFor="vif_health_screening_24">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_CT_HR_CO}
@@ -2113,9 +2162,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_25"
                           id="vif_health_screening_25"
-                          value={chartInfo.vif_health_screening_25 || 'n'}
+                          value={chartInfo.vif_health_screening_25 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_25 === 'y'}
+                          checked={chartInfo.vif_health_screening_25 === "y"}
                         />
                         <label htmlFor="vif_health_screening_25">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_MRI_BR}
@@ -2129,9 +2178,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_26"
                           id="vif_health_screening_26"
-                          value={chartInfo.vif_health_screening_26 || 'n'}
+                          value={chartInfo.vif_health_screening_26 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_26 === 'y'}
+                          checked={chartInfo.vif_health_screening_26 === "y"}
                         />
                         <label htmlFor="vif_health_screening_26">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_MRI_LU}
@@ -2144,9 +2193,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_27"
                           id="vif_health_screening_27"
-                          value={chartInfo.vif_health_screening_27 || 'n'}
+                          value={chartInfo.vif_health_screening_27 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_27 === 'y'}
+                          checked={chartInfo.vif_health_screening_27 === "y"}
                         />
                         <label htmlFor="vif_health_screening_27">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_MRI_CE}
@@ -2159,9 +2208,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_28"
                           id="vif_health_screening_28"
-                          value={chartInfo.vif_health_screening_28 || 'n'}
+                          value={chartInfo.vif_health_screening_28 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_28 === 'y'}
+                          checked={chartInfo.vif_health_screening_28 === "y"}
                         />
                         <label htmlFor="vif_health_screening_28">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_MRI_MRA_BR}
@@ -2174,9 +2223,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_29"
                           id="vif_health_screening_29"
-                          value={chartInfo.vif_health_screening_29 || 'n'}
+                          value={chartInfo.vif_health_screening_29 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_29 === 'y'}
+                          checked={chartInfo.vif_health_screening_29 === "y"}
                         />
                         <label htmlFor="vif_health_screening_29">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_UL_PE}
@@ -2189,9 +2238,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_30"
                           id="vif_health_screening_30"
-                          value={chartInfo.vif_health_screening_30 || 'n'}
+                          value={chartInfo.vif_health_screening_30 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_30 === 'y'}
+                          checked={chartInfo.vif_health_screening_30 === "y"}
                         />
                         <label htmlFor="vif_health_screening_30">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_UL_CH}
@@ -2204,9 +2253,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_31"
                           id="vif_health_screening_31"
-                          value={chartInfo.vif_health_screening_31 || 'n'}
+                          value={chartInfo.vif_health_screening_31 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_31 === 'y'}
+                          checked={chartInfo.vif_health_screening_31 === "y"}
                         />
                         <label htmlFor="vif_health_screening_31">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_UL_TH}
@@ -2219,9 +2268,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_32"
                           id="vif_health_screening_32"
-                          value={chartInfo.vif_health_screening_32 || 'n'}
+                          value={chartInfo.vif_health_screening_32 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_32 === 'y'}
+                          checked={chartInfo.vif_health_screening_32 === "y"}
                         />
                         <label htmlFor="vif_health_screening_32">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_UL_CA}
@@ -2234,9 +2283,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_33"
                           id="vif_health_screening_33"
-                          value={chartInfo.vif_health_screening_33 || 'n'}
+                          value={chartInfo.vif_health_screening_33 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_33 === 'y'}
+                          checked={chartInfo.vif_health_screening_33 === "y"}
                         />
                         <label htmlFor="vif_health_screening_33">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_UL_HT}
@@ -2249,9 +2298,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_34"
                           id="vif_health_screening_34"
-                          value={chartInfo.vif_health_screening_34 || 'n'}
+                          value={chartInfo.vif_health_screening_34 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_34 === 'y'}
+                          checked={chartInfo.vif_health_screening_34 === "y"}
                         />
                         <label htmlFor="vif_health_screening_34">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_UL_PR}
@@ -2264,9 +2313,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_35"
                           id="vif_health_screening_35"
-                          value={chartInfo.vif_health_screening_35 || 'n'}
+                          value={chartInfo.vif_health_screening_35 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_35 === 'y'}
+                          checked={chartInfo.vif_health_screening_35 === "y"}
                         />
                         <label htmlFor="vif_health_screening_35">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_PET_CT_BR}
@@ -2279,9 +2328,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_36"
                           id="vif_health_screening_36"
-                          value={chartInfo.vif_health_screening_36 || 'n'}
+                          value={chartInfo.vif_health_screening_36 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_36 === 'y'}
+                          checked={chartInfo.vif_health_screening_36 === "y"}
                         />
                         <label htmlFor="vif_health_screening_36">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_PET_CT_TR}
@@ -2294,9 +2343,9 @@ export default function WorkflowModal({ closeModal }: Props) {
                           type="checkbox"
                           name="vif_health_screening_37"
                           id="vif_health_screening_37"
-                          value={chartInfo.vif_health_screening_37 || 'n'}
+                          value={chartInfo.vif_health_screening_37 || "n"}
                           onChange={handleInputChange}
-                          checked={chartInfo.vif_health_screening_37 === 'y'}
+                          checked={chartInfo.vif_health_screening_37 === "y"}
                         />
                         <label htmlFor="vif_health_screening_37">
                           {langFile[lang].WORKFLOW_MODAL_VF_HSP_A_PET_CT_BR_TR}
@@ -2330,7 +2379,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       labelText
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="예약확인증"
-                      files={filesData[getFileGubun(tabType)]['예약확인증']}
+                      files={filesData[getFileGubun(tabType)]["예약확인증"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2347,7 +2396,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       labelText
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="초청장"
-                      files={filesData[getFileGubun(tabType)]['초청장']}
+                      files={filesData[getFileGubun(tabType)]["초청장"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2364,7 +2413,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       labelText
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="여권"
-                      files={filesData[getFileGubun(tabType)]['여권']}
+                      files={filesData[getFileGubun(tabType)]["여권"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2383,7 +2432,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       labelText
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="신원확인서"
-                      files={filesData[getFileGubun(tabType)]['신원확인서']}
+                      files={filesData[getFileGubun(tabType)]["신원확인서"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2403,7 +2452,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       labelText
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="재직증명서"
-                      files={filesData[getFileGubun(tabType)]['재직증명서']}
+                      files={filesData[getFileGubun(tabType)]["재직증명서"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2415,14 +2464,14 @@ export default function WorkflowModal({ closeModal }: Props) {
           </div>
         )}
 
-        {tabType === 'visitInfo' && (
+        {tabType === "visitInfo" && (
           <div className="visit-info-tab relative">
             <div className="flex gap-5 header-buttons">
-              {userInfo && userInfo.country === 'korea' && !userInfo.p_idx && (
+              {userInfo && userInfo.country === "korea" && !userInfo.p_idx && (
                 <button
                   className="primary-btn"
                   type="button"
-                  onClick={() => handleTopBtnClick('confirm')}
+                  onClick={() => handleTopBtnClick("confirm")}
                 >
                   {langFile[lang].WORKFLOW_MODAL_CONFIRM_VISIT_INFO_BUTTON_TEXT}
                   <Send />
@@ -2451,16 +2500,16 @@ export default function WorkflowModal({ closeModal }: Props) {
                       {/* 진료예약일 */}
                     </label>
                     <input
-                      disabled={userInfo.country !== 'korea'}
+                      disabled={userInfo.country !== "korea"}
                       value={
                         chartInfo.vii_tad
                           ? convertTimeToStr(
-                              'korea',
+                              "korea",
                               chartInfo.vii_tad.toString(),
                               null,
-                              'YYYY-MM-DDTHH:mm:ss'
+                              "YYYY-MM-DDTHH:mm:ss"
                             )
-                          : ''
+                          : ""
                       }
                       onChange={setSchedule}
                       className="input"
@@ -2488,12 +2537,12 @@ export default function WorkflowModal({ closeModal }: Props) {
                     <div className="input input-disabled">
                       {chartInfo.vii_tad
                         ? convertTimeToStr(
-                            'mongolia',
+                            "mongolia",
                             chartInfo.vii_tad.toString(),
                             null,
-                            'YYYY-MM-DD,a hh:mm'
+                            "YYYY-MM-DD,a hh:mm"
                           )
-                        : ''}
+                        : ""}
                     </div>
                   </div>
                 </div>
@@ -2511,7 +2560,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       className="input"
                       name="vii_cost"
                       id="vii_cost"
-                      value={chartInfo.vii_cost || ''}
+                      value={chartInfo.vii_cost || ""}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -2528,7 +2577,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="검사항목및예약일"
                       files={
-                        filesData[getFileGubun(tabType)]['검사항목및예약일']
+                        filesData[getFileGubun(tabType)]["검사항목및예약일"]
                       }
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
@@ -2544,7 +2593,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     <DropFileInput
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="주의사항"
-                      files={filesData[getFileGubun(tabType)]['주의사항']}
+                      files={filesData[getFileGubun(tabType)]["주의사항"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2563,7 +2612,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     className="textarea-m"
                     name="vii_precaution"
                     id="vii_precaution"
-                    value={chartInfo.vii_precaution || ''}
+                    value={chartInfo.vii_precaution || ""}
                     onChange={handleInputChange}
                   ></textarea>
                 </div>
@@ -2579,7 +2628,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     className="textarea-s"
                     name="vii_other"
                     id="vii_other"
-                    value={chartInfo.vii_other || ''}
+                    value={chartInfo.vii_other || ""}
                     onChange={handleInputChange}
                   ></textarea>
                 </div>
@@ -2598,7 +2647,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                         id="yes"
                         value="y"
                         onChange={handleInputChange}
-                        checked={chartInfo.vii_vi_yn === 'y'}
+                        checked={chartInfo.vii_vi_yn === "y"}
                       />
                       <label htmlFor="yes" className="label">
                         {langFile[lang].WORKFLOW_MODAL_VF_YES}
@@ -2614,7 +2663,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                         id="no"
                         value="n"
                         onChange={handleInputChange}
-                        checked={chartInfo.vii_vi_yn === 'n'}
+                        checked={chartInfo.vii_vi_yn === "n"}
                       />
                       <label htmlFor="no" className="label">
                         {langFile[lang].WORKFLOW_MODAL_VF_NO}
@@ -2627,7 +2676,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       type="text"
                       autoComplete="off"
                       className="check-input w-full"
-                      value={chartInfo.vii_vi_memo || ''}
+                      value={chartInfo.vii_vi_memo || ""}
                       onChange={handleInputChange}
                       name="vii_vi_memo"
                     />
@@ -2657,7 +2706,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       short
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="차량정보"
-                      files={filesData[getFileGubun(tabType)]['차량정보']}
+                      files={filesData[getFileGubun(tabType)]["차량정보"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2674,7 +2723,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       short
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="숙소정보"
-                      files={filesData[getFileGubun(tabType)]['숙소정보']}
+                      files={filesData[getFileGubun(tabType)]["숙소정보"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2691,7 +2740,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       short
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="병원위치"
-                      files={filesData[getFileGubun(tabType)]['병원위치']}
+                      files={filesData[getFileGubun(tabType)]["병원위치"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2710,7 +2759,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       short
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="비상연락망"
-                      files={filesData[getFileGubun(tabType)]['비상연락망']}
+                      files={filesData[getFileGubun(tabType)]["비상연락망"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2722,14 +2771,14 @@ export default function WorkflowModal({ closeModal }: Props) {
           </div>
         )}
 
-        {tabType === 'visitResult' && (
+        {tabType === "visitResult" && (
           <div className="visit-result-tab relative">
             <div className="flex gap-5 header-buttons">
-              {userInfo && userInfo.country === 'korea' && !userInfo.p_idx && (
+              {userInfo && userInfo.country === "korea" && !userInfo.p_idx && (
                 <button
                   className="primary-btn"
                   type="button"
-                  onClick={() => handleTopBtnClick('confirm')}
+                  onClick={() => handleTopBtnClick("confirm")}
                 >
                   {
                     langFile[lang]
@@ -2761,7 +2810,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       short
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="처방전"
-                      files={filesData[getFileGubun(tabType)]['처방전']}
+                      files={filesData[getFileGubun(tabType)]["처방전"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2778,7 +2827,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       short
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="개인정보동의서"
-                      files={filesData[getFileGubun(tabType)]['개인정보동의서']}
+                      files={filesData[getFileGubun(tabType)]["개인정보동의서"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2795,7 +2844,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       short
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="검사동의서"
-                      files={filesData[getFileGubun(tabType)]['검사동의서']}
+                      files={filesData[getFileGubun(tabType)]["검사동의서"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2814,7 +2863,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       short
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="시술동의서"
-                      files={filesData[getFileGubun(tabType)]['시술동의서']}
+                      files={filesData[getFileGubun(tabType)]["시술동의서"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2834,7 +2883,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       short
                       disabled={!!(userInfo && userInfo.p_idx)}
                       type="입원동의서"
-                      files={filesData[getFileGubun(tabType)]['입원동의서']}
+                      files={filesData[getFileGubun(tabType)]["입원동의서"]}
                       onRemove={onRemove}
                       setFiles={handleSetFiles}
                       dropFile={() => {}}
@@ -2852,7 +2901,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     autoComplete="off"
                     name="vir_other"
                     id="vir_other"
-                    value={chartInfo.vir_other || ''}
+                    value={chartInfo.vir_other || ""}
                     onChange={handleInputChange}
                   ></textarea>
                 </div>
@@ -2861,15 +2910,15 @@ export default function WorkflowModal({ closeModal }: Props) {
           </div>
         )}
 
-        {tabType === 'postConsulting' && (
+        {tabType === "postConsulting" && (
           <div className="post-consulting-tab relative">
             <div className="flex gap-5 header-buttons">
-              {userInfo && userInfo.country !== 'korea' && !userInfo.p_idx && (
+              {userInfo && userInfo.country !== "korea" && !userInfo.p_idx && (
                 <button
                   className="primary-btn"
                   type="button"
                   onClick={() => {
-                    handleTopBtnClick('confirm');
+                    handleTopBtnClick("confirm");
                   }}
                 >
                   {langFile[lang].WORKFLOW_MODAL_CONFIRM_POST_CARE_BUTTON_TEXT}
@@ -2897,7 +2946,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     </label>
                     <input
                       autoComplete="off"
-                      value={patientInfo?.u_name_eng || ''}
+                      value={patientInfo?.u_name_eng || ""}
                       disabled={true}
                       type="text"
                       name="p_name_eng"
@@ -2918,11 +2967,11 @@ export default function WorkflowModal({ closeModal }: Props) {
                           ? dayjs()
                               .subtract(
                                 dayjs(patientInfo?.birthday).year(),
-                                'year'
+                                "year"
                               )
                               .year()
                               .toString()
-                          : ''
+                          : ""
                       }
                       disabled
                       type="text"
@@ -2939,7 +2988,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     </label>
                     <input
                       autoComplete="off"
-                      value={patientInfo?.sex || ''}
+                      value={patientInfo?.sex || ""}
                       disabled
                       type="text"
                       className="input input-disabled"
@@ -2959,8 +3008,8 @@ export default function WorkflowModal({ closeModal }: Props) {
                       autoComplete="off"
                       value={
                         patientInfo?.birthday
-                          ? dayjs(patientInfo.birthday).format('YYYY/MM/DD')
-                          : ''
+                          ? dayjs(patientInfo.birthday).format("YYYY/MM/DD")
+                          : ""
                       }
                       disabled
                       type="text"
@@ -2977,7 +3026,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     </label>
                     <input
                       autoComplete="off"
-                      value={patientInfo?.tall || ''}
+                      value={patientInfo?.tall || ""}
                       disabled
                       type="text"
                       className="input input-disabled"
@@ -2993,7 +3042,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     </label>
                     <input
                       autoComplete="off"
-                      value={patientInfo?.weight || ''}
+                      value={patientInfo?.weight || ""}
                       disabled
                       type="text"
                       className="input input-disabled"
@@ -3026,7 +3075,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     name="poc_current_status"
                     id="poc_current_status"
                     className="input textarea-s"
-                    value={chartInfo.poc_current_status || ''}
+                    value={chartInfo.poc_current_status || ""}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -3042,7 +3091,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     name="poc_progression"
                     id="poc_progression"
                     className="input textarea-m"
-                    value={chartInfo.poc_progression || ''}
+                    value={chartInfo.poc_progression || ""}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -3058,7 +3107,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     name="poc_needed"
                     id="poc_needed"
                     className="input textarea-s"
-                    value={chartInfo.poc_needed || ''}
+                    value={chartInfo.poc_needed || ""}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -3072,7 +3121,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     labelText
                     disabled={!!(userInfo && userInfo.p_idx)}
                     type="첨부"
-                    files={filesData[getFileGubun(tabType)]['첨부']}
+                    files={filesData[getFileGubun(tabType)]["첨부"]}
                     onRemove={onRemove}
                     setFiles={handleSetFiles}
                     dropFile={() => {}}
@@ -3083,14 +3132,14 @@ export default function WorkflowModal({ closeModal }: Props) {
           </div>
         )}
 
-        {tabType === 'postPrescript' && (
+        {tabType === "postPrescript" && (
           <div className="post-prescript-tab relative">
             <div className="flex gap-5 header-buttons">
-              {userInfo && userInfo.country === 'korea' && !userInfo.p_idx && (
+              {userInfo && userInfo.country === "korea" && !userInfo.p_idx && (
                 <button
                   className="primary-btn"
                   type="button"
-                  onClick={() => openPsModal('new')}
+                  onClick={() => openPsModal("new")}
                 >
                   {langFile[lang].WORKFLOW_MODAL_ADD_PRESCRIPTION_RQ}
                   <Plus />
@@ -3125,7 +3174,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                         <TableRow<TableMenuOption>
                           key={pp_idx}
                           handleClick={() => {
-                            openPsModal('manage');
+                            openPsModal("manage");
                             selectedId.current = pp_idx.toString();
                           }}
                           buttonText={
@@ -3140,15 +3189,15 @@ export default function WorkflowModal({ closeModal }: Props) {
                             userInfo
                               ? userInfo.p_idx
                                 ? []
-                                : userInfo.country === 'korea'
-                                ? ['remove']
+                                : userInfo.country === "korea"
+                                ? ["remove"]
                                 : []
                               : []
                           }
                         >
                           <td>{pp_idx}</td>
                           <td>
-                            {request_type === 'n'
+                            {request_type === "n"
                               ? langFile[lang]
                                   .WORKFLOW_MODAL_PP_PRESCRIPTION_RQ_TYPE1
                               : langFile[lang]
@@ -3156,17 +3205,17 @@ export default function WorkflowModal({ closeModal }: Props) {
                           </td>
                           <td className="body">{request_memo}</td>
                           <td>
-                            {lang === 'ko' ? regist_name_kor : regist_name_eng}
+                            {lang === "ko" ? regist_name_kor : regist_name_eng}
                           </td>
-                          <td>{status === 'y' ? 'Y' : 'N'}</td>
+                          <td>{status === "y" ? "Y" : "N"}</td>
                           <td>
                             {request_date
                               ? convertTimeToStr(
                                   userInfo?.country,
                                   request_date.toString(),
-                                  '-'
+                                  "-"
                                 )
-                              : '-'}
+                              : "-"}
                           </td>
                         </TableRow>
                       )
@@ -3182,13 +3231,13 @@ export default function WorkflowModal({ closeModal }: Props) {
 }
 
 type ChatStatusType =
-  | 'create'
-  | 'confirm'
-  | 'save'
-  | 'zoom'
-  | 'chatting'
-  | 'completed'
-  | 'edit';
+  | "create"
+  | "confirm"
+  | "save"
+  | "zoom"
+  | "chatting"
+  | "completed"
+  | "edit";
 
 type Chat = {
   name_kor: string | string[];
@@ -3215,10 +3264,10 @@ const Chatting = ({ tab, alertList }: ChattingProps) => {
   const alertListRef = useRef(null);
 
   const addComment = async (comment: string) => {
-    const res = await registAlert(chartId, 'chat', 'regist', { comment });
-    if (res === 'SUCCESS') {
-      console.log('log 쌓기 성공 > 이제 채팅 이벤트 발신');
-      emitEvent('chat message', {
+    const res = await registAlert(chartId, "chat", "regist", { comment });
+    if (res === "SUCCESS") {
+      console.log("log 쌓기 성공 > 이제 채팅 이벤트 발신");
+      emitEvent("chat message", {
         w_idx: chartId,
         registdate_utc: new Date().toISOString(),
         regist_name_kor: userInfo.u_name_kor,
@@ -3226,9 +3275,9 @@ const Chatting = ({ tab, alertList }: ChattingProps) => {
         chat_comment: comment,
       });
 
-      return 'SUCCESS';
+      return "SUCCESS";
     }
-    return 'FAIL';
+    return "FAIL";
   };
 
   useEffect(() => {
@@ -3249,10 +3298,10 @@ const Chatting = ({ tab, alertList }: ChattingProps) => {
 
   useEffect(() => {
     const fetchChattingList = async () => {
-      const res = await getAlertList(chartId, 'chat');
-      if (res !== 'ServerError') {
+      const res = await getAlertList(chartId, "chat");
+      if (res !== "ServerError") {
         setChattingList(res);
-        console.log('채팅 목록', res);
+        console.log("채팅 목록", res);
       }
     };
 
@@ -3260,11 +3309,11 @@ const Chatting = ({ tab, alertList }: ChattingProps) => {
   }, []);
 
   useEffect(() => {
-    emitEvent('join room', chartId);
-    console.log('join room');
+    emitEvent("join room", chartId);
+    console.log("join room");
 
-    onEvent('chat message', (data: ChatAlert) => {
-      console.log('채팅 소켓 수신 성공', data);
+    onEvent("chat message", (data: ChatAlert) => {
+      console.log("채팅 소켓 수신 성공", data);
 
       setChattingList((prev) => [...prev, data]);
     });
@@ -3280,10 +3329,10 @@ const Chatting = ({ tab, alertList }: ChattingProps) => {
         {alertList &&
           alertList.map((a, idx) => (
             <div key={a.w_idx + idx}>
-              {a.status === 'create' && (
+              {a.status === "create" && (
                 <>
                   <h3 className="created-date flex align-center">
-                    {lang === 'en' && (
+                    {lang === "en" && (
                       <span>
                         {langFile[lang].WORKFLOW_MODAL_CHATTING_CREATED}
                       </span>
@@ -3295,7 +3344,7 @@ const Chatting = ({ tab, alertList }: ChattingProps) => {
                       lang,
                       true
                     )}
-                    {lang === 'ko' && (
+                    {lang === "ko" && (
                       <span>
                         {langFile[lang].WORKFLOW_MODAL_CHATTING_CREATED}
                       </span>
@@ -3308,9 +3357,9 @@ const Chatting = ({ tab, alertList }: ChattingProps) => {
                 <p>
                   <span className="text">
                     <strong>
-                      {lang === 'ko'
-                        ? a.regist_name_kor || '-'
-                        : a.regist_name_eng || '-'}
+                      {lang === "ko"
+                        ? a.regist_name_kor || "-"
+                        : a.regist_name_eng || "-"}
                     </strong>
                     {getSystemAlertText(lang, a.gubun, a.status)}
                   </span>
@@ -3339,7 +3388,7 @@ const Chatting = ({ tab, alertList }: ChattingProps) => {
                 <div className="flex flex-col gap-5">
                   <span className="text">
                     <strong>
-                      {lang === 'ko' ? c.regist_name_kor : c.regist_name_eng}
+                      {lang === "ko" ? c.regist_name_kor : c.regist_name_eng}
                     </strong>
                     <span className="written-date">
                       {convertChatTime(
@@ -3375,12 +3424,12 @@ function ChattingInput({
   tab,
   lang,
 }: {
-  addChat: (comment: string) => Promise<'SUCCESS' | 'FAIL'>;
+  addChat: (comment: string) => Promise<"SUCCESS" | "FAIL">;
   userInfo: StoredUser | null;
   tab: WorkflowTabType;
   lang: LangType;
 }) {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const input = useRef(null);
 
   const handleSubmit = async (ev: FormEvent<HTMLFormElement>) => {
@@ -3389,8 +3438,8 @@ function ChattingInput({
     const res = await addChat(text);
 
     // 성공시
-    if (res === 'SUCCESS') {
-      setText('');
+    if (res === "SUCCESS") {
+      setText("");
       input.current && input.current.focus();
     }
   };
@@ -3436,32 +3485,32 @@ const PrescriptionModal = ({
   w_idx?: number;
   country?: string;
   item: PostPrescription | null;
-  type: 'new' | 'manage';
+  type: "new" | "manage";
   handleComplete: (data?: number | PostPrescriptionModal) => void;
   handleClose: () => void;
   handleActionButtonClick?: (type: ModalType) => void;
 }) => {
-  const gubun1 = '사후처방';
-  const gubun2 = '약처방';
+  const gubun1 = "사후처방";
+  const gubun2 = "약처방";
 
   const { lang } = useContext(LanguageContext);
   const [pInfo, setPInfo] = useState<PostPrescriptionModal>({
     pp_idx: 0,
-    request_type: 'n',
+    request_type: "n",
     request_date: new Date(),
-    request_memo: '',
-    status: 'n',
+    request_memo: "",
+    status: "n",
   });
 
   const [files, setFiles] = useState<File[] | SavedFile[]>([]);
 
   const setSelectedFiles = async (files: File[]) => {
-    if (type === 'new') {
+    if (type === "new") {
       setFiles(files);
     } else {
       const formData = new FormData();
       files.forEach((f) => {
-        formData.append('files', f);
+        formData.append("files", f);
       });
       const res = await uploadFiles(
         formData,
@@ -3472,7 +3521,7 @@ const PrescriptionModal = ({
         w_idx,
         pInfo.pp_idx
       );
-      if (res === 'SUCCESS') {
+      if (res === "SUCCESS") {
         const files = await getFiles(
           o_idx,
           gubun1,
@@ -3480,28 +3529,28 @@ const PrescriptionModal = ({
           w_idx,
           pInfo.pp_idx
         );
-        if (files !== 'ServerError') {
+        if (files !== "ServerError") {
           setFiles(files);
         } else {
-          console.log('파일목록 불러오기 실패');
+          console.log("파일목록 불러오기 실패");
         }
       } else {
-        console.log('pp 파일 업로드 실패');
+        console.log("pp 파일 업로드 실패");
       }
     }
   };
 
   const onRemove = async (id: string) => {
-    if (type === 'new') {
-      if (!('f_idx' in files[0])) {
+    if (type === "new") {
+      if (!("f_idx" in files[0])) {
         setFiles((prev) => (prev as File[]).filter((file) => file.name !== id));
       }
     } else {
       // 파일을 삭제하시겠습니까?
       if (confirm(langFile[lang].DELETE_FILE_CONFIRM_TEXT)) {
         const res = await deleteFile(parseInt(id));
-        if (res === 'SUCCESS') {
-          if ('f_idx' in files[0]) {
+        if (res === "SUCCESS") {
+          if ("f_idx" in files[0]) {
             setFiles((prev) =>
               (prev as SavedFile[]).filter(
                 (file) => file.f_idx !== parseInt(id)
@@ -3509,7 +3558,7 @@ const PrescriptionModal = ({
             );
           }
         } else {
-          console.log('파일 삭제');
+          console.log("파일 삭제");
         }
       }
     }
@@ -3520,17 +3569,17 @@ const PrescriptionModal = ({
     ev.preventDefault();
     const { request_date, request_memo, request_type, status } = pInfo;
     const body = {
-      request_date: dayjs(request_date).format('YYYY-MM-DD'),
+      request_date: dayjs(request_date).format("YYYY-MM-DD"),
       request_memo,
       request_type,
       status,
     };
-    if (type === 'new') {
+    if (type === "new") {
       const res = await registPostPrescription(o_idx, w_idx, u_idx, body);
-      if (res.message === 'SUCCESS') {
+      if (res.message === "SUCCESS") {
         const formData = new FormData();
         files.forEach((f) => {
-          formData.append('files', f);
+          formData.append("files", f);
         });
         const filesResponse = await uploadFiles(
           formData,
@@ -3541,20 +3590,20 @@ const PrescriptionModal = ({
           w_idx,
           res.pp_idx
         );
-        if (filesResponse === 'SUCCESS') {
+        if (filesResponse === "SUCCESS") {
           handleComplete(res.pp_idx);
         } else {
-          console.log('약처방 파일등록 실패');
+          console.log("약처방 파일등록 실패");
         }
       } else {
-        console.log('약처방 등록 실패');
+        console.log("약처방 등록 실패");
       }
     } else {
       const res = await editPostPrescription(item.pp_idx, body);
-      if (res === 'SUCCESS') {
+      if (res === "SUCCESS") {
         handleComplete(pInfo);
       } else {
-        console.log('처방 요청 정보 수정 실패');
+        console.log("처방 요청 정보 수정 실패");
       }
     }
   };
@@ -3564,10 +3613,10 @@ const PrescriptionModal = ({
     // ✨ 처방내용 확인요청, 처방요청 완료처리 api 통신...
     // 성공시 아래의 함수 실행 ( 처방요청 목록 모달 닫고, 알림 모달 띄움 )
     if (handleActionButtonClick) {
-      if (country === 'korea') {
-        handleActionButtonClick('confirm');
+      if (country === "korea") {
+        handleActionButtonClick("confirm");
       } else {
-        handleActionButtonClick('completed');
+        handleActionButtonClick("completed");
       }
     }
     // handleActionButtonClick && handleActionButtonClick();
@@ -3603,14 +3652,14 @@ const PrescriptionModal = ({
   useEffect(() => {
     const fetchFiles = async () => {
       const files = await getFiles(o_idx, gubun1, gubun2, w_idx, pInfo.pp_idx);
-      if (files !== 'ServerError') {
+      if (files !== "ServerError") {
         setFiles(files);
       } else {
-        console.log('파일목록 불러오기 실패');
+        console.log("파일목록 불러오기 실패");
       }
     };
 
-    if (type === 'manage' && pInfo.pp_idx) {
+    if (type === "manage" && pInfo.pp_idx) {
       fetchFiles();
     }
   }, [pInfo]);
@@ -3620,21 +3669,21 @@ const PrescriptionModal = ({
       onComplete={onComplete}
       onClose={handleClose}
       title={
-        type === 'new'
+        type === "new"
           ? langFile[lang].PRESCRIPTION_REQUEST_MODAL_NEW_TITLE // 약처방 요청 등록
           : langFile[lang].PRESCRIPTION_REQUEST_MODAL_MANAGE_TITLE // 약처방 요청 관리
       }
       completeBtnText={
-        type === 'new'
+        type === "new"
           ? langFile[lang].WORKFLOW_MODAL_PP_PRESCRIPTION_RQ_ADD_BUTTON_TEXT // 완료
           : langFile[lang].MODAL_MANAGE_COMPLETE_BUTTON_TEXT // 저장
       }
       width="basic"
-      hideBtns={(type === 'manage' && country !== 'korea') || patient}
+      hideBtns={(type === "manage" && country !== "korea") || patient}
     >
       <div className="relative">
         <div className="flex gap-5 header-buttons">
-          {type === 'manage' && country === 'korea' && !patient && (
+          {type === "manage" && country === "korea" && !patient && (
             <button className="primary-btn" type="button" onClick={topBtnClick}>
               {
                 langFile[lang]
@@ -3645,7 +3694,7 @@ const PrescriptionModal = ({
             </button>
           )}
 
-          {type === 'manage' && country !== 'korea' && !patient && (
+          {type === "manage" && country !== "korea" && !patient && (
             <button className="primary-btn" type="button" onClick={topBtnClick}>
               {
                 langFile[lang]
@@ -3674,9 +3723,9 @@ const PrescriptionModal = ({
               </span>
               <div
                 className={`radio-box flex gap-10 flex-1 ${
-                  type === 'manage' && country !== 'korea'
-                    ? 'input-disabled'
-                    : ''
+                  type === "manage" && country !== "korea"
+                    ? "input-disabled"
+                    : ""
                 }`}
               >
                 <span className="flex align-center gap-5">
@@ -3686,13 +3735,13 @@ const PrescriptionModal = ({
                   </label>
                   <input
                     onChange={handleChangeInput}
-                    checked={pInfo.request_type === 'n'}
+                    checked={pInfo.request_type === "n"}
                     value="n"
                     type="radio"
                     name="request_type"
                     id="n"
                     disabled={
-                      (type === 'manage' && country !== 'korea') || patient
+                      (type === "manage" && country !== "korea") || patient
                     }
                   />
                 </span>
@@ -3705,12 +3754,12 @@ const PrescriptionModal = ({
                   <input
                     onChange={handleChangeInput}
                     value="e"
-                    checked={pInfo.request_type === 'e'}
+                    checked={pInfo.request_type === "e"}
                     type="radio"
                     name="request_type"
                     id="e"
                     disabled={
-                      (type === 'manage' && country !== 'korea') || patient
+                      (type === "manage" && country !== "korea") || patient
                     }
                   />
                 </span>
@@ -3727,7 +3776,7 @@ const PrescriptionModal = ({
                 value={new Date(pInfo.request_date)}
                 onComplete={handleDate}
                 range={false}
-                disabled={(type === 'manage' && country !== 'korea') || patient}
+                disabled={(type === "manage" && country !== "korea") || patient}
               />
             </div>
           </div>
@@ -3743,7 +3792,7 @@ const PrescriptionModal = ({
               onChange={handleChangeInput}
               value={pInfo.request_memo}
               className="input textarea-m"
-              disabled={(type === 'manage' && country !== 'korea') || patient}
+              disabled={(type === "manage" && country !== "korea") || patient}
             ></textarea>
           </div>
 
@@ -3758,7 +3807,7 @@ const PrescriptionModal = ({
               type="addedFiles"
               setFiles={setSelectedFiles}
               onRemove={onRemove}
-              disabled={(type === 'manage' && country !== 'korea') || patient}
+              disabled={(type === "manage" && country !== "korea") || patient}
             />
           </div>
         </div>
@@ -3778,64 +3827,64 @@ const getAlertText = ({
   lang: LangType;
 }) => {
   const alertText = {
-    title: '',
-    desc: '',
+    title: "",
+    desc: "",
   };
-  if (tabType === 'patient') {
-    if (modalType === 'download') {
+  if (tabType === "patient") {
+    if (modalType === "download") {
       alertText.title = langFile[lang].DOWNLOAD_PT_INFO_ALERT_TITLE; // 환자정보를 다운로드 하시겠습니까?
       alertText.desc = langFile[lang].DOWNLOAD_PT_INFO_ALERT_DESC; // 확인버튼을 클릭하시면 다운로드가 시작됩니다.
     } //
-    else if (modalType === 'confirm') {
+    else if (modalType === "confirm") {
       alertText.title = langFile[lang].RQ_CONFIRM_PATIENT_INFO_ALERT_TITLE; // 환자정보 확인을 요청 하시겠습니까?
       alertText.desc = langFile[lang].RQ_CONFIRM_PATIENT_INFO_ALERT_DESC; // 확인버튼을 클릭하시면 환자정보 확인이 요청됩니다.
     }
   } //
-  else if (tabType === 'opinion' && modalType === 'confirm') {
+  else if (tabType === "opinion" && modalType === "confirm") {
     alertText.title = langFile[lang].RQ_CONFIRM_OPINION_ALERT_TITLE; // 소견서 확인을 요청 하시겠습니까?
     alertText.desc = langFile[lang].RQ_CONFIRM_OPINION_ALERT_DESC; // 확인 버튼을 클릭하시면 소견서 확인이 요청됩니다.
   } //
-  else if (tabType === 'teleconsulting') {
-    if (modalType === 'confirm') {
+  else if (tabType === "teleconsulting") {
+    if (modalType === "confirm") {
       alertText.title = langFile[lang].RQ_CONFIRM_SCHEDULING_ALERT_TITLE; // 원격협진 스케쥴링을 요청 하시겠습니까?
       alertText.desc = langFile[lang].RQ_CONFIRM_SCHEDULING_ALERT_DESC; // 확인 버튼을 클릭하시면  원격협진 스케쥴링이 요청됩니다.
     }
   } //
-  else if (tabType === 'carePlans') {
-    if (modalType === 'confirm') {
+  else if (tabType === "carePlans") {
+    if (modalType === "confirm") {
       alertText.title = langFile[lang].RQ_CONFIRM_CP_ALERT_TITLE; // 치료계획서 확인을 요청 하시겠습니까?
       alertText.desc = langFile[lang].RQ_CONFIRM_CP_ALERT_DESC; // 확인 버튼을 클릭하시면 치료계획서 확인이 요청됩니다.
-    } else if (modalType === 'download') {
+    } else if (modalType === "download") {
       alertText.title = langFile[lang].DOWNLOAD_CP_ALERT_TITLE; // 치료계획서를 다운로드 하시겠습니까?
       alertText.desc = langFile[lang].DOWNLOAD_CP_ALERT_DESC; // 확인 버튼을 클릭하시면 다운로드가 시작됩니다.
     }
   } //
-  else if (tabType === 'visitForm') {
-    if (modalType === 'confirm') {
+  else if (tabType === "visitForm") {
+    if (modalType === "confirm") {
       alertText.title = langFile[lang].RQ_CONFIRM_VF_ALERT_TITLE; // 내원준비 확인을 요청 하시겠습니까?
       alertText.desc = langFile[lang].RQ_CONFIRM_VF_ALERT_DESC; // 확인 버튼을 클릭하시면 내원준비 확인이 요청됩니다.
     }
   } //
-  else if (tabType === 'visitInfo' && modalType === 'confirm') {
+  else if (tabType === "visitInfo" && modalType === "confirm") {
     alertText.title = langFile[lang].RQ_CONFIRM_VI_ALERT_TITLE; // '내원정보 확인을 요청 하시겠습니까?
     alertText.desc = langFile[lang].RQ_CONFIRM_VI_ALERT_DESC; // 확인 버튼을 클릭하시면 내원정보 확인이 요청됩니다.
   } //
-  else if (tabType === 'visitResult' && modalType === 'confirm') {
+  else if (tabType === "visitResult" && modalType === "confirm") {
     alertText.title = langFile[lang].RQ_CONFIRM_VR_ALERT_TITLE; // 내원결과 확인을 요청 하시겠습니까?
     alertText.desc = langFile[lang].RQ_CONFIRM_VR_ALERT_DESC; // 확인 버튼을 클릭하시면 내원결과 확인이 요청됩니다.
   } //
-  else if (tabType === 'postConsulting' && modalType === 'confirm') {
+  else if (tabType === "postConsulting" && modalType === "confirm") {
     alertText.title = langFile[lang].RQ_CONFIRM_PC_ALERT_TITLE; // 상담내용 확인을 요청 하시겠습니까?
     alertText.desc = langFile[lang].RQ_CONFIRM_PC_ALERT_DESC; // 확인 버튼을 클릭하시면 상담내용 확인이 요청됩니다.
   } //
-  else if (tabType === 'postPrescript') {
-    if (modalType === 'confirm') {
-      alertText.title = '처방내용 확인을 요청 하시겠습니까?';
-      alertText.desc = '확인 버튼을 클릭하시면 처방내용 확인이 요청됩니다.';
-    } else if (modalType === 'completed') {
-      alertText.title = '처방요청을 완료 처리 하시겠습니까?';
-      alertText.desc = '확인 버튼을 클릭하시면 처방요청이 완료 처리됩니다.';
-    } else if (modalType === 'remove') {
+  else if (tabType === "postPrescript") {
+    if (modalType === "confirm") {
+      alertText.title = "처방내용 확인을 요청 하시겠습니까?";
+      alertText.desc = "확인 버튼을 클릭하시면 처방내용 확인이 요청됩니다.";
+    } else if (modalType === "completed") {
+      alertText.title = "처방요청을 완료 처리 하시겠습니까?";
+      alertText.desc = "확인 버튼을 클릭하시면 처방요청이 완료 처리됩니다.";
+    } else if (modalType === "remove") {
       alertText.title = langFile[lang].DELETE_PP_REQ_ALERT_TITLE; // 처방요청을 삭제하시겠습니까?
       alertText.desc = langFile[lang].DELETE_PP_REQ_ALERT_DESC; // 삭제 버튼을 클릭하시면 처방요청이 삭제됩니다.
     }
@@ -3854,84 +3903,84 @@ const getCheckModalText = ({
   tabType: WorkflowTabType;
   modalType: ModalType;
   lang: LangType;
-  psModalType: 'new' | 'manage' | '';
+  psModalType: "new" | "manage" | "";
 }) => {
   const confirmModalText = {
-    title: '',
-    desc: '',
+    title: "",
+    desc: "",
   };
 
-  if (tabType === 'patient') {
-    if (modalType === 'download') {
+  if (tabType === "patient") {
+    if (modalType === "download") {
       confirmModalText.title = langFile[lang].CP_DOWNLOAD_PT_INFO_ALERT_TITLE; // 환자정보 다운로드 완료
       confirmModalText.desc = langFile[lang].CP_DOWNLOAD_PT_INFO_ALERT_DESC; // 환자정보 다운로드가 완료되었습니다.
     } //
-    else if (modalType === 'confirm') {
+    else if (modalType === "confirm") {
       confirmModalText.title =
         langFile[lang].CP_RQ_CONFIRM_PATIENT_INFO_ALERT_TITLE; // 환자정보 확인 요청 완료
       confirmModalText.desc =
         langFile[lang].CP_RQ_CONFIRM_PATIENT_INFO_ALERT_DESC; // 환자정보 확인 요청이 완료되었습니다.
     }
   } //
-  else if (tabType === 'opinion' && modalType === 'confirm') {
+  else if (tabType === "opinion" && modalType === "confirm") {
     confirmModalText.title = langFile[lang].CP_RQ_CONFIRM_OPINION_ALERT_TITLE; // 소견서 확인 요청 완료
     confirmModalText.desc = langFile[lang].CP_RQ_CONFIRM_OPINION_ALERT_DESC; // 소견서 확인 요청이 완료되었습니다.
   } //
-  else if (tabType === 'teleconsulting') {
-    if (modalType === 'confirm') {
+  else if (tabType === "teleconsulting") {
+    if (modalType === "confirm") {
       confirmModalText.title =
         langFile[lang].CP_RQ_CONFIRM_SCHEDULING_ALERT_TITLE; // 원격협진 스케쥴링 요청 완료
       confirmModalText.desc =
         langFile[lang].CP_RQ_CONFIRM_SCHEDULING_ALERT_DESC; // '원격협진 스케쥴링 요청이 완료되었습니다.
     }
   } //
-  else if (tabType === 'carePlans') {
-    if (modalType === 'confirm') {
+  else if (tabType === "carePlans") {
+    if (modalType === "confirm") {
       confirmModalText.title = langFile[lang].CP_RQ_CONFIRM_CP_ALERT_TITLE; // 치료계획서 확인 요청 완료
       confirmModalText.desc = langFile[lang].CP_RQ_CONFIRM_CP_ALERT_DESC; // 치료계획서 확인 요청이 완료되었습니다.
-    } else if (modalType === 'download') {
+    } else if (modalType === "download") {
       confirmModalText.title = langFile[lang].CP_DOWNLOAD_CP_ALERT_TITLE; // 치료계획서 다운로드 완료
       confirmModalText.desc = langFile[lang].CP_DOWNLOAD_CP_ALERT_DESC; // 치료계획서 다운로드가 완료되었습니다.
     }
   } //
-  else if (tabType === 'visitForm') {
-    if (modalType === 'confirm') {
+  else if (tabType === "visitForm") {
+    if (modalType === "confirm") {
       confirmModalText.title = langFile[lang].CP_RQ_CONFIRM_VF_ALERT_TITLE; // 내원준비 확인 요청 완료
       confirmModalText.desc = langFile[lang].CP_RQ_CONFIRM_VF_ALERT_DESC; // 내원준비 확인 요청이 완료되었습니다.
     }
   } //
-  else if (tabType === 'visitInfo' && modalType === 'confirm') {
+  else if (tabType === "visitInfo" && modalType === "confirm") {
     confirmModalText.title = langFile[lang].CP_RQ_CONFIRM_VI_ALERT_TITLE; // 내원정보 확인 요청 완료
     confirmModalText.desc = langFile[lang].CP_RQ_CONFIRM_VI_ALERT_DESC; // 내원정보 확인 요청이 완료되었습니다.
   } //
-  else if (tabType === 'visitResult' && modalType === 'confirm') {
+  else if (tabType === "visitResult" && modalType === "confirm") {
     confirmModalText.title = langFile[lang].CP_RQ_CONFIRM_VR_ALERT_TITLE; // 내원결과 확인 요청 완료
     confirmModalText.desc = langFile[lang].CP_RQ_CONFIRM_VR_ALERT_DESC; // 내원결과 확인 요청이 완료되었습니다.
   } //
-  else if (tabType === 'postConsulting' && modalType === 'confirm') {
+  else if (tabType === "postConsulting" && modalType === "confirm") {
     confirmModalText.title = langFile[lang].CP_RQ_CONFIRM_PC_ALERT_TITLE; // 상담내용 확인 요청 완료
     confirmModalText.desc = langFile[lang].CP_RQ_CONFIRM_PC_ALERT_DESC; // 상담내용 확인 요청이 완료되었습니다.
   } //
-  else if (tabType === 'postPrescript') {
-    if (psModalType === 'new') {
+  else if (tabType === "postPrescript") {
+    if (psModalType === "new") {
       confirmModalText.title = langFile[lang].ADD_PP_REQ_ALERT_TITLE; // 처방요청 등록 완료
       confirmModalText.desc = langFile[lang].ADD_PP_REQ_ALERT_DESC; // 처방요청 등록이 완료되었습니다.
-    } else if (psModalType === 'manage') {
-      if (modalType === 'confirm') {
+    } else if (psModalType === "manage") {
+      if (modalType === "confirm") {
         confirmModalText.title = langFile[lang].CP_RQ_CONFIRM_PP_ALERT_TITLE; // 처방내용 확인 요청 완료
         confirmModalText.desc = langFile[lang].CP_RQ_CONFIRM_PP_ALERT_DESC; // 처방내용 확인 요청이 완료되었습니다.
-      } else if (modalType === 'completed') {
+      } else if (modalType === "completed") {
         confirmModalText.title =
           langFile[lang].CP_COMPLETE_CONFIRM_RQ_ALERT_TITLE; // 처방요청 완료 처리 완료
         confirmModalText.desc =
           langFile[lang].CP_COMPLETE_CONFIRM_RQ_ALERT_DESC; // 처방요청 완료 처리가 완료되었습니다.
-      } else if (modalType === 'manage') {
+      } else if (modalType === "manage") {
         confirmModalText.title = langFile[lang].EDIT_PP_REQ_ALERT_TITLE; // 처방요청 정보 수정 완료
         confirmModalText.desc = langFile[lang].EDIT_PP_REQ_ALERT_DESC; // 처방요청 정보 수정이 완료되었습니다.
       }
     }
 
-    if (modalType === 'remove') {
+    if (modalType === "remove") {
       confirmModalText.title = langFile[lang].CP_DELETE_PP_REQ_ALERT_TITLE; // 처방요청 삭제 완료
       confirmModalText.desc = langFile[lang].CP_DELETE_PP_REQ_ALERT_DESC; // 처방요청 삭제가 완료되었습니다.
     }
@@ -3943,42 +3992,42 @@ const getCheckModalText = ({
 function getTableHeadData(lang: LangType) {
   const tds: TableHeadCol[] = [
     {
-      key: 'No',
-      valueType: 'id',
-      type: 'text',
+      key: "No",
+      valueType: "id",
+      type: "text",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_PP_PRESCRIPTION_RQ_TYPE, // 요청유형
-      valueType: 'name',
-      type: 'text',
+      valueType: "name",
+      type: "text",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_PP_PRESCRIPTION_RQ_CONTENTS, // 요청사항
-      valueType: 'body',
-      type: 'text',
+      valueType: "body",
+      type: "text",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_PP_PRESCRIPTION_RQ_WRITER, // 작성자
-      valueType: 'name',
-      type: 'text',
+      valueType: "name",
+      type: "text",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_PP_PRESCRIPTION_RQ_STATUS, // 처리완료여부
-      valueType: 'name',
-      type: 'text',
+      valueType: "name",
+      type: "text",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_PP_PRESCRIPTION_RQ_REGISTER_DATE, // 요청일
-      valueType: 'date',
-      type: 'text',
+      valueType: "date",
+      type: "text",
     },
     {
-      key: '',
-      type: 'button',
+      key: "",
+      type: "button",
     },
     {
-      key: '',
-      type: 'menu',
+      key: "",
+      type: "menu",
     },
   ];
 
@@ -3989,39 +4038,43 @@ function getTabs(lang: LangType) {
   const workflow_tabs: { key: string; value: WorkflowTabType }[] = [
     {
       key: langFile[lang].WORKFLOW_MODAL_TAB_PATIENT, // 환자정보
-      value: 'patient',
+      value: "patient",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_TAB_OPINION, // 소견서정보
-      value: 'opinion',
+      value: "opinion",
+    },
+    {
+      key: langFile[lang].WORKFLOW_MODAL_TAB_PRELIMINARY, // 사전문진
+      value: "preliminary",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_TAB_TELECONSULTING, // 원격협진
-      value: 'teleconsulting',
+      value: "teleconsulting",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_TAB_CARE_PLANS, // 치료계획서
-      value: 'carePlans',
+      value: "carePlans",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_TAB_VISIT_FORM, // 내원준비
-      value: 'visitForm',
+      value: "visitForm",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_TAB_VISIT_INFO, // 내원상담
-      value: 'visitInfo',
+      value: "visitInfo",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_TAB_VISIT_RESULT, // 내원결과
-      value: 'visitResult',
+      value: "visitResult",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_TAB_POST_CARE, // 사후상담
-      value: 'postConsulting',
+      value: "postConsulting",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_TAB_POST_PRESCRIPTION, //  사후처방
-      value: 'postPrescript',
+      value: "postPrescript",
     },
   ];
 

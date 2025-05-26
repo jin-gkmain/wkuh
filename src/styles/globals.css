@@ -62,7 +62,7 @@
 }
 
 .flex-row {
-  flex-direction: 'row';
+  flex-direction: "row";
 }
 
 .flex-center {
@@ -1679,7 +1679,7 @@ thead th .fc-scroller {
 
 .fc-direction-ltr .fc-day .fc-daygrid-event.fc-event-end:before,
 .fc-direction-rtl .fc-day .fc-daygrid-event.fc-event-start::before {
-  content: '';
+  content: "";
   margin-right: 5px;
   width: 3px;
   height: 3px;
@@ -1735,7 +1735,6 @@ thead th .fc-scroller {
     font-size: 0.78em;
   }
 }
-
 
 @media screen and (max-width: 1000px) {
   .workflow-modal .modal-frame {
@@ -1907,7 +1906,7 @@ thead th .fc-scroller {
   top: 0;
   background-color: var(--white);
   margin-bottom: 30px;
-  font-size: 15px;
+  font-size: 1em;
   font-weight: 700;
   border-bottom: 1px solid var(--gray);
   z-index: 1;
@@ -1924,7 +1923,7 @@ thead th .fc-scroller {
 }
 
 .workflow-modal .input {
-  min-width: 200px;
+  min-width: 150px;
 }
 
 .workflow-modal .radio-box {
@@ -2504,7 +2503,7 @@ thead th .fc-scroller {
   padding: 9px 16px;
 }
 
-.teleconsulting-area .patient-info-area .patient-view input[type='text'] {
+.teleconsulting-area .patient-info-area .patient-view input[type="text"] {
   width: 100%;
 }
 
