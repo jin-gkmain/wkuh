@@ -4,14 +4,14 @@ import React, { useState, useEffect } from "react";
 // 개별 버튼의 스타일을 결정하는 함수
 const getButtonStyle = (isSelected, isHovered) => {
   const baseStyle = {
-    padding: "0px 32px", // 버튼 내부 여백 (상하, 좌우)
-    borderRadius: "20px", // 알약 모양을 위한 충분한 값
+    padding: "3px 14px", // 버튼 내부 여백 (상하, 좌우)
+    borderRadius: "10px", // 알약 모양을 위한 충분한 값
     cursor: "pointer",
     border: "1px solid black", // 기본 테두리
     backgroundColor: "white", // 기본 배경색
     color: "black", // 기본 글자색
-    margin: "0 5px", // 버튼 간 간격 (좌우)
-    fontSize: "14px", // 글자 크기
+    margin: "0 3px", // 버튼 간 간격 (좌우)
+    fontSize: "13px", // 글자 크기
     fontWeight: "500", // 글자 두께
     outline: "none", // 클릭 시 기본 outline 제거
     transition:
@@ -24,8 +24,8 @@ const getButtonStyle = (isSelected, isHovered) => {
     return {
       ...baseStyle,
       backgroundColor: "#D6EAF8", // 선택 시 배경색 (이미지와 유사한 연한 파란색)
-      color: "black", // 선택 시 글자색 (이미지에서는 검은색 유지)
       borderColor: "#D6EAF8", // 선택 시 테두리 색 (배경과 동일하게 하여 없는 것처럼 보이게)
+      fontWeight: "600",
     };
   }
 
@@ -33,6 +33,7 @@ const getButtonStyle = (isSelected, isHovered) => {
   if (isHovered) {
     return {
       ...baseStyle,
+      fontWeight: "700",
       borderColor: "#777", // 호버 시 테두리 약간 진하게
       // backgroundColor: '#f8f8f8', // 호버 시 배경색 살짝 변경 (선택사항)
     };
@@ -53,7 +54,7 @@ function SegmentedPillButtonsGroup({
   options,
   onSelect,
   defaultValue = null,
-  style,
+  style = {},
 }) {
   const [selectedOption, setSelectedOption] = useState(defaultValue);
   const [hoveredOption, setHoveredOption] = useState(null); // 마우스 호버 상태 추적

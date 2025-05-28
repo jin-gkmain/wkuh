@@ -2916,3 +2916,51 @@ thead th .fc-scroller {
     width: 23%;
   }
 }
+
+/* PaperWeightLayout.css (예시) */
+.slider-container {
+  /* max-width: 600px; /* 원하는 최대 너비 설정 */
+  /* margin: 0 auto;   /* 중앙 정렬 */
+}
+
+.slide-content {
+  display: flex !important; /* react-slick 내부 스타일을 덮어쓰기 위해 !important 사용 가능성 있음 */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh; /* 화면 높이의 80% 정도를 차지하도록 설정 (예시) */
+  /* background-color: #f0f0f0; /* 슬라이드 배경색 */
+  /* border: 1px solid #ccc; */
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.slide-content h3 {
+  margin-bottom: 20px;
+}
+
+.button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.slick-list {
+  height: 100%;
+}
+
+.slick-track {
+  height: 100%;
+}
+
+.slick-slide > div {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slick-slide > div > div {
+  display: flex;
+}
