@@ -1,18 +1,30 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useRouter } from "next/router";
-import { Button, Typography } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Input,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import getPatients from "@/data/patient";
+import { log } from "console";
+import { LanguageContext } from "@/context/LanguageContext";
+import langFile from "@/lang";
+import PatientInfoLayout from "./PatientInfoLayout";
 // import './PaperWeightLayout.css'; // 스타일 파일 (필요시)
 
 // 새로운 타입 정의
 export type InputComponentProps = {
-  value: any;
-  onChange: (value: any) => void;
+  value: string | string[]; // 문자열 또는 문자열 배열을 받을 수 있도록 수정
+  onChange: (value: string | string[]) => void; // 마찬가지로 수정
   onKeyDown: (event: React.KeyboardEvent) => void; // 모든 HTMLInputElement에 적용 가능하도록 KeyboardEvent로 변경
   // 필요에 따라 추가적인 props (예: placeholder, disabled 등)를 여기에 정의할 수 있습니다.
-  validate?: (value: any) => boolean;
+  validate?: (value: any) => boolean; // validate는 다양한 타입을 받을 수 있으므로 any 유지
   helperText?: string;
 };
 
@@ -24,7 +36,9 @@ export type SlideContent = {
   inputComponent?: (props: InputComponentProps) => React.ReactNode;
   validate?: (value: any) => boolean;
   isSummary?: boolean; // isSummary는 페이지 레벨이 아니라, 페이지의 마지막 항목에만 의미가 있을 수 있음. 또는 페이지 전체가 요약일 수도 있음. 여기서는 항목 레벨로 유지.
+  isPass?: boolean;
   isValidate?: boolean;
+  passText?: string;
 };
 
 type PreliminaryLayoutProps = {
@@ -53,7 +67,10 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
     visible: false,
     key: 0,
   });
+  const { lang, setLang } = useContext(LanguageContext);
+
   const toastTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const { hos } = router.query;
 
   const showToast = (message: string) => {
     if (toastTimerRef.current) {
@@ -65,18 +82,22 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
     }, 2000); // 3초 후 토스트 숨김
   };
 
-  const checkPatientNumber = () => {
-    if (answers["patientNum"] === "1234567890") {
-      openPatientInfo();
-    } else {
-      showToast("환자 번호가 올바르지 않습니다.");
+  const checkPatientNumber = async () => {
+    const patients = (await getPatients(Number(hos), {})) as Patient[];
+    for (const patient of patients) {
+      console.log(answers["patientNum"], patient.p_serial_no);
+      if (answers["patientNum"] === patient.p_serial_no.toString()) {
+        openPatientInfo(patient);
+        return;
+      }
     }
+    showToast("환자 번호가 올바르지 않습니다.");
   };
   // isQuestionAnswered 로직 수정: pageIndex를 받고, 해당 페이지의 모든 항목을 검사
   const isPageValid = (pageIndex: number): boolean => {
     const pageItems = slidesContent[pageIndex];
     if (!pageItems) return false; // 페이지 자체가 없는 경우
-
+    if (!pageItems[0]?.isPass) return true;
     for (const item of pageItems) {
       if (item.isSummary || !item.inputComponent) {
         // 요약 항목이거나 입력 컴포넌트가 없으면 해당 항목은 통과
@@ -89,19 +110,22 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
         if (!item.validate(answer)) return false; // validate 함수 실패 시 페이지 전체 실패
       } else {
         // validate 함수 없고 inputComponent만 있다면, 기본 "값이 있는지" 여부로 판단
-        if (answer === undefined || String(answer).trim() === "") return false; // 기본 검사 실패 시 페이지 전체 실패
+        if (answer === undefined) return false; // undefined는 항상 실패
+        if (typeof answer === "string" && answer.trim() === "") return false; // 문자열인데 비었으면 실패
+        if (Array.isArray(answer) && answer.length === 0) return false; // 배열인데 비었으면 실패
       }
     }
     return true; // 모든 항목 통과 시 페이지 유효
   };
 
-  const openPatientInfo = () => {
+  const openPatientInfo = (patient: Patient) => {
     setIsPatientInfo(true);
+    setPatientInfo(patient);
+  };
+
+  const closePatientInfo = () => {
+    setIsPatientInfo(false);
     next();
-    // setPatientInfo({
-    //   patientNum: answers["patientNum"],
-    //   patientBirth: answers["patientBirth"],
-    // });
   };
 
   // handleInputChange 수정: pageIndex, itemIndex 대신 questionKey 직접 사용
@@ -129,6 +153,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
 
   // next 함수: isPageValid(currentPageIndex) 사용
   const next = () => {
+    console.log(answers);
     if (!isPageValid(currentPageIndex)) {
       showToast("현재 페이지의 모든 필수 항목을 올바르게 입력해주세요.");
       return;
@@ -146,6 +171,14 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
 
   const home = () => {
     router.back(); // 또는 특정 경로로 이동 router.push('/');
+  };
+
+  const pass = () => {
+    if (sliderRef.current) {
+      answers[slidesContent[currentPageIndex - 1]?.[0]?.questionKey] =
+        slidesContent[currentPageIndex - 1]?.[0]?.passText || "없음";
+      sliderRef.current.slickNext();
+    }
   };
 
   const settings = {
@@ -238,76 +271,79 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
             padding: "20px",
             display: "flex",
             flexDirection: "column",
-            paddingBottom: `${BOTTOM_NAV_HEIGHT + 20}px`, // 하단 네비게이션바 높이만큼 추가 패딩
+            position: "relative", // 오버레이 기준점
           }}
         >
-          {isPatientInfo ? (
-            <div>
-              <Typography variant="h4">환자 정보</Typography>
-            </div>
-          ) : (
-            <Slider ref={sliderRef} {...settings} style={{ height: "100%" }}>
-              {slidesContent.map((pageItems, pageIndex) => (
-                <div
-                  key={`page-${pageIndex}`} // 페이지 키
-                  className="slide-content-wrapper"
-                  style={{
-                    outline: "none", // Slider 내부 div 포커스 아웃라인 제거
-                  }}
-                >
-                  {pageItems.map((item) => (
-                    <div
-                      key={item.id} // 항목의 id를 키로 사용 (id가 고유해야 함)
-                      className="slide-item-content"
-                      style={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center", // 내부 요소들 수평 중앙 정렬
-                      }}
-                    >
-                      <div style={{ height: "40px" }}></div>
-                      {item.title && (
-                        <Typography variant="h4">{item.title}</Typography>
-                      )}{" "}
-                      {/* 항목별 제목 */}
-                      {typeof item.content === "string" ? (
-                        <Typography
-                          variant="h5"
-                          align="center"
-                          sx={{
-                            whiteSpace: "pre-line",
-                            lineHeight: "1.5",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {item.content}
-                        </Typography>
-                      ) : (
-                        item.content
-                      )}
-                      {item.inputComponent &&
-                        item.inputComponent({
-                          value: answers[item.questionKey] || "",
-                          onChange: (value) =>
-                            handleItemInputChange(item.questionKey, value),
-                          // 각 input에서 Enter 시 next()를 시도하도록 onKeyDown에 next 직접 전달 또는 수정된 handleItemKeyDown 사용
-                          onKeyDown: (e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              // 현재 입력 필드가 속한 페이지의 모든 항목이 유효한지 확인 후 다음으로
-                              // 해당 입력이 마지막 입력이어야 하거나, 모든 항목이 채워졌을 때 등 UX 고려 필요
-                              // 여기서는 Enter시 무조건 next() 시도 (유효성 검사는 next() 내부에서)
-                              next();
-                            }
-                          },
-                        })}
-                      <div style={{ height: "40px" }}></div>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </Slider>
+          {/* Slider는 항상 렌더링 */}
+          <Slider ref={sliderRef} {...settings} style={{ height: "100%" }}>
+            {slidesContent.map((pageItems, pageIndex) => (
+              <div
+                key={`page-${pageIndex}`} // 페이지 키
+                className="slide-content-wrapper"
+                style={{
+                  outline: "none", // Slider 내부 div 포커스 아웃라인 제거
+                }}
+              >
+                {pageItems.map((item) => (
+                  <div
+                    key={item.id} // 항목의 id를 키로 사용 (id가 고유해야 함)
+                    className="slide-item-content"
+                    style={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center", // 내부 요소들 수평 중앙 정렬
+                      overflowX: "scroll",
+                    }}
+                  >
+                    <div style={{ height: "40px" }}></div>
+                    {item.title && (
+                      <Typography
+                        align="center"
+                        sx={{ fontWeight: "bold", fontSize: "1.8rem" }}
+                      >
+                        {item.title}
+                      </Typography>
+                    )}{" "}
+                    {/* 항목별 제목 */}
+                    {typeof item.content === "string" ? (
+                      <Typography
+                        variant="body2"
+                        align="center"
+                        sx={{
+                          whiteSpace: "pre-line",
+                          lineHeight: "1.5",
+                          fontWeight: "bold",
+                          color: "red",
+                        }}
+                      >
+                        {item.content}
+                      </Typography>
+                    ) : (
+                      item.content
+                    )}
+                    {item.inputComponent &&
+                      item.inputComponent({
+                        value: answers[item.questionKey] || "",
+                        onChange: (value) =>
+                          handleItemInputChange(item.questionKey, value),
+                        onKeyDown: (e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            next();
+                          }
+                        },
+                      })}
+                    <div style={{ height: "40px" }}></div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </Slider>
+
+          {/* isPatientInfo가 true일 때 오버레이 표시 */}
+          {isPatientInfo && (
+            <PatientInfoLayout patientInfo={patientInfo} lang={lang} />
           )}
         </div>
 
@@ -316,6 +352,9 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
           style={{
             padding: "20px",
             textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             borderTop: "1px solid #eee",
             backgroundColor: "white", // 배경색 추가하여 내용과 구분
             // position: "fixed", // 이 방법 대신 flex-shrink:0 와 전체 flex 구조 활용
@@ -330,7 +369,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
             className="button"
             onClick={() => {
               if (isPatientInfo) {
-                setIsPatientInfo(false);
+                closePatientInfo();
               } else if (currentPageIndex === 0) {
                 checkPatientNumber();
               } else if (
@@ -355,34 +394,74 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
             {isPatientInfo
               ? "시작하기"
               : isCurrentPageSummary ||
-                slidesContent[currentPageIndex]?.[0]?.isSummary ||
-                currentPageIndex === 0
-              ? "다음"
-              : "완료"}
+                slidesContent[currentPageIndex]?.[0]?.isSummary
+              ? "완료"
+              : "다음"}
           </Button>
           {!(
             isCurrentPageSummary ||
             slidesContent[currentPageIndex]?.[0]?.isSummary ||
             currentPageIndex === 0
           ) ? (
-            <Button
-              className="button"
-              onClick={previous}
-              disabled={currentPageIndex === 0}
-              style={{
-                width: "85%",
-                height: "60px",
-                marginTop: "10px",
-                cursor: "pointer",
-                color: "black",
-                background: "white",
-                border: "1px solid #043E68",
-                borderRadius: "30px",
-                fontSize: "1.3rem",
-              }}
-            >
-              이전
-            </Button>
+            slidesContent[currentPageIndex]?.[0]?.isPass ? (
+              <Button
+                className="button"
+                onClick={previous}
+                disabled={currentPageIndex === 0}
+                style={{
+                  width: "85%",
+                  height: "60px",
+                  marginTop: "10px",
+                  cursor: "pointer",
+                  color: "black",
+                  background: "white",
+                  border: "1px solid #043E68",
+                  borderRadius: "30px",
+                  fontSize: "1.3rem",
+                }}
+              >
+                이전
+              </Button>
+            ) : (
+              <Stack direction="row" spacing={2} width="85%">
+                <Button
+                  className="button"
+                  onClick={previous}
+                  disabled={currentPageIndex === 0}
+                  style={{
+                    width: "50%",
+                    height: "60px",
+                    marginTop: "10px",
+                    cursor: "pointer",
+                    color: "black",
+                    background: "white",
+                    border: "1px solid #043E68",
+                    borderRadius: "30px",
+                    fontSize: "1.3rem",
+                  }}
+                >
+                  이전
+                </Button>
+                <Button
+                  className="button"
+                  onClick={pass}
+                  disabled={currentPageIndex === 0}
+                  style={{
+                    width: "50%",
+                    height: "60px",
+                    marginTop: "10px",
+                    cursor: "pointer",
+                    color: "black",
+                    background: "white",
+                    border: "1px solid #043E68",
+                    borderRadius: "30px",
+                    fontSize: "1.3rem",
+                  }}
+                >
+                  {slidesContent[currentPageIndex]?.[0]?.passText || "없음"}
+                </Button>
+              </Stack>
+            )
           ) : (
             <div style={{ height: "70px" }}></div>
           )}
