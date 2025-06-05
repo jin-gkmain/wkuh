@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import getPatients from "@/data/patient";
 import { log } from "console";
-import { LanguageContext } from "@/context/LanguageContext";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
 import langFile from "@/lang";
 import PatientInfoLayout from "./PatientInfoLayout";
 // import './PaperWeightLayout.css'; // 스타일 파일 (필요시)
@@ -25,20 +25,22 @@ export type InputComponentProps = {
   onKeyDown: (event: React.KeyboardEvent) => void; // 모든 HTMLInputElement에 적용 가능하도록 KeyboardEvent로 변경
   // 필요에 따라 추가적인 props (예: placeholder, disabled 등)를 여기에 정의할 수 있습니다.
   validate?: (value: any) => boolean; // validate는 다양한 타입을 받을 수 있으므로 any 유지
-  helperText?: string;
+  helperText?: Record<LangType, string>;
+  placeholder?: Record<LangType, string>;
+  lang: LangType;
 };
 
 export type SlideContent = {
   id: number | string;
   questionKey: string; // 이제 모든 항목에 대해 고유한 questionKey가 필수라고 가정
-  title?: string; // 페이지 전체 제목이 아니라 개별 항목의 제목이 될 수 있음
-  content?: React.ReactNode;
+  title?: Record<LangType, string>; // 페이지 전체 제목이 아니라 개별 항목의 제목이 될 수 있음
+  content?: Record<LangType, string>;
   inputComponent?: (props: InputComponentProps) => React.ReactNode;
   validate?: (value: any) => boolean;
   isSummary?: boolean; // isSummary는 페이지 레벨이 아니라, 페이지의 마지막 항목에만 의미가 있을 수 있음. 또는 페이지 전체가 요약일 수도 있음. 여기서는 항목 레벨로 유지.
   isPass?: boolean;
   isValidate?: boolean;
-  passText?: string;
+  passText?: Record<LangType, string>;
 };
 
 type PreliminaryLayoutProps = {
@@ -91,7 +93,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
         return;
       }
     }
-    showToast("환자 번호가 올바르지 않습니다.");
+    showToast(langFile[lang].MOBILE_PRELIMINARY_PATIENT_NUMBER_ERROR);
   };
   // isQuestionAnswered 로직 수정: pageIndex를 받고, 해당 페이지의 모든 항목을 검사
   const isPageValid = (pageIndex: number): boolean => {
@@ -155,7 +157,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
   const next = () => {
     console.log(answers);
     if (!isPageValid(currentPageIndex)) {
-      showToast("현재 페이지의 모든 필수 항목을 올바르게 입력해주세요.");
+      showToast(langFile[lang].MOBILE_PRELIMINARY_ALL_REQUIRED_ERROR);
       return;
     }
     if (sliderRef.current) {
@@ -192,7 +194,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
     beforeChange: (oldPageIndex: number, newPageIndex: number) => {
       if (newPageIndex > oldPageIndex) {
         if (!isPageValid(oldPageIndex)) {
-          showToast("현재 페이지의 모든 필수 항목을 올바르게 입력해주세요.");
+          showToast(langFile[lang].MOBILE_PRELIMINARY_ALL_REQUIRED_ERROR);
           setTimeout(() => {
             if (sliderRef.current) {
               sliderRef.current.slickGoTo(oldPageIndex, true);
@@ -206,10 +208,6 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
       setCurrentPageIndex(current); // 이름 변경된 상태 업데이트 함수 사용
     },
   };
-
-  if (!slidesContent || slidesContent.length === 0) {
-    return <div style={{ padding: "20px" }}>설문 내용이 없습니다.</div>;
-  }
 
   // 현재 페이지의 모든 항목이 isSummary인지 확인 (다음 버튼 텍스트 용도)
   const isCurrentPageSummary = slidesContent[currentPageIndex]?.every(
@@ -302,11 +300,11 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                         align="center"
                         sx={{ fontWeight: "bold", fontSize: "1.8rem" }}
                       >
-                        {item.title}
+                        {item.title[lang]}
                       </Typography>
                     )}{" "}
                     {/* 항목별 제목 */}
-                    {typeof item.content === "string" ? (
+                    {typeof item.content === "object" ? (
                       <Typography
                         variant="body2"
                         align="center"
@@ -317,10 +315,10 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                           color: "red",
                         }}
                       >
-                        {item.content}
+                        {item.content[lang]}
                       </Typography>
                     ) : (
-                      item.content
+                      ""
                     )}
                     {item.inputComponent &&
                       item.inputComponent({
@@ -333,6 +331,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                             next();
                           }
                         },
+                        lang: lang,
                       })}
                     <div style={{ height: "40px" }}></div>
                   </div>
@@ -392,11 +391,11 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
             }}
           >
             {isPatientInfo
-              ? "시작하기"
+              ? langFile[lang].MOBILE_PRELIMINARY_START
               : isCurrentPageSummary ||
                 slidesContent[currentPageIndex]?.[0]?.isSummary
-              ? "완료"
-              : "다음"}
+              ? langFile[lang].MOBILE_PRELIMINARY_COMPLETE
+              : langFile[lang].MOBILE_PRELIMINARY_NEXT}
           </Button>
           {!(
             isCurrentPageSummary ||
@@ -420,7 +419,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                   fontSize: "1.3rem",
                 }}
               >
-                이전
+                {langFile[lang].MOBILE_PRELIMINARY_BACK}
               </Button>
             ) : (
               <Stack direction="row" spacing={2} width="85%">
@@ -440,7 +439,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                     fontSize: "1.3rem",
                   }}
                 >
-                  이전
+                  {langFile[lang].MOBILE_PRELIMINARY_BACK}
                 </Button>
                 <Button
                   className="button"
@@ -458,7 +457,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                     fontSize: "1.3rem",
                   }}
                 >
-                  {slidesContent[currentPageIndex]?.[0]?.passText || "없음"}
+                  {slidesContent[currentPageIndex]?.[0]?.passText[lang] || ""}
                 </Button>
               </Stack>
             )

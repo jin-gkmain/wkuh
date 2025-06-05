@@ -19,6 +19,10 @@ const lang = {
   MOBILE_PRELIMINARY_BACK: "Өмнөх",
   MOBILE_PRELIMINARY_COMPLETE: "Дуусгах",
   MOBILE_PRELIMINARY_START: "Эхлэх",
+  MOBILE_PRELIMINARY_ALL_REQUIRED_ERROR:
+    "Барлыг шалгана уу, бүх шаардлагатай өрөөг оруулна уу.",
+  MOBILE_PRELIMINARY_PATIENT_NUMBER_ERROR:
+    "Өвчтөний дугаар байхгүй байна. Дахин шалгаж оруулна уу.",
 
   MOBILE_PRELIMINARY_PATIENNUM_DESC:
     "Эмнэлгээс өгсөн өвчтөний дугаарыг оруулна уу.",
@@ -59,6 +63,7 @@ const lang = {
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE8: "Арьсны тууралт",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE9: "Сарын тэмдэг алдагдах",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE10: "Сэтгэл гутрал/Түгшүүр",
+  MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE: "Білмеймін",
 
   MOBILE_PRELIMINARY_PAIN_DESC: "Та хэр их өвдөлт мэдэрч байна вэ?",
   MOBILE_PRELIMINARY_PAIN_DEGREE1: "Өвдөлтгүй",
@@ -91,6 +96,7 @@ const lang = {
   MOBILE_PRELIMINARY_PAST_HISTORY_TITLE5: "Бусад",
   MOBILE_PRELIMINARY_PAST_HISTORY_INPUT_PLACEHOLDER:
     "Бусад оношлогдож байсан өвчнөө оруулна уу",
+  MOBILE_PRELIMINARY_PAST_HISTORY_NOT_SURE: "Білмеймін",
 
   MOBILE_PRELIMINARY_SMOKE_DESC: "Та тамхи татдаг уу?",
   MOBILE_PRELIMINARY_SMOKE_YES: "Тийм",
@@ -102,15 +108,16 @@ const lang = {
   MOBILE_PRELIMINARY_DRINK_NO: "Үгүй",
   MOBILE_PRELIMINARY_DRINK_NOT_NOW: "Урьд нь уудаг байсан, одоо больсон",
 
-  MOBILE_PRELIMINARY_PAST_SURGERY_DESC: "Та мэс засал хийлгэж байсан уу?",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE1: "Бамбай булчирхайн мэс засал",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE2: "Кесар хагалгаа",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE3: "Бөөр авах мэс засал",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE4: "Гоо сайхны мэс засал",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE5: "Зүрхний мэс засал",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE6: "Хавдар авах мэс засал",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE7: "Бусад",
-  MOBILE_PRELIMINARY_PAST_SURGERY_INPUT_PLACEHOLDER:
+  MOBILE_PRELIMINARY_PAST_SURGERIES_DESC: "Та мэс засал хийлгэж байсан уу?",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE1: "Бамбай булчирхайн мэс засал",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE2: "Кесар хагалгаа",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE3: "Бөөр авах мэс засал",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE4: "Гоо сайхны мэс засал",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE5: "Зүрхний мэс засал",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE6: "Хавдар авах мэс засал",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE7: "Бусад",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_NOT_SURE: "Білмеймін",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_INPUT_PLACEHOLDER:
     "Хийлгэж байсан бусад мэс заслаа оруулна уу",
 
   MOBILE_PRELIMINARY_PAST_MEDICINE_DESC: "Та ямар нэгэн эм хэрэглэж байсан уу?",
@@ -130,12 +137,16 @@ const lang = {
   MOBILE_PRELIMINARY_ALLERGY_TITLE6: "Металл",
   MOBILE_PRELIMINARY_ALLERGY_TITLE7: "Бусад",
   MOBILE_PRELIMINARY_ALLERGY_INPUT_PLACEHOLDER: "Ямар харшилтайгаа оруулна уу",
+  MOBILE_PRELIMINARY_ALLERGY_NOT_SURE: "Байхгүй",
 
   MOBILE_PRELIMINARY_TODOCTOR_DESC: "Та эмчид хэлэх зүйл байна уу?",
   MOBILE_PRELIMINARY_TODOCTOR_SUBDESC:
     "Хэрэв та эмчид хэлэх зүйл байхгүй бол `Байхгүй` гэж сонгоно уу.",
   MOBILE_PRELIMINARY_TODOCTOR_INPUT_PLACEHOLDER:
     "Эмчид хэлэхийг хүссэн зүйлээ оруулна уу",
+  MOBILE_PRELIMINARY_TODOCTOR_NOT_SURE: "Байхгүй",
+
+  MOBILE_PRELIMINARY_SUMMARY_DESC: "Та эмчид хэлэх зүйл байна уу?",
 };
 
 export default lang;

@@ -1,13 +1,13 @@
-import { createContext } from 'react';
+import { createContext } from "react";
 
-export type LangType = 'ko' | 'en';
+export type LangType = "ko" | "en" | "kk" | "mn";
 
 type LanguageContextState = {
-  lang: 'ko' | 'en';
+  lang: LangType;
   setLang: (lang: LangType) => void;
 };
 
 export const LanguageContext = createContext<LanguageContextState>({
-  lang: 'ko',
+  lang: "ko",
   setLang() {},
 });

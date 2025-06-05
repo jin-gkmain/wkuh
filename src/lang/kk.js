@@ -19,6 +19,10 @@ const lang = {
   MOBILE_PRELIMINARY_BACK: "АЛДЫҢҒЫ",
   MOBILE_PRELIMINARY_COMPLETE: "АЯҚТАУ",
   MOBILE_PRELIMINARY_START: "БАСТАУ",
+  MOBILE_PRELIMINARY_ALL_REQUIRED_ERROR:
+    "Барлық қажетті өрістерді тексеріп, қайта енгізіңіз.",
+  MOBILE_PRELIMINARY_PATIENT_NUMBER_ERROR:
+    "Пациент нөмірі жоқ. Тексеріп, қайта енгізіңіз.",
 
   MOBILE_PRELIMINARY_PATIENNUM_DESC:
     "Аурухана берген пациент нөмірін енгізіңіз.",
@@ -57,6 +61,7 @@ const lang = {
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE8: "Тері бөртпесі",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE9: "Етеккірдің тұрақсыздығы",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE10: "Депрессия/Мазасыздық",
+  MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE: "Білмеймін",
 
   MOBILE_PRELIMINARY_PAIN_DESC: "Ауырсыну деңгейі қандай?",
   MOBILE_PRELIMINARY_PAIN_DEGREE1: "Ауырсыну жоқ",
@@ -89,6 +94,7 @@ const lang = {
   MOBILE_PRELIMINARY_PAST_HISTORY_TITLE5: "Басқа",
   MOBILE_PRELIMINARY_PAST_HISTORY_INPUT_PLACEHOLDER:
     "Басқа өткен медициналық тарихты енгізіңіз",
+  MOBILE_PRELIMINARY_PAST_HISTORY_NOT_SURE: "Білмеймін",
 
   MOBILE_PRELIMINARY_SMOKE_DESC: "Темекі шегесіз бе?",
   MOBILE_PRELIMINARY_SMOKE_YES: "Иә",
@@ -100,17 +106,18 @@ const lang = {
   MOBILE_PRELIMINARY_DRINK_NO: "Жоқ",
   MOBILE_PRELIMINARY_DRINK_NOT_NOW: "Бұрын ішетін едім, бірақ тастадым",
 
-  MOBILE_PRELIMINARY_PAST_SURGERY_DESC:
+  MOBILE_PRELIMINARY_PAST_SURGERIES_DESC:
     "Сізге қандай да бір операция жасалды ма?",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE1: "Қалқанша безіне операция",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE2: "Кесар тілігі",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE3: "Нефрэктомия",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE4: "Пластикалық хирургия",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE5: "Жүрекке операция",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE6: "Ісікті алып тастау операциясы",
-  MOBILE_PRELIMINARY_PAST_SURGERY_TITLE7: "Басқа",
-  MOBILE_PRELIMINARY_PAST_SURGERY_INPUT_PLACEHOLDER:
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE1: "Қалқанша безіне операция",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE2: "Кесар тілігі",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE3: "Нефрэктомия",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE4: "Пластикалық хирургия",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE5: "Жүрекке операция",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE6: "Ісікті алып тастау операциясы",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE7: "Басқа",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_INPUT_PLACEHOLDER:
     "Басқа операцияны енгізіңіз",
+  MOBILE_PRELIMINARY_PAST_SURGERIES_NOT_SURE: "Білмеймін",
 
   MOBILE_PRELIMINARY_PAST_MEDICINE_DESC: "Қандай да бір дәрі қабылдадыңыз ба?",
   MOBILE_PRELIMINARY_PAST_MEDICINE_SUBDESC:
@@ -128,12 +135,16 @@ const lang = {
   MOBILE_PRELIMINARY_ALLERGY_TITLE6: "Металл",
   MOBILE_PRELIMINARY_ALLERGY_TITLE7: "Басқа",
   MOBILE_PRELIMINARY_ALLERGY_INPUT_PLACEHOLDER: "Аллергияны енгізіңіз",
+  MOBILE_PRELIMINARY_ALLERGY_NOT_SURE: "Жоқ",
 
   MOBILE_PRELIMINARY_TODOCTOR_DESC: "Дәрігерге айтқыңыз келетін нәрсе бар ма?",
   MOBILE_PRELIMINARY_TODOCTOR_SUBDESC:
     "Егер дәрігерге айтқыңыз келетін ештеңе болмаса, `Жоқ` таңдаңыз",
   MOBILE_PRELIMINARY_TODOCTOR_INPUT_PLACEHOLDER:
     "Дәрігерге айтқыңыз келетін мазмұнды енгізіңіз",
+  MOBILE_PRELIMINARY_TODOCTOR_NOT_SURE: "Жоқ",
+
+  MOBILE_PRELIMINARY_SUMMARY_DESC: "Дәрігерге айтқыңыз келетін нәрсе бар ма?",
 };
 
 export default lang;

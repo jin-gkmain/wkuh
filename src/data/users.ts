@@ -1,4 +1,4 @@
-import instance from '@/utils/myAxios';
+import instance from "@/utils/myAxios";
 
 // export default async function getUsers(body: {
 //   [key: string]: any;
@@ -22,9 +22,9 @@ import instance from '@/utils/myAxios';
 async function getAllUsers(body?: { [key: string]: any }) {
   // ✨ 해당 기관의 사용자 목록 불러오기
   try {
-    const res = await instance.post('/user_list', {
-      search: '',
-      search_key: '',
+    const res = await instance.post("/user_list", {
+      search: "",
+      search_key: "",
       ...body,
     });
 
@@ -36,20 +36,20 @@ async function getAllUsers(body?: { [key: string]: any }) {
       return [];
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
 async function getUsersByOIdx(
   o_idx?: number,
   body?: { [key: string]: string }
-): Promise<User[] | 'ServerError'> {
+): Promise<User[] | "ServerError"> {
   // ✨ 해당 기관의 사용자 목록 불러오기
   try {
-    const res = await instance.post('/user_list', {
-      o_idx: o_idx || '',
-      search: '',
-      search_key: '',
+    const res = await instance.post("/user_list", {
+      o_idx: o_idx || "",
+      search: "",
+      search_key: "",
       ...body,
     });
 
@@ -61,24 +61,24 @@ async function getUsersByOIdx(
       return [];
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
 async function deleteUser(u_idx: number) {
   try {
-    const res = await instance.post('/user_delete', {
+    const res = await instance.post("/user_delete", {
       u_idx,
     });
     const data: MyResponse<SimpleRes> = res.data;
 
-    if (data.result === 'OK') {
-      return 'SUCCESS';
+    if (data.result === "OK") {
+      return "SUCCESS";
     } else {
-      return 'FAIL';
+      return "FAIL";
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
@@ -88,31 +88,32 @@ async function registUser(
   body: { [key: string]: any }
 ) {
   let reqBody = { ...body, o_idx, regist_u_idx };
+  console.log("reqBody > ", reqBody);
   try {
-    const res = await instance.post('/user_regist', reqBody);
+    const res = await instance.post("/user_regist", reqBody);
     const data: MyResponse<SimpleRes> = res.data;
-    if (data.result === 'OK') {
-      return 'SUCCESS';
+    if (data.result === "OK") {
+      return "SUCCESS";
     } else {
-      return 'FAIL';
+      return "FAIL";
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
 async function editUser(u_idx: number, body: { [key: string]: any }) {
-  let reqBody = { u_idx, use_ch: 'y', ...body };
+  let reqBody = { u_idx, use_ch: "y", ...body };
   try {
-    const res = await instance.post('/user_edit', reqBody);
+    const res = await instance.post("/user_edit", reqBody);
     const data: MyResponse<SimpleRes> = res.data;
-    if (data.result === 'OK') {
-      return 'SUCCESS';
+    if (data.result === "OK") {
+      return "SUCCESS";
     } else {
-      return 'FAIL';
+      return "FAIL";
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 

@@ -46,10 +46,10 @@ export default function UserModalBox({
     permission: permissionOptions[0].value,
     job: "doctor",
     note: "",
-    specialty: "general_internal_medicine",
+    medical_dept: "1",
   });
   const jobOptions = getJobOptions(lang, user.job);
-  const specialtyOptions = getSpecialtyOptions(lang, user.job);
+  const medicalDeptOptions = getMedicalDeptOptions(lang, user.job);
   const [idDuplicated, setIdDuplicated] = useState<
     "ready" | "success" | "duplicated"
   >("ready");
@@ -64,14 +64,14 @@ export default function UserModalBox({
     if (selectType === "job") setUser((prev) => ({ ...prev, job: selected }));
     else if (selectType === "permission")
       setUser((prev) => ({ ...prev, permission: selected }));
-    else if (selectType === "specialty")
-      setUser((prev) => ({ ...prev, specialty: selected }));
+    else if (selectType === "medical_dept")
+      setUser((prev) => ({ ...prev, medical_dept: selected }));
   }
 
   // 사용자 수정, 등록
   const handleSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
-
+    console.log("user > ", user);
     const {
       u_idx,
       u_code,
@@ -82,6 +82,7 @@ export default function UserModalBox({
       permission,
       job,
       note,
+      medical_dept,
     } = user;
 
     if (!u_id.trim().length || idDuplicated !== "success") {
@@ -106,14 +107,16 @@ export default function UserModalBox({
       job,
       note,
       country: org.country,
+      medical_dept: medical_dept ? Number(medical_dept) : null,
     };
-
+    console.log("body > ", body);
     // 시용자 등록 모달에서 submit 한 경우
     if (type === "new") {
       // body.u_code = `${org.o_code}_U_018`; // 자동 생성전 임시코드
       body.u_pwd = body.u_id;
 
       const res = await registUser(org.o_idx, regist_u_idx, body);
+      console.log("res > ", res);
       if (res === "SUCCESS") {
         onComplete();
       } else {
@@ -328,10 +331,10 @@ export default function UserModalBox({
                   </span>
                   <Select
                     disabled={user.job === "patient" || user.job === "admin"}
-                    selected={user.specialty}
-                    options={specialtyOptions}
+                    selected={user.medical_dept?.toString() || ""}
+                    options={medicalDeptOptions}
                     setSelected={setSelectedValue}
-                    selectType="specialty"
+                    selectType="medical_dept"
                   />
                 </div>
               </section>
@@ -392,172 +395,172 @@ function getJobOptions(lang: LangType, job: string) {
   return jobList;
 }
 
-function getSpecialtyOptions(lang: LangType, job: string) {
-  const specialtyList = [
+function getMedicalDeptOptions(lang: LangType, job: string) {
+  const medicalDeptList = [
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY1, // 내과
-      value: "general_internal_medicine",
+      value: "1",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY2, // 소화기내과
-      value: "gastroenterology",
+      value: "2",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY3, // 호흡기내과
-      value: "pulmonology",
+      value: "3",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY4, // 심장내과
-      value: "cardiology",
+      value: "4",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY5, // 신장내과
-      value: "nephrology",
+      value: "5",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY6, // 내분비내과
-      value: "endocrinology",
+      value: "6",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY7, // 혈액종양내과
-      value: "hematology_oncology",
+      value: "7",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY8, // 감염내과
-      value: "infectious_disease",
+      value: "8",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY9, // 류마티스내과
-      value: "rheumatology",
+      value: "9",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY10, // 알레르기내과
-      value: "allergy_medicine",
+      value: "10",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY11, // 신경과
-      value: "neuro_medicine",
+      value: "11",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY12, // 일반외과
-      value: "general_surgery",
+      value: "12",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY13, // 흉부외과
-      value: "thoracic_surgery",
+      value: "13",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY14, // 신경외과
-      value: "neurosurgery",
+      value: "14",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY15, // 정형외과
-      value: "orthopedic_surgery",
+      value: "15",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY16, // 성형외과
-      value: "plastic_surgery",
+      value: "16",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY17, // 산부인과
-      value: "obstetrics_gynecology",
+      value: "17",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY18, // 비뇨기과
-      value: "urology",
+      value: "18",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY19, // 소아청소년과
-      value: "pediatric_adolescent_medicine",
+      value: "19",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY20, // 소아외과
-      value: "pediatric_surgery",
+      value: "20",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY21, // 영상의학과
-      value: "radiology",
+      value: "21",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY22, // 핵의학과
-      value: "nuclear_medicine",
+      value: "22",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY23, // 병리과
-      value: "pathology",
+      value: "23",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY24, // 정신건강의학과
-      value: "psychiatry",
+      value: "24",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY25, // 재활의학과
-      value: "rehabilitation_medicine",
+      value: "25",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY26, // 마취통증의학과
-      value: "anesthesiology_pain_medicine",
+      value: "26",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY27, // 피부과
-      value: "dermatology",
+      value: "27",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY28, // 이비인후과
-      value: "otolaryngology",
+      value: "28",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY29, // 안과
-      value: "ophthalmology",
+      value: "29",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY30, // 가정의학과
-      value: "family_medicine",
+      value: "30",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY31, // 치과
-      value: "dentistry",
+      value: "31",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY32, // 응급의학과
-      value: "emergency_medicine",
+      value: "32",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY33, // 노인병내과
-      value: "geriatrics",
+      value: "33",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY34, // 중환자학과
-      value: "critical_care_medicine",
+      value: "34",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY35, // 심장혈관센터
-      value: "cardiovascular_center",
+      value: "35",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY36, // 뇌혈관센터
-      value: "stroke_center",
+      value: "36",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY37, // 장기이식센터
-      value: "organ_transplantation_center",
+      value: "37",
     },
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY38, // 종양센터
-      value: "cancer_center",
+      value: "38",
     },
   ];
   if (job === "patient" || job === "admin") {
-    specialtyList.push(
+    medicalDeptList.push(
       {
         key: langFile[lang].USER_MODAL_USER_JOB5, // 환자
-        value: "patient",
+        value: "1",
       },
       {
         key: langFile[lang].USER_MODAL_USER_JOB6, // 관리자
-        value: "admin",
+        value: "2",
       }
     );
   }
-  return specialtyList;
+  return medicalDeptList;
 }

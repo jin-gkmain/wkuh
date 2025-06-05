@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   SlideContent,
   InputComponentProps,
 } from "../pages/mobile/preliminary/PreliminaryLayout"; // 경로가 정확한지 확인해주세요.
 import { Button, Slider, Stack, TextField } from "@mui/material";
-import langFile from "@/lang";
+import langFile, { getAllValuesForConstantKeyAsDict } from "@/lang";
+import { LanguageContext } from "@/context/LanguageContext";
 
 const commonInputStyles: React.CSSProperties = {
   marginTop: "40px",
@@ -36,21 +37,22 @@ const MyTextInput = ({
   value,
   onChange,
   onKeyDown,
-  placeholder,
   validate,
   helperText,
-}: InputComponentProps & { placeholder?: string }) => (
+  placeholder,
+  lang,
+}: InputComponentProps) => (
   <TextField
     error={validate && !validate(value) && value.length > 0}
     helperText={
-      validate && !validate(value) && value.length > 0 ? helperText : ""
+      validate && !validate(value) && value.length > 0 ? helperText[lang] : ""
     }
     type="text"
     value={value}
     variant="standard"
     onChange={(e) => onChange(e.target.value)}
     onKeyDown={onKeyDown}
-    placeholder={placeholder || "텍스트를 입력하세요"}
+    placeholder={placeholder[lang] || ""}
     style={commonInputStyles}
     slotProps={{
       input: {
@@ -67,18 +69,19 @@ const MyNumberInput = ({
   placeholder,
   validate,
   helperText,
-}: InputComponentProps & { placeholder?: string }) => (
+  lang,
+}: InputComponentProps) => (
   <TextField
     error={validate && !validate(value) && value.length > 0}
     helperText={
-      validate && !validate(value) && value.length > 0 ? helperText : ""
+      validate && !validate(value) && value.length > 0 ? helperText[lang] : ""
     }
     type="number"
     value={value}
     variant="standard"
     onChange={(e) => onChange(e.target.value)}
     onKeyDown={onKeyDown}
-    placeholder={placeholder || "숫자를 입력하세요"}
+    placeholder={placeholder[lang] || ""}
     style={commonInputStyles}
     slotProps={{
       input: {
@@ -94,15 +97,16 @@ const MyTextArea = ({
   placeholder,
   validate,
   helperText,
-}: Omit<InputComponentProps, "onKeyDown"> & { placeholder?: string }) => (
+  lang,
+}: Omit<InputComponentProps, "onKeyDown">) => (
   <TextField
     error={validate && !validate(value) && value.length > 0}
     helperText={
-      validate && !validate(value) && value.length > 0 ? helperText : ""
+      validate && !validate(value) && value.length > 0 ? helperText[lang] : ""
     }
     value={value}
     onChange={(e) => onChange(e.target.value)}
-    placeholder={placeholder || "자유롭게 작성해주세요..."}
+    placeholder={placeholder[lang] || ""}
     multiline
     rows={5}
     variant="outlined"
@@ -133,11 +137,12 @@ const MySliderInput = ({
   placeholder,
   validate,
   helperText,
-}: InputComponentProps & { placeholder?: string }) => {
+  lang,
+}: InputComponentProps) => {
   const marks = [
     {
       value: 0,
-      label: "0 통증 없음",
+      label: "0 " + langFile[lang].MOBILE_PRELIMINARY_PAIN_DEGREE1,
     },
     {
       value: 10,
@@ -157,7 +162,7 @@ const MySliderInput = ({
     },
     {
       value: 48,
-      label: "5 심한 통증",
+      label: "5 " + langFile[lang].MOBILE_PRELIMINARY_PAIN_DEGREE2,
     },
     {
       value: 57,
@@ -177,7 +182,7 @@ const MySliderInput = ({
     },
     {
       value: 96,
-      label: "10 통증 매우 심함",
+      label: "10 " + langFile[lang].MOBILE_PRELIMINARY_PAIN_DEGREE3,
     },
   ];
   function valuetext(value: number) {
@@ -236,11 +241,17 @@ const MySliderInput = ({
 // MyButtonGroup Props 타입 정의
 // InputComponentProps에서 onKeyDown만 가져오고, value와 onChange는 커스텀하게 정의합니다.
 type MyButtonGroupProps = {
-  options: { id: string; label: string; type: "button" | "etc" }[];
+  options: {
+    id: string;
+    label: Record<string, string>;
+    type: "button" | "etc";
+  }[];
   value: string; // 선택된 옵션 상태를 나타내는 JSON 문자열 e.g., {"sym1": true, "sym11": "기타 증상"}
   onChange: (value: string) => void; // 변경된 상태 객체를 JSON 문자열로 전달
   onKeyDown?: (event: React.KeyboardEvent) => void; // onKeyDown은 옵셔널하게 유지
+  lang: string;
   isOneLine?: boolean; // 버튼을 한줄로 보여줄지
+  placeholder?: Record<string, string>;
 };
 
 const MyButtonGroup = ({
@@ -248,6 +259,8 @@ const MyButtonGroup = ({
   value, // JSON string from props
   onChange,
   onKeyDown,
+  lang,
+  placeholder,
   isOneLine = false,
 }: MyButtonGroupProps) => {
   // 내부 상태는 객체로 관리
@@ -353,13 +366,13 @@ const MyButtonGroup = ({
                   width: "100%", // 버튼 너비 강제
                 }}
               >
-                {option.label}
+                {option.label[lang]}
               </Button>
               {isEtcSelectedAndVisible && (
                 <TextField
                   variant="outlined" // 사용자가 변경한 variant 유지
                   fullWidth
-                  placeholder="기타 증상을 입력하세요"
+                  placeholder={placeholder?.[lang] || ""}
                   value={selectedOptionsMap[option.id] as string} // 이미 string으로 확인됨
                   onChange={(e) =>
                     handleTextFieldChange(option.id, e.target.value)
@@ -390,10 +403,11 @@ const MyButtonGroup = ({
 
 // MySelectButtonGroup Props 타입 정의
 type MySelectButtonGroupProps = {
-  options: { id: string; label: string }[]; // etc 타입은 우선 제외, 필요시 추가
+  options: { id: string; label: Record<string, string> }[]; // etc 타입은 우선 제외, 필요시 추가
   value: string | null; // 선택된 단일 옵션의 ID 또는 null
   onChange: (selectedId: string | null) => void; // 변경된 단일 ID 또는 null을 전달
   onKeyDown?: (event: React.KeyboardEvent) => void;
+  lang: string;
   isOneLine?: boolean;
 };
 
@@ -402,6 +416,7 @@ const MySelectButtonGroup = ({
   value: selectedOption,
   onChange,
   onKeyDown,
+  lang,
   isOneLine = false,
 }: MySelectButtonGroupProps) => {
   const handleButtonClick = (optionId: string) => {
@@ -446,7 +461,7 @@ const MySelectButtonGroup = ({
               justifyContent: "center",
             }}
           >
-            {option.label}
+            {option.label[lang]}
           </Button>
         ))}
       </div>
@@ -456,65 +471,344 @@ const MySelectButtonGroup = ({
 
 // Options for MyButtonGroup instances
 const symptomsOptions = [
-  { id: "sym1", label: "두통", type: "button" as const },
-  { id: "sym2", label: "가슴 통증", type: "button" as const },
-  { id: "sym3", label: "복통", type: "button" as const },
-  { id: "sym4", label: "기침", type: "button" as const },
-  { id: "sym5", label: "열", type: "button" as const },
-  { id: "sym6", label: "메스꺼움/구토", type: "button" as const },
-  { id: "sym7", label: "설사/변비", type: "button" as const },
-  { id: "sym8", label: "피부 발진", type: "button" as const },
-  { id: "sym9", label: "생리 이상", type: "button" as const },
-  { id: "sym10", label: "우울/불안", type: "button" as const },
-  { id: "sym11", label: "기타", type: "etc" as const },
+  {
+    id: "sym1",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE1"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "sym2",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE2"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "sym3",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE3"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "sym4",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE4"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "sym5",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE5"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "sym6",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE6"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "sym7",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE7"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "sym8",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE8"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "sym9",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE9"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "sym10",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE10"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "sym11",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE11"
+    ),
+    type: "etc" as const,
+  },
 ];
 
 const pastHistoryOptions = [
-  { id: "past1", label: "고혈압", type: "button" as const },
-  { id: "past2", label: "당뇨", type: "button" as const },
-  { id: "past3", label: "결핵", type: "button" as const },
-  { id: "past4", label: "암", type: "button" as const },
-  { id: "past5", label: "기타", type: "etc" as const },
+  {
+    id: "past1",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_HISTORY_TITLE1"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "past2",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_HISTORY_TITLE2"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "past3",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_HISTORY_TITLE3"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "past4",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_HISTORY_TITLE4"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "past5",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_HISTORY_TITLE5"
+    ),
+    type: "etc" as const,
+  },
 ];
 
 const familyHistoryOptions = [
-  { id: "family1", label: "고혈압", type: "button" as const },
-  { id: "family2", label: "당뇨", type: "button" as const },
-  { id: "family3", label: "결핵", type: "button" as const },
-  { id: "family4", label: "암", type: "button" as const },
-  { id: "family5", label: "기타", type: "etc" as const },
+  {
+    id: "family1",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE1"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "family2",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE2"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "family3",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE3"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "family4",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE4"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "family5",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE5"
+    ),
+    type: "etc" as const,
+  },
 ];
 
 const smokeOptions = [
-  { id: "smoke1", label: "예" },
-  { id: "smoke2", label: "아니요" },
-  { id: "smoke3", label: "과거에 피웠지만 끊었음" },
+  {
+    id: "smoke1",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SMOKE_YES"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "smoke2",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SMOKE_NO"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "smoke3",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_SMOKE_NOT_NOW"
+    ),
+    type: "button" as const,
+  },
 ];
 
 const drinkOptions = [
-  { id: "drink1", label: "예" },
-  { id: "drink2", label: "아니요" },
-  { id: "drink3", label: "과거에 마셨지만 끊었음" },
+  {
+    id: "drink1",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_DRINK_YES"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "drink2",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_DRINK_NO"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "drink3",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_DRINK_NOT_NOW"
+    ),
+    type: "button" as const,
+  },
 ];
 
 const pastSurgeriesOptions = [
-  { id: "pastSurgery1", label: "맹장수술", type: "button" as const },
-  { id: "pastSurgery2", label: "제왕절개", type: "button" as const },
-  { id: "pastSurgery3", label: "담낭 제거 수술", type: "button" as const },
-  { id: "pastSurgery4", label: "정형외과 수술", type: "button" as const },
-  { id: "pastSurgery5", label: "심장 수술", type: "button" as const },
-  { id: "pastSurgery6", label: "종양 제거 수술", type: "button" as const },
-  { id: "pastSurgery7", label: "기타", type: "etc" as const },
+  {
+    id: "pastSurgery1",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE1"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "pastSurgery2",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE2"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "pastSurgery3",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE3"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "pastSurgery4",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE4"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "pastSurgery6",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE6"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "pastSurgery7",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_PAST_SURGERIES_TITLE7"
+    ),
+    type: "etc" as const,
+  },
 ];
 
 const allergyOptions = [
-  { id: "allergy1", label: "약물", type: "button" as const },
-  { id: "allergy2", label: "음식", type: "button" as const },
-  { id: "allergy3", label: "꽃가루", type: "button" as const },
-  { id: "allergy4", label: "동물 털", type: "button" as const },
-  { id: "allergy5", label: "먼지", type: "button" as const },
-  { id: "allergy6", label: "금속", type: "button" as const },
-  { id: "allergy7", label: "기타", type: "etc" as const },
+  {
+    id: "allergy1",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_ALLERGY_TITLE1"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "allergy2",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_ALLERGY_TITLE2"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "allergy3",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_ALLERGY_TITLE3"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "allergy4",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_ALLERGY_TITLE4"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "allergy5",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_ALLERGY_TITLE5"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "allergy6",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_ALLERGY_TITLE6"
+    ),
+    type: "button" as const,
+  },
+  {
+    id: "allergy7",
+    label: getAllValuesForConstantKeyAsDict(
+      langFile,
+      "MOBILE_PRELIMINARY_ALLERGY_TITLE7"
+    ),
+    type: "etc" as const,
+  },
 ];
 
 export const testSlides: SlideContent[][] = [
@@ -522,14 +816,23 @@ export const testSlides: SlideContent[][] = [
     {
       id: "patientNumQuestion",
       questionKey: "patientNum",
-      title: "병원에서 안내 받은\n환자 번호를 입력해주세요.",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_PATIENNUM_DESC"
+      ),
       inputComponent: (props) => (
         <MyTextInput
           {...props}
-          placeholder="환자 번호"
+          placeholder={getAllValuesForConstantKeyAsDict(
+            langFile,
+            "MOBILE_PRELIMINARY_PATIENNUM_INPUT_PLACEHOLDER"
+          )}
           // validate={(value) => value.trim().length === 4}
           validate={(value) => true}
-          helperText="잘못된 환자번호입니다."
+          helperText={getAllValuesForConstantKeyAsDict(
+            langFile,
+            "MOBILE_PRELIMINARY_PATIENNUM_INPUT_ERROR"
+          )}
         />
       ),
       // validate: (value) => value.trim().length === 4,
@@ -537,15 +840,24 @@ export const testSlides: SlideContent[][] = [
       isValidate: true,
     },
     {
-      id: "nameQuestion",
+      id: "patientBirthQuestion",
       questionKey: "patientBirth",
-      title: "본인의 생년월일을\n입력해주세요",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_PATIENTBIRTH_DESC"
+      ),
       inputComponent: (props) => (
         <MyTextInput
           {...props}
-          placeholder="생년월일 (필수, 6자)"
+          placeholder={getAllValuesForConstantKeyAsDict(
+            langFile,
+            "MOBILE_PRELIMINARY_BIRTHDAY_INPUT_PLACEHOLDER"
+          )}
           validate={(value) => value.trim().length === 6}
-          helperText="생년월일을 6자로 입력해주세요"
+          helperText={getAllValuesForConstantKeyAsDict(
+            langFile,
+            "MOBILE_PRELIMINARY_PATIENTBIRTH_INPUT_ERROR"
+          )}
         />
       ),
       validate: (value) => value.trim().length === 6,
@@ -555,7 +867,10 @@ export const testSlides: SlideContent[][] = [
     {
       id: "symptomsSlide",
       questionKey: "userSymptoms",
-      title: "어떤 증상이 있으신가요?",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_SYMPTOMS_DESC"
+      ),
       inputComponent: (props) => (
         <MyButtonGroup
           {...props}
@@ -580,13 +895,20 @@ export const testSlides: SlideContent[][] = [
       },
       isValidate: true,
       isPass: false,
+      passText: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE"
+      ),
     },
   ],
   [
     {
       id: "painSlide",
       questionKey: "userPain",
-      title: "이번에 발생한 통증은\n어느 정도로 아프신가요?",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_PAIN_DESC"
+      ),
       inputComponent: (props) => <MySliderInput {...props} />,
       validate: (value) => typeof value === "string" && value.trim().length > 0,
       isPass: true,
@@ -596,52 +918,97 @@ export const testSlides: SlideContent[][] = [
     {
       id: "diagnosisSlide",
       questionKey: "userDiagnosis",
-      title: "진단명이 무엇인가요?",
-      content: "진단명을 모를 경우 `잘모르겠음` 선택",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_DIAGNOSIS_DESC"
+      ),
+      content: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_DIAGNOSIS_SUBDESC"
+      ),
       inputComponent: (props) => (
-        <MyTextArea {...props} placeholder="진단명을 입력해주세요." />
+        <MyTextArea
+          {...props}
+          placeholder={getAllValuesForConstantKeyAsDict(
+            langFile,
+            "MOBILE_PRELIMINARY_DIAGNOSIS_INPUT_PLACEHOLDER"
+          )}
+        />
       ),
       validate: (value) => typeof value === "string" && value.trim().length > 0,
       isPass: false,
-      passText: "잘모르겠음",
+      passText: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_DIAGNOSIS_NOT_SURE"
+      ),
     },
   ],
   [
     {
       id: "treatmentSlide",
       questionKey: "userTreatment",
-      title: "그 동안 받은 치료가 있나요?",
-      content: "받은 치료가 없다면 `없음` 선택",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_TREATMENT_DESC"
+      ),
+      content: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_TREATMENT_SUBDESC"
+      ),
       inputComponent: (props) => (
-        <MyTextArea {...props} placeholder="치료 내용을 입력해주세요" />
+        <MyTextArea
+          {...props}
+          placeholder={getAllValuesForConstantKeyAsDict(
+            langFile,
+            "MOBILE_PRELIMINARY_TREATMENT_INPUT_PLACEHOLDER"
+          )}
+        />
       ),
       validate: (value) => typeof value === "string" && value.trim().length > 0,
       isPass: false,
-      passText: "없음",
+      passText: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_TREATMENT_NOT_SURE"
+      ),
     },
   ],
   [
     {
       id: "specificSlide",
       questionKey: "userSpecific",
-      title: "한국에서 받기 원하는\n치료 항목이 있나요?",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_SPECIFIC_DESC"
+      ),
       inputComponent: (props) => (
         <MyTextArea
           {...props}
-          placeholder="받기 원하는 치료 항목을 입력해주세요."
+          placeholder={getAllValuesForConstantKeyAsDict(
+            langFile,
+            "MOBILE_PRELIMINARY_SPECIFIC_INPUT_PLACEHOLDER"
+          )}
         />
       ),
       validate: (value) => typeof value === "string" && value.trim().length > 0,
       isPass: true,
-      passText: "없음",
+      passText: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_SPECIFIC_NOT_SURE"
+      ),
     },
   ],
   [
     {
       id: "pastHistorySlide",
       questionKey: "userPastHistory",
-      title: "과거에 아래의 병력이 있었다면\n 모두 선택 해주세요.",
-      content: "병력이 없다면 없음을 눌러주세요",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_PAST_HISTORY_DESC"
+      ),
+      content: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_PAST_HISTORY_SUBDESC"
+      ),
       inputComponent: (props) => (
         <MyButtonGroup
           {...props}
@@ -666,15 +1033,24 @@ export const testSlides: SlideContent[][] = [
       },
       isValidate: true,
       isPass: false,
-      passText: "없음",
+      passText: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_PAST_HISTORY_NOT_SURE"
+      ),
     },
   ],
   [
     {
       id: "familyHistorySlide",
       questionKey: "userFamilyHistory",
-      title: "가족중 아래의 질환이 있었다면\n 모두 선택 해주세요.",
-      content: "질환이 없다면 없음을 눌러주세요",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_FAMILY_HISTORY_DESC"
+      ),
+      content: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_FAMILY_HISTORY_SUBDESC"
+      ),
       inputComponent: (props) => (
         <MyButtonGroup
           {...props}
@@ -699,14 +1075,20 @@ export const testSlides: SlideContent[][] = [
       },
       isValidate: true,
       isPass: false,
-      passText: "없음",
+      passText: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_FAMILY_HISTORY_NOT_SURE"
+      ),
     },
   ],
   [
     {
       id: "smokeSlide",
       questionKey: "userSmoke",
-      title: "흡연을 하시나요?",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_SMOKE_DESC"
+      ),
       inputComponent: (props) => (
         <MySelectButtonGroup
           {...props}
@@ -725,7 +1107,10 @@ export const testSlides: SlideContent[][] = [
     {
       id: "drinkSlide",
       questionKey: "userDrink",
-      title: "음주를 하시나요?",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_DRINK_DESC"
+      ),
       inputComponent: (props) => (
         <MySelectButtonGroup
           {...props}
@@ -744,7 +1129,10 @@ export const testSlides: SlideContent[][] = [
     {
       id: "pastSurgerySlide",
       questionKey: "userPastSurgery",
-      title: "과거에 수술을 받았나요?",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_PAST_SURGERIES_DESC"
+      ),
       inputComponent: (props) => (
         <MyButtonGroup
           {...props}
@@ -769,19 +1157,33 @@ export const testSlides: SlideContent[][] = [
       },
       isValidate: true,
       isPass: false,
+      passText: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_PAST_SURGERIES_NOT_SURE"
+      ),
     },
   ],
   [
     {
       id: "allergySlide",
       questionKey: "userAllergy",
-      title: "알러지가 있으신가요?",
-      content: "알러지가 없다면 `없음`을 눌러주세요",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_ALLERGY_DESC"
+      ),
+      content: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_ALLERGY_SUBDESC"
+      ),
       inputComponent: (props) => (
         <MyButtonGroup
           {...props}
           options={allergyOptions}
           value={typeof props.value === "string" ? props.value : "{}"}
+          placeholder={getAllValuesForConstantKeyAsDict(
+            langFile,
+            "MOBILE_PRELIMINARY_ALLERGY_INPUT_PLACEHOLDER"
+          )}
         />
       ),
       validate: (value) => {
@@ -801,36 +1203,52 @@ export const testSlides: SlideContent[][] = [
       },
       isValidate: true,
       isPass: false,
-      passText: "없음",
+      passText: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_ALLERGY_NOT_SURE"
+      ),
     },
   ],
   [
     {
       id: "todoctorSlide",
       questionKey: "userTodoctor",
-      title: "의료진에게 전달 할\n내용이 있나요?",
-      content: "전달 할 내용이 없다면 `없음`을 눌러주세요",
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_TODOCTOR_DESC"
+      ),
+      content: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_TODOCTOR_SUBDESC"
+      ),
       inputComponent: (props) => (
-        <MyTextArea {...props} placeholder="전달 할 내용을 입력해주세요." />
+        <MyTextArea
+          {...props}
+          placeholder={getAllValuesForConstantKeyAsDict(
+            langFile,
+            "MOBILE_PRELIMINARY_TODOCTOR_INPUT_PLACEHOLDER"
+          )}
+        />
       ),
       validate: (value) => typeof value === "string" && value.trim().length > 0,
       isPass: false,
-      passText: "없음",
+      passText: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_TODOCTOR_NOT_SURE"
+      ),
     },
   ],
   [
     {
       id: "summarySlide",
       questionKey: "summaryPage",
-      title: "제출 완료",
-      content: (
-        <div style={{ textAlign: "center" }}>
-          <h4>설문 완료!</h4>
-          <p>참여해주셔서 감사합니다.</p>
-          <p style={{ fontSize: "0.9em", color: "gray" }}>
-            곧 홈으로 이동합니다.
-          </p>
-        </div>
+      title: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_SUMMARY_DESC"
+      ),
+      content: getAllValuesForConstantKeyAsDict(
+        langFile,
+        "MOBILE_PRELIMINARY_SUMMARY_SUBDESC"
       ),
       isSummary: true,
     },
