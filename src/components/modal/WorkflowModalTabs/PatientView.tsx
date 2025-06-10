@@ -203,7 +203,7 @@ export function PatientView({
           </div>
         </div>
       </div>
-
+      {/* TODO 환자 기본정보 카자흐 경우 추가 필요 */}
       {/* 진료 기본정보 */}
       <div className="diagnosis-info-container">
         <div className="content-header">
@@ -217,9 +217,8 @@ export function PatientView({
           <div className="input-row-wrap">
             <div className="input-col-wrap">
               <span className="label flex gap-3 align-center">
-                <FlagMongolSq width={10} height={10} />
                 {langFile[lang].WORKFLOW_MODAL_CHART_INFO_NURSE1}
-                {/* 몽골 간호사 */}
+                {/* 현지 간호사 */}
               </span>
               <SelectInput
                 usersJobType="nurse"
@@ -239,7 +238,6 @@ export function PatientView({
 
             <div className="input-col-wrap">
               <span className="label flex align-center gap-3">
-                <FlagMongolSq width={10} height={10} />
                 {langFile[lang].WORKFLOW_MODAL_CHART_INFO_DOCTOR1}
                 {/* 몽골 의사 */}
               </span>
@@ -265,7 +263,11 @@ export function PatientView({
           <div className="input-row-wrap">
             <div className="input-col-wrap">
               <span className="label flex align-center gap-3">
-                <FlagKoreaSq width={10} height={10} />
+                {org?.country === "mongolia" ? (
+                  <FlagMongolSq width={10} height={10} />
+                ) : (
+                  <FlagKoreaSq width={10} height={10} />
+                )}
                 {langFile[lang].WORKFLOW_MODAL_CHART_INFO_NURSE2}
                 {/* 한국 간호사 */}
               </span>
@@ -292,7 +294,11 @@ export function PatientView({
             </div>
             <div className="input-col-wrap">
               <span className="label flex align-center gap-3">
-                <FlagKoreaSq width={10} height={10} />
+                {org?.country === "mongolia" ? (
+                  <FlagMongolSq width={10} height={10} />
+                ) : (
+                  <FlagKoreaSq width={10} height={10} />
+                )}
                 {langFile[lang].WORKFLOW_MODAL_CHART_INFO_DOCTOR2}
                 {/* 한국 의사 */}
               </span>

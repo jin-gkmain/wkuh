@@ -5,19 +5,19 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from 'react';
-import DropFileInput from '../common/inputs/DropFileInput';
-import ModalFrame from '../modal/ModalFrame';
-import DateInput, { Value } from '../common/inputs/DateInput';
-import SelectInput from '../common/inputs/SelectInput';
-import FlagKoreaSq from '../common/icons/FlagKoreaSq';
-import langFile from '@/lang';
-import { LangType, LanguageContext } from '@/context/LanguageContext';
-import Select from '../common/inputs/Select';
-import dayjs from 'dayjs';
-import { useAppSelector } from '@/store';
-import { editOrg, registOrg } from '@/data/org';
-import getFiles, { deleteFile, uploadFiles } from '@/data/file';
+} from "react";
+import DropFileInput from "../common/inputs/DropFileInput";
+import ModalFrame from "../modal/ModalFrame";
+import DateInput, { Value } from "../common/inputs/DateInput";
+import SelectInput from "../common/inputs/SelectInput";
+import FlagKoreaSq from "../common/icons/FlagKoreaSq";
+import langFile from "@/lang";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
+import Select from "../common/inputs/Select";
+import dayjs from "dayjs";
+import { useAppSelector } from "@/store";
+import { editOrg, registOrg } from "@/data/org";
+import getFiles, { deleteFile, uploadFiles } from "@/data/file";
 
 type Props = {
   item: Organization | null;
@@ -26,8 +26,8 @@ type Props = {
   onComplete: (data?: any) => void;
 };
 
-const gubun1 = '계약서';
-const gubun2 = '첨부';
+const gubun1 = "계약서";
+const gubun2 = "첨부";
 
 function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
   const { userInfo } = useAppSelector(({ user }) => user);
@@ -37,20 +37,20 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
   const [modalInfo, setModalInfo] = useState<OrganizationModal>({
     o_idx: 0,
     u_idx: 0,
-    o_code: '',
+    o_code: "",
     parent_o_idx: 0,
-    o_name_kor: '',
-    o_name_eng: '',
-    country: 'mongolia',
-    domain: '',
+    o_name_kor: "",
+    o_name_eng: "",
+    country: "korea",
+    domain: "",
     contract_sd: null,
     contract_ed: null,
-    contract_email: '',
-    contract_tel: '',
-    note: '',
-    u_name_kor: '',
-    u_name_eng: '',
-    qr_code: '',
+    contract_email: "",
+    contract_tel: "",
+    note: "",
+    u_name_kor: "",
+    u_name_eng: "",
+    qr_code: "",
   });
   const [inputAlert, setInputAlert] = useState({
     o_name_kor: false,
@@ -67,12 +67,12 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
   const handleRemove = async (id: string) => {
     if (isSavedFile(files[0])) {
       const res = await deleteFile(parseInt(id));
-      if (res === 'SUCCESS') {
+      if (res === "SUCCESS") {
         setFiles((prev) =>
           (prev as SavedFile[]).filter((file) => file.f_idx.toString() !== id)
         );
       } else {
-        console.log('파일 삭제 실패');
+        console.log("파일 삭제 실패");
       }
     } else {
       setFiles((prev) => (prev as File[]).filter((file) => file.name !== id));
@@ -81,7 +81,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
   // 파일 설정
   const setSelectedFiles = async (acceptedFiles: File[]) => {
-    if (type === 'manage') {
+    if (type === "manage") {
       const formData = getFormDataWithFiles(acceptedFiles);
       const res = await uploadFiles(
         formData,
@@ -90,9 +90,9 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
         gubun1,
         gubun2
       );
-      if (res === 'SUCCESS') {
+      if (res === "SUCCESS") {
         const res = await getFiles(modalInfo.o_idx, gubun1, gubun2);
-        if (res !== 'ServerError') {
+        if (res !== "ServerError") {
           setFiles(res);
         }
       }
@@ -108,8 +108,8 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
     if (Array.isArray(dates)) {
       setModalInfo((prev) => ({
         ...prev,
-        contract_sd: dayjs(dates[0]!).format('YYYY.MM.DD'),
-        contract_ed: dayjs(dates[1]!).format('YYYY.MM.DD'),
+        contract_sd: dayjs(dates[0]!).format("YYYY.MM.DD"),
+        contract_ed: dayjs(dates[1]!).format("YYYY.MM.DD"),
       }));
     }
   }, []);
@@ -119,7 +119,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
     let submitable = true;
     keys.forEach((k) => {
       let val =
-        typeof modalInfo[k] === 'string' ? modalInfo[k].trim() : modalInfo[k];
+        typeof modalInfo[k] === "string" ? modalInfo[k].trim() : modalInfo[k];
 
       if (!val) {
         setInputAlert((prev) => ({ ...prev, [k]: true }));
@@ -136,8 +136,8 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
   const getFormDataWithFiles = (acceptedFiles: (SavedFile | File)[]) => {
     const formData = new FormData();
     acceptedFiles.forEach((file) => {
-      if (!('f_idx' in file)) {
-        formData.append('files', file);
+      if (!("f_idx" in file)) {
+        formData.append("files", file);
       }
     });
 
@@ -164,10 +164,10 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
     } = modalInfo;
 
     let submitable = checkRequirements([
-      'o_name_kor',
-      'domain',
-      'o_code',
-      'u_idx',
+      "o_name_kor",
+      "domain",
+      "o_code",
+      "u_idx",
     ]);
 
     if (!submitable) return;
@@ -179,7 +179,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
       o_name_eng,
       o_name_kor,
       country,
-      domain: domain[0] !== '@' ? `@${domain.trim()}` : domain.trim(),
+      domain: domain[0] !== "@" ? `@${domain.trim()}` : domain.trim(),
       contract_ed,
       contract_sd,
       contract_email,
@@ -187,34 +187,34 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
       note,
     };
     // 기관 등록 모달에서 submit 한 경우
-    if (type === 'new') {
+    if (type === "new") {
       const data = await registOrg(parent_o_idx, userInfo.u_idx, body);
-      if (data.message === 'SUCCESS') {
+      if (data.message === "SUCCESS") {
         const formData = getFormDataWithFiles(files);
         const res = await uploadFiles(
           formData,
           data.o_idx,
           userInfo.u_idx,
-          '계약서',
-          '첨부'
+          "계약서",
+          "첨부"
         );
-        if (res === 'SUCCESS') {
+        if (res === "SUCCESS") {
           onComplete();
         } else {
-          console.log('기관 등록은 성공했는데, 파일 업로드에 실패한 경우');
+          console.log("기관 등록은 성공했는데, 파일 업로드에 실패한 경우");
         }
       } else {
-        console.log('기관 등록 실패');
+        console.log("기관 등록 실패");
       }
     }
     // 기관 관리 모달에서 submit 한 경우
-    else if (type === 'manage') {
+    else if (type === "manage") {
       body.parent_o_idx = parent_o_idx;
       const data = await editOrg(o_idx, body);
-      if (data === 'SUCCESS') {
+      if (data === "SUCCESS") {
         onComplete(modalInfo);
       } else {
-        console.log('기관 정보 수정 오류');
+        console.log("기관 정보 수정 오류");
       }
     }
   };
@@ -251,11 +251,11 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
   // 기관 수정의 경우 기존의 파일 목록 데이터 받아와 초기 설정
   useEffect(() => {
-    if (type === 'manage' && item) {
+    if (type === "manage" && item) {
       // 파일 리스트 불러오기
       (async () => {
         const res = await getFiles(item.o_idx, gubun1, gubun2);
-        if (res !== 'ServerError') {
+        if (res !== "ServerError") {
           setFiles(res);
         }
       })();
@@ -266,12 +266,12 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
     <div className="org-modal-box">
       <ModalFrame
         title={
-          type === 'new'
+          type === "new"
             ? langFile[lang].ORG_MODAL_NEW_TITLE_TEXT // 기관 등록
             : langFile[lang].ORG_MODAL_MANAGE_TITLE_TEXT // 기관 정보 수정
         }
         completeBtnText={
-          lang !== 'ko' ? langFile[lang].ORG_MODAL_COMPLETE_BUTTON_TEXT : ''
+          lang !== "ko" ? langFile[lang].ORG_MODAL_COMPLETE_BUTTON_TEXT : ""
         }
         onClose={closeModal}
         onComplete={handleSubmit}
@@ -290,7 +290,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
                   onChange={handleOnChange}
                   type="text"
                   className={`input ${
-                    inputAlert.o_name_kor ? 'alert-border-color' : ''
+                    inputAlert.o_name_kor ? "alert-border-color" : ""
                   }`}
                   id="o_name_kor"
                   name="o_name_kor"
@@ -302,9 +302,19 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
                   *{langFile[lang].ORG_ORG_COUNTRY_TEXT}
                   {/* 국가 */}
                 </span>
-                <div className="input input-disabled">
-                  {getCountry(modalInfo.country)}
-                </div>
+                <Select
+                  selectType="country"
+                  options={countrySelectOptions}
+                  selected={modalInfo.country}
+                  setSelected={(country: any) => {
+                    console.log(country);
+                    setModalInfo((prev) => ({
+                      ...prev,
+                      country: country,
+                    }));
+                    console.log(modalInfo);
+                  }}
+                />
               </div>
 
               <div className="input-col-wrap">
@@ -314,7 +324,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
                 </label>
                 <input
                   autoComplete="off"
-                  value={modalInfo.contract_email || ''}
+                  value={modalInfo.contract_email || ""}
                   onChange={handleOnChange}
                   type="text"
                   className="input"
@@ -334,7 +344,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
                   onChange={handleOnChange}
                   type="text"
                   className={`input ${
-                    inputAlert.domain ? 'alert-border-color' : ''
+                    inputAlert.domain ? "alert-border-color" : ""
                   }`}
                   id="domain"
                   name="domain"
@@ -353,7 +363,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
                   onSelect={setManager}
                   label
                   selected={
-                    lang === 'en' ? modalInfo.u_name_eng : modalInfo.u_name_kor
+                    lang === "en" ? modalInfo.u_name_eng : modalInfo.u_name_kor
                   }
                 />
               </div>
@@ -367,7 +377,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
                 </label>
                 <input
                   autoComplete="off"
-                  value={modalInfo.o_name_eng || ''}
+                  value={modalInfo.o_name_eng || ""}
                   onChange={handleOnChange}
                   type="text"
                   className="input"
@@ -402,7 +412,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
                 </label>
                 <input
                   autoComplete="off"
-                  value={modalInfo.contract_tel || ''}
+                  value={modalInfo.contract_tel || ""}
                   onChange={handleOnChange}
                   type="text"
                   className="input"
@@ -422,7 +432,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
                   onChange={handleOnChange}
                   type="text"
                   className={`input ${
-                    inputAlert.o_code ? 'alert-border-color' : ''
+                    inputAlert.o_code ? "alert-border-color" : ""
                   }`}
                   id="o_code"
                   name="o_code"
@@ -442,7 +452,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
               name="note"
               id="note"
               className="input"
-              value={modalInfo.note || ''}
+              value={modalInfo.note || ""}
               onChange={handleOnChange}
             />
           </div>
@@ -473,11 +483,15 @@ function getCountryOptions(lang: LangType) {
   return [
     {
       key: langFile[lang].COUNTRY_KOREA, // 한국
-      value: 'korea',
+      value: "korea",
     },
     {
       key: langFile[lang].COUNTRY_MONGOLIA, // 몽골
-      value: 'mongolia',
+      value: "mongolia",
+    },
+    {
+      key: langFile[lang].COUNTRY_KAZAKHSTAN, // 카자흐스탄
+      value: "kazakhstan",
     },
   ];
 }

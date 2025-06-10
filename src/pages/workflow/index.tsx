@@ -1,8 +1,8 @@
-import Layout from '@/components/common/Layout';
-import AddButton from '@/components/common/inputs/AddButton';
-import Select, { SelectOptionType } from '@/components/common/inputs/Select';
-import TableHead from '@/components/common/table/TableHead';
-import TableRow from '@/components/common/table/TableRow';
+import Layout from "@/components/common/Layout";
+import AddButton from "@/components/common/inputs/AddButton";
+import Select, { SelectOptionType } from "@/components/common/inputs/Select";
+import TableHead from "@/components/common/table/TableHead";
+import TableRow from "@/components/common/table/TableRow";
 import React, {
   ReactElement,
   useCallback,
@@ -10,23 +10,23 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
-import { useRouter } from 'next/router';
-import useModal from '@/hooks/useModal';
-import PatientModalBox from '@/components/modal/PatientModalBox';
-import useAlertModal from '@/hooks/useAlertModal';
-import ConfirmAlertBox from '@/components/common/ConfirmAlertBox';
-import CheckAlertbox from '@/components/common/CheckAlertBox';
-import FlagMongolSq from '@/components/common/icons/FlagMongolSq';
-import langFile from '@/lang';
-import { LangType, LanguageContext } from '@/context/LanguageContext';
-import getTableRowMenuOptions from '@/utils/table';
-import { convertTimeToStr } from '@/utils/date';
-import SearchPatientsContent from '@/components/pages/organizations/SearchPatientsContent';
-import { useAppSelector } from '@/store';
-import getOrgs from '@/data/org';
-import getPatients, { deletePatient } from '@/data/patient';
-import MyHead from '@/components/common/MyHead';
+} from "react";
+import { useRouter } from "next/router";
+import useModal from "@/hooks/useModal";
+import PatientModalBox from "@/components/modal/PatientModalBox";
+import useAlertModal from "@/hooks/useAlertModal";
+import ConfirmAlertBox from "@/components/common/ConfirmAlertBox";
+import CheckAlertbox from "@/components/common/CheckAlertBox";
+import FlagMongolSq from "@/components/common/icons/FlagMongolSq";
+import langFile from "@/lang";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
+import getTableRowMenuOptions from "@/utils/table";
+import { convertTimeToStr } from "@/utils/date";
+import SearchPatientsContent from "@/components/pages/organizations/SearchPatientsContent";
+import { useAppSelector } from "@/store";
+import getOrgs from "@/data/org";
+import getPatients, { deletePatient } from "@/data/patient";
+import MyHead from "@/components/common/MyHead";
 
 export type searchOptions = {
   search_p_chart_no: string;
@@ -48,8 +48,8 @@ export default function WorkflowPage() {
   );
 
   const { ModalPortal, openModal, closeModal } = useModal();
-  const [modalType, setModalType] = useState<ModalType>('new');
-  const [selectedHospital, setSelectedHospital] = useState('');
+  const [modalType, setModalType] = useState<ModalType>("new");
+  const [selectedHospital, setSelectedHospital] = useState("");
   const {
     ModalPortal: RemoveModalPortal,
     openModal: openRemoveModal,
@@ -61,9 +61,9 @@ export default function WorkflowPage() {
   const router = useRouter();
 
   const [searchInputs, setSearchInputs] = useState<searchOptions>({
-    search_p_chart_no: '',
-    search_name: '',
-    search_nurse: '',
+    search_p_chart_no: "",
+    search_name: "",
+    search_nurse: "",
   });
 
   // 병원 선택
@@ -79,13 +79,13 @@ export default function WorkflowPage() {
   // 환자 table 의 dropdown 메뉴 선택시 동작
   const onClickMenu = (type: string, patientNumber: number) => {
     selectedPatientIdx.current = patientNumber;
-    if (type === 'manage') {
-      openSelectedModal('manage');
-    } else if (type === 'remove') {
-      if (userInfo.country !== 'korea' || userInfo.permission !== 'admin') {
+    if (type === "manage") {
+      openSelectedModal("manage");
+    } else if (type === "remove") {
+      if (userInfo.country !== "korea" || userInfo.permission !== "admin") {
         return;
       }
-      setModalType('remove');
+      setModalType("remove");
       openRemoveModal();
     }
   };
@@ -98,20 +98,20 @@ export default function WorkflowPage() {
 
   // 환자 등록, 수정이 완료되었을 때 동작
   const onComplete = async (data: Patient | null) => {
-    if (modalType === 'new') {
+    if (modalType === "new") {
       // ✨ 전달받은 환자 data 를 patients 목록에 추가한다.
       const o_idx =
-        userInfo.country === 'korea'
+        userInfo.country === "korea"
           ? parseInt(selectedHospital)
           : userInfo.o_idx;
 
       const res = await getPatients(o_idx, searchInputs);
-      if (res !== 'ServerError') {
+      if (res !== "ServerError") {
         setPatients(res);
       } else {
-        console.log('환자목록 불러오기 실패');
+        console.log("환자목록 불러오기 실패");
       }
-    } else if (modalType === 'manage') {
+    } else if (modalType === "manage") {
       // ✨ 전달받은 환자 data를 patients 에서 찾아 변경된 부분을 수정한다.
       setPatients((prev) =>
         prev.map((p) => (p.p_idx === data.p_idx ? data : p))
@@ -124,14 +124,14 @@ export default function WorkflowPage() {
   // 환자목록 삭제
   const removePatient = async () => {
     const res = await deletePatient(selectedPatientIdx.current);
-    if (res === 'SUCCESS') {
+    if (res === "SUCCESS") {
       setPatients((prev) =>
         prev.filter((item) => item.p_idx !== selectedPatientIdx.current)
       );
       closeRemoveModal();
       openAlertModal();
     } else {
-      console.log('환자 삭제 실패');
+      console.log("환자 삭제 실패");
     }
   };
 
@@ -142,11 +142,11 @@ export default function WorkflowPage() {
 
   // 가관 등록하기 버튼 클릭시 동작
   const addPatient = () => {
-    if (userInfo && userInfo.country === 'korea') {
+    if (userInfo && userInfo.country === "korea") {
       if (!selectedHospital)
         return alert(langFile[lang].PATIENT_ALERT_ADD_ORG_FIRST); // PATIENT_ALERT_ADD_ORG_FIRST
     }
-    openSelectedModal('new');
+    openSelectedModal("new");
   };
 
   // 병원목록 설정
@@ -154,7 +154,7 @@ export default function WorkflowPage() {
     if (!userInfo) return;
 
     const fetchHostpitals = async () => {
-      let search = userInfo.country === 'korea' ? 'parent_o_idx' : 'o_idx';
+      let search = userInfo.country === "korea" ? "parent_o_idx" : "o_idx";
       let search_key = userInfo.o_idx;
 
       const h = await getOrgs({
@@ -162,11 +162,11 @@ export default function WorkflowPage() {
         search_key,
       });
 
-      if (h !== 'ServerError') {
+      if (h !== "ServerError") {
         setHospitals(h);
-        console.log('병원목록 받기!!! > ', h);
+        console.log("병원목록 받기!!! > ", h);
       } else {
-        console.log('병원 목록 데이터 받기 실패');
+        console.log("병원 목록 데이터 받기 실패");
       }
     };
 
@@ -179,11 +179,11 @@ export default function WorkflowPage() {
     let options: SelectOptionType[] = [];
     hospitals.forEach((o) => {
       const option: SelectOptionType = {
-        key: o.o_name_kor || '',
-        keyEn: o.o_name_eng || '',
+        key: o.o_name_kor || "",
+        keyEn: o.o_name_eng || "",
         value: o.o_idx.toString(),
       };
-      if (o.use_ch === 'y') {
+      if (o.use_ch === "y") {
         options.push(option);
       }
     });
@@ -199,16 +199,16 @@ export default function WorkflowPage() {
     if (selectedHospital) {
       // 한국 기관의 경우, 선택한 기관의 기관번호, 몽골 기관의 경우 해당 기관의 기관번호로 설정한다.
       const o_idx =
-        userInfo.country === 'korea'
+        userInfo.country === "korea"
           ? parseInt(selectedHospital)
           : userInfo.o_idx;
 
       const fetchPatients = async () => {
         const res = await getPatients(o_idx, searchInputs);
-        if (res !== 'ServerError') {
+        if (res !== "ServerError") {
           setPatients(res);
         } else {
-          console.log('환자목록 불러오기 실패');
+          console.log("환자목록 불러오기 실패");
         }
       };
 
@@ -221,12 +221,12 @@ export default function WorkflowPage() {
     if (userInfo) {
       let { country, permission } = userInfo;
       let dropOptions = [];
-      if (country === 'korea') {
-        if (permission === 'admin') {
-          dropOptions.push('remove');
+      if (country === "korea") {
+        if (permission === "admin") {
+          dropOptions.push("remove");
         }
       }
-      dropOptions.push('manage');
+      dropOptions.push("manage");
 
       setTableDropOptions(dropOptions);
     }
@@ -241,12 +241,12 @@ export default function WorkflowPage() {
         <PatientModalBox
           regist_u_idx={userInfo?.u_idx}
           org={
-            userInfo?.country === 'korea'
+            userInfo?.country === "korea"
               ? hospitals.find((o) => o.o_idx == parseInt(selectedHospital))
               : hospitals[0]
           }
           patient={
-            modalType === 'manage'
+            modalType === "manage"
               ? patients.find((p) => p.p_idx === selectedPatientIdx.current)
               : null
           }
@@ -272,16 +272,16 @@ export default function WorkflowPage() {
         <CheckAlertbox
           handleClose={closeAlertModal}
           title={
-            modalType === 'new'
+            modalType === "new"
               ? langFile[lang].ADD_PATIENT_ALERT_TITLE // 환자 등록 완료
-              : modalType === 'manage'
+              : modalType === "manage"
               ? langFile[lang].EDIT_PATIENT_ALERT_TITLE // 환자 정보 수정 완료
               : langFile[lang].CP_DELETE_PATIENT_ALERT_TITLE // 환자 삭제 완료
           }
           desc={
-            modalType === 'new'
+            modalType === "new"
               ? langFile[lang].ADD_PATIENT_ALERT_DESC // 환자 등록이 완료되었습니다.
-              : modalType === 'manage'
+              : modalType === "manage"
               ? langFile[lang].EDIT_PATIENT_ALERT_DESC // 환자 정보 수정이 완료되었습니다.
               : langFile[lang].CP_DELETE_PATIENT_ALERT_DESC // 환자 삭제가 완료되었습니다.
           }
@@ -298,12 +298,12 @@ export default function WorkflowPage() {
       {/* 병원 filter, 등록 영역 */}
       <div
         className={`flex controll-table-area ${
-          userInfo && userInfo.country === 'korea'
-            ? 'justify-between'
-            : 'justify-end'
+          userInfo && userInfo.country === "korea"
+            ? "justify-between"
+            : "justify-end"
         }`}
       >
-        {userInfo && userInfo.country === 'korea' && (
+        {userInfo && userInfo.country === "korea" && (
           <Select
             options={hospitalsOptions}
             selectType="hospitalSelect"
@@ -343,22 +343,22 @@ export default function WorkflowPage() {
                 tableRowOptionType={tableDropOptions}
                 lang={lang}
               >
-                <td>{p_chart_no ? p_chart_no : '-'}</td>
+                <td>{p_chart_no ? p_chart_no : "-"}</td>
                 <td>{u_name_eng}</td>
-                <td>{tel ? tel : '-'}</td>
-                <td>{address ? address : '-'}</td>
+                <td>{tel ? tel : "-"}</td>
+                <td>{address ? address : "-"}</td>
                 <td>
                   {nurse_idx
-                    ? lang === 'en'
+                    ? lang === "en"
                       ? nurse_name_eng
                       : nurse_name_kor
-                    : '-'}
+                    : "-"}
                 </td>
                 <td>
                   {convertTimeToStr(
                     userInfo?.country,
                     registdate_utc.toString(),
-                    '.'
+                    "."
                   )}
                 </td>
               </TableRow>
@@ -378,43 +378,42 @@ function getTableHeadData(lang: LangType) {
   const tds: TableHeadCol[] = [
     {
       key: langFile[lang].PATIENT_CODE_TEXT, // 환자번호
-      valueType: 'id',
-      type: 'text',
+      valueType: "id",
+      type: "text",
     },
     {
       key: langFile[lang].PATIENT_NAME_TEXT, // 환자명
-      valueType: 'localName',
-      type: 'text',
+      valueType: "localName",
+      type: "text",
     },
     {
       key: langFile[lang].PATIENT_TEL_TEXT, // 연락처
-      valueType: 'phone',
-      type: 'text',
+      valueType: "phone",
+      type: "text",
     },
     {
       key: langFile[lang].PATIENT_ADDRESS_TEXT, // 집주소
-      valueType: 'address',
-      type: 'text',
+      valueType: "address",
+      type: "text",
     },
     {
-      icon: <FlagMongolSq />,
       key: langFile[lang].PATIENT_NURSE_IN_CHARGE_TEXT, // 담당 간호사
-      valueType: 'localName',
-      type: 'text',
+      valueType: "localName",
+      type: "text",
     },
     {
       key: langFile[lang].PATIENT_REGIST_DATE_TEXT, // 등록일
-      valueType: 'date',
-      type: 'text',
+      valueType: "date",
+      type: "text",
     },
 
     {
-      key: '',
-      type: 'button',
+      key: "",
+      type: "button",
     },
     {
-      key: '',
-      type: 'menu',
+      key: "",
+      type: "menu",
     },
   ];
 

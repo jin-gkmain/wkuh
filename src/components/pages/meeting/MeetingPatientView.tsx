@@ -175,7 +175,6 @@ export function PatientView({
           <div className="input-row-wrap">
             <div className="input-col-wrap">
               <span className="label flex gap-3 align-center">
-                <FlagMongolSq width={10} height={10} />
                 {langFile[lang].WORKFLOW_MODAL_CHART_INFO_NURSE1}
                 {/* 몽골 간호사 */}
               </span>
@@ -196,7 +195,6 @@ export function PatientView({
 
             <div className="input-col-wrap">
               <span className="label flex align-center gap-3">
-                <FlagMongolSq width={10} height={10} />
                 {langFile[lang].WORKFLOW_MODAL_CHART_INFO_DOCTOR1}
                 {/* 몽골 의사 */}
               </span>

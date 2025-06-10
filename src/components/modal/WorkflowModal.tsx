@@ -1445,7 +1445,6 @@ export default function WorkflowModal({ closeModal }: Props) {
 
                 <div className="input-col-wrap flex-1">
                   <span className="label flex gap-3 align-center">
-                    <FlagMongolSq />
                     {langFile[lang].WORKFLOW_MODAL_TELE_DATE} {"  "}
                     {/* 협진일시 */}
                     <span className="desc">
@@ -1453,6 +1452,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       {/* (*한국 협진일시 등록시 자동 등록됩니다.) */}
                     </span>
                   </span>
+                  {/* TODO 시간 포맷 추가 필요 */}
                   <div className="input input-disabled">
                     {chartInfo.te_date
                       ? convertTimeToStr(
@@ -1555,7 +1555,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       className="input input-disabled"
                     />
                   </div>
-
+                  {/* TODO 국적 추가 필요 */}
                   <div className="input-col-wrap">
                     <label htmlFor="country" className="label">
                       {langFile[lang].WORKFLOW_MODAL_CP_PATIENT_NATIONALITY}

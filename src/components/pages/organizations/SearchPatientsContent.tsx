@@ -1,8 +1,10 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
-import langFile from '@/lang';
-import { LangType } from '@/context/LanguageContext';
-import FlagMongolSq from '@/components/common/icons/FlagMongolSq';
-import { searchOptions } from '@/pages/workflow';
+import React, { ChangeEvent, FormEvent, useState } from "react";
+import langFile from "@/lang";
+import { LangType } from "@/context/LanguageContext";
+import FlagMongolSq from "@/components/common/icons/FlagMongolSq";
+import { searchOptions } from "@/pages/workflow";
+import FlagKoreaSq from "@/components/common/icons/FlagKoreaSq";
+import { useAppSelector } from "@/store";
 
 function SearchPatientsContent({
   lang,
@@ -13,10 +15,11 @@ function SearchPatientsContent({
   onComplete: (searchOpsiont: searchOptions) => void;
   o_idx: string;
 }) {
+  const { userInfo } = useAppSelector(({ user }) => user);
   const [searchInputs, setSearchInputs] = useState({
-    search_p_chart_no: '',
-    search_name: '',
-    search_nurse: '',
+    search_p_chart_no: "",
+    search_name: "",
+    search_nurse: "",
   });
 
   const handleInputChange = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +85,12 @@ function SearchPatientsContent({
 
           <div className="flex item-row align-center">
             <label htmlFor="search_nurse" className="flex gap-3 justify-end">
-              <FlagMongolSq width={13} height={13} />
+              {userInfo?.country === "korea" && (
+                <FlagKoreaSq width={13} height={13} />
+              )}
+              {userInfo?.country === "mongolia" && (
+                <FlagMongolSq width={13} height={13} />
+              )}
               {langFile[lang].PATIENT_SEARCH_NURSE}
               {/** 간호사 */}
             </label>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { Box, CardContent, Card, Typography } from "@mui/material";
+import { Box, CardContent, Card, Typography, Stack } from "@mui/material";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import ChatMessage from "@/components/common/mobile/ChatMessage";
 import ChatInput from "@/components/common/mobile/ChatInput";
@@ -64,7 +64,7 @@ const ChatInterface: React.FC = () => {
           )
         );
         charIndex++;
-        typingTimeoutRef.current = setTimeout(typeChar, 50);
+        typingTimeoutRef.current = setTimeout(typeChar, 25);
       } else {
         setMessages((prev) =>
           prev.map((msg) =>
@@ -142,70 +142,77 @@ const ChatInterface: React.FC = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        justifyContent: "space-between",
-        flexGrow: 1,
-      }}
-    >
-      <Box
+    <Stack sx={{ height: "100vh", width: "100%" }}>
+      <Stack
         sx={{
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          mt: 1,
-          mb: 4,
+          flexDirection: "column",
+          height: "80%",
+          flexGrow: 1,
         }}
       >
-        <Card
+        <Box
           sx={{
-            width: "80%",
-            border: "1px solid #e0e0e0",
-            backgroundColor: "#f5f5f5",
-            borderRadius: 2,
-            boxShadow: 0,
-            p: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mt: 1,
+            mb: 4,
           }}
         >
-          <CardContent
+          <Card
             sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              pt: 2,
-              pb: 0,
+              width: "80%",
+              border: "1px solid #e0e0e0",
+              backgroundColor: "#f5f5f5",
+              borderRadius: 2,
+              boxShadow: 0,
+              p: 0,
             }}
           >
-            <LightbulbIcon sx={{ width: 30, height: 30, mr: 1 }} />
-            <Typography variant="body2">
-              {langFile[lang]?.MOBILE_CHATBOT_INTRO}
-            </Typography>
-          </CardContent>
-        </Card>
-      </Box>
-
-      <Box
-        ref={chatContainerRef}
-        sx={{ flexGrow: 1, overflowY: "auto", p: 2, pb: "100px" }}
-      >
-        {messages.map((msg) => (
-          <ChatMessage
-            key={msg.id}
-            message={msg.text}
-            sender={msg.sender}
-            timestamp={msg.timestamp}
-          />
-        ))}
-      </Box>
-      <ChatInput
-        onSendMessage={handleSendMessage}
-        disabled={loading}
-        placeholder={langFile[lang]?.MOBILE_CHATBOT_INPUT_PLACEHOLDER}
-      />
-    </Box>
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                pt: 2,
+                pb: 0,
+              }}
+            >
+              <LightbulbIcon sx={{ width: 30, height: 30, mr: 1 }} />
+              <Typography variant="body2">
+                {langFile[lang]?.MOBILE_CHATBOT_INTRO}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Box>
+        <Box
+          ref={chatContainerRef}
+          sx={{
+            flexGrow: 1,
+            overflowY: "auto",
+            pr: 2,
+            pl: 2,
+          }}
+        >
+          {messages.map((msg) => (
+            <ChatMessage
+              key={msg.id}
+              message={msg.text}
+              sender={msg.sender}
+              timestamp={msg.timestamp}
+            />
+          ))}
+        </Box>
+      </Stack>
+      <Stack sx={{ height: "20%" }}>
+        <ChatInput
+          onSendMessage={handleSendMessage}
+          disabled={loading}
+          placeholder={langFile[lang]?.MOBILE_CHATBOT_INPUT_PLACEHOLDER}
+        />
+      </Stack>
+    </Stack>
   );
 };
 

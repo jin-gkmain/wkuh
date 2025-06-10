@@ -397,6 +397,7 @@ export default function HistorySearchBox({
             onClick={handleSearch}
             sx={{
               backgroundColor: "#049EB8",
+              padding: "8px 10px",
               "&:hover": { backgroundColor: "rgba(4, 158, 184, 0.8)" },
             }}
           >
@@ -406,6 +407,7 @@ export default function HistorySearchBox({
             variant="contained"
             onClick={handleReset}
             sx={{
+              padding: "8px 10px",
               backgroundColor: "rgba(188, 188, 188, 1)",
               "&:hover": {
                 backgroundColor: "rgba(188, 188, 188, 0.8)",

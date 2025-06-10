@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Box, TextField, IconButton, Paper } from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
+import React, { useState } from "react";
+import { Box, TextField, IconButton, Card, Paper } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -8,34 +8,41 @@ interface ChatInputProps {
   placeholder?: string;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled, placeholder }) => {
-  const [inputValue, setInputValue] = useState('');
+const ChatInput: React.FC<ChatInputProps> = ({
+  onSendMessage,
+  disabled,
+  placeholder,
+}) => {
+  const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (inputValue.trim()) {
       onSendMessage(inputValue.trim());
-      setInputValue('');
+      setInputValue("");
     }
   };
 
   return (
-    <Paper 
-      elevation={3} 
-      sx={{ 
-        position: 'fixed',
+    <Paper
+      elevation={3}
+      sx={{
+        position: "fixed",
         bottom: 0,
-        left: 'auto',
-        right: 'auto',
-        width: '100%',
-        maxWidth: '428px', // MobileLayout의 max-width와 동기화 필요
-        margin: 'auto',
-        p: 1, 
-        backgroundColor: 'background.paper', 
-        zIndex: 1100, 
+        left: "auto",
+        right: "auto",
+        width: "100%",
+        maxWidth: "428px", // MobileLayout의 max-width와 동기화 필요
+        margin: "auto",
+        p: 1,
+        backgroundColor: "background.paper",
       }}
     >
-      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ display: "flex", alignItems: "center" }}
+      >
         <TextField
           fullWidth
           variant="outlined"
@@ -46,12 +53,16 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled, placehol
           disabled={disabled}
           sx={{
             mr: 1,
-            '& .MuiOutlinedInput-root': {
-              borderRadius: '20px',
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "20px",
             },
           }}
         />
-        <IconButton type="submit" color="primary" disabled={disabled || !inputValue.trim()}>
+        <IconButton
+          type="submit"
+          color="primary"
+          disabled={disabled || !inputValue.trim()}
+        >
           <SendIcon />
         </IconButton>
       </Box>
@@ -59,4 +70,4 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, disabled, placehol
   );
 };
 
-export default ChatInput; 
+export default ChatInput;

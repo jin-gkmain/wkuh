@@ -2,6 +2,7 @@ const lang = {
   // 공용
   COUNTRY_KOREA: "한국",
   COUNTRY_MONGOLIA: "몽골",
+  COUNTRY_KAZAKHSTAN: "카자흐스탄",
   ATTACHED_FILE: "첨부파일",
   ATTACHED_FILE_PLACEHOLDER:
     "파일 추가 혹은 여기로 드래그 (20MB 이하, 최대 10개, jpg, png, gif, pdf, xls, ppt, hwp, doc, zuo)",
@@ -282,9 +283,9 @@ const lang = {
   WORKFLOW_MODAL_PT_TEL: "연락처",
 
   WORKFLOW_MODAL_CHART_INFO: "진료 기본정보",
-  WORKFLOW_MODAL_CHART_INFO_NURSE1: "몽골 간호사",
+  WORKFLOW_MODAL_CHART_INFO_NURSE1: "현지 간호사",
   WORKFLOW_MODAL_CHART_INFO_NURSE2: "한국 간호사",
-  WORKFLOW_MODAL_CHART_INFO_DOCTOR1: "몽골 의사",
+  WORKFLOW_MODAL_CHART_INFO_DOCTOR1: "현지 의사",
   WORKFLOW_MODAL_CHART_INFO_DOCTOR2: "한국 의사",
 
   WORKFLOW_MODAL_PT_MEDICAL_INFO: "환자 의료정보",
@@ -942,7 +943,7 @@ const lang = {
   HISTORY_TABLE_HOSPITAL: "병원명",
   HISTORY_TABLE_COUNTRY: "국가",
   HISTORY_TABLE_PATIENT_ID: "환자번호",
-  HISTORY_TABLE_STATUS: "상태", 
+  HISTORY_TABLE_STATUS: "상태",
   HISTORY_TABLE_TELE_DATE: "협진일자",
   HISTORY_TABLE_DOWNLOAD_MESSAGE: "개의 진료내역을 다운로드했습니다.",
   HISTORY_TABLE_NO_DATA: "조건에 맞는 진료내역이 없습니다.",

@@ -6,18 +6,18 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
-import ModalFrame from '../modal/ModalFrame';
-import SelectInput from '../common/inputs/SelectInput';
-import DateInput, { Value } from '../common/inputs/DateInput';
-import { LanguageContext } from '@/context/LanguageContext';
-import langFile from '@/lang';
-import instance from '@/utils/myAxios';
-import dayjs from 'dayjs';
-import { editPatient, registPatient } from '@/data/patient';
-import Select from '../common/inputs/Select';
-import CheckDuplicateInput from '../common/inputs/CheckDuplicateInput';
-import { getOrg } from '@/data/org';
+} from "react";
+import ModalFrame from "../modal/ModalFrame";
+import SelectInput from "../common/inputs/SelectInput";
+import DateInput, { Value } from "../common/inputs/DateInput";
+import { LanguageContext } from "@/context/LanguageContext";
+import langFile from "@/lang";
+import instance from "@/utils/myAxios";
+import dayjs from "dayjs";
+import { editPatient, registPatient } from "@/data/patient";
+import Select from "../common/inputs/Select";
+import CheckDuplicateInput from "../common/inputs/CheckDuplicateInput";
+import { getOrg } from "@/data/org";
 
 type Props = {
   regist_u_idx?: number;
@@ -29,12 +29,12 @@ type Props = {
 };
 
 export type ChartIdDuplicated =
-  | 'ready'
-  | 'success'
-  | 'fail'
-  | 'length'
-  | 'notCheck'
-  | 'modify';
+  | "ready"
+  | "success"
+  | "fail"
+  | "length"
+  | "notCheck"
+  | "modify";
 
 export default function PatientModalBox({
   regist_u_idx,
@@ -46,27 +46,27 @@ export default function PatientModalBox({
 }: Props) {
   const { lang } = useContext(LanguageContext);
   const sexOptions = getSexOptions();
-  const [chartIdCheck, setChartIdCheck] = useState<ChartIdDuplicated>('ready');
-  const [pIdCheck, setPIdCheck] = useState<ChartIdDuplicated>('ready');
+  const [chartIdCheck, setChartIdCheck] = useState<ChartIdDuplicated>("ready");
+  const [pIdCheck, setPIdCheck] = useState<ChartIdDuplicated>("ready");
 
   const [patientInfo, setPatientInfo] = useState<PatientModal>({
     p_idx: 0,
-    u_name_eng: '',
+    u_name_eng: "",
     sex: sexOptions[0].value,
     birthday: null,
-    weight: '',
-    tall: '',
-    tel: '',
-    visit_paths: '',
+    weight: "",
+    tall: "",
+    tel: "",
+    visit_paths: "",
     nurse_idx: null,
-    nurse_name_eng: '',
-    nurse_name_kor: '',
+    nurse_name_eng: "",
+    nurse_name_kor: "",
     p_chart_no: 0,
-    p_email: '',
-    p_id: '',
-    address: '',
-    note: '',
-    p_serial_no: '',
+    p_email: "",
+    p_id: "",
+    address: "",
+    note: "",
+    p_serial_no: "",
   });
 
   const [inputAlert, setInputAlert] = useState({
@@ -74,8 +74,8 @@ export default function PatientModalBox({
     p_serial_no: false,
   });
 
-  const accountRef = useRef('');
-  const serialNoRef = useRef('');
+  const accountRef = useRef("");
+  const serialNoRef = useRef("");
 
   const handleSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
@@ -111,14 +111,14 @@ export default function PatientModalBox({
       return setInputAlert((prev) => ({ ...prev, p_serial_no: true }));
     }
 
-    if (pIdCheck === 'fail') submitable = false;
+    if (pIdCheck === "fail") submitable = false;
 
-    if (chartIdCheck !== 'success') {
+    if (chartIdCheck !== "success") {
       if (
         !(
-          type === 'manage' &&
+          type === "manage" &&
           serialNoRef.current === patientInfo.p_serial_no &&
-          chartIdCheck === 'ready'
+          chartIdCheck === "ready"
         )
       ) {
         submitable = false;
@@ -131,9 +131,9 @@ export default function PatientModalBox({
     let body: any = {
       nurse_idx: nurse_idx || null,
       p_chart_no:
-        type === 'manage' ? p_chart_no : `${org.o_code}-${p_serial_no}`,
+        type === "manage" ? p_chart_no : `${org.o_code}-${p_serial_no}`,
       u_name_eng,
-      u_name_kor: ' ',
+      u_name_kor: " ",
       sex,
       birthday,
       weight,
@@ -147,24 +147,24 @@ export default function PatientModalBox({
       p_email,
     };
 
-    if (type === 'new') {
+    if (type === "new") {
       const res = await registPatient(org.o_idx, regist_u_idx, body);
-      if (res === 'SUCCESS') {
+      if (res === "SUCCESS") {
         onComplete();
       } else {
-        console.log('환자 등록 실패');
+        console.log("환자 등록 실패");
       }
-    } else if (type === 'manage') {
+    } else if (type === "manage") {
       // ✨ 환자 수정 api 통신...
       // 성공시 onComplete에 수정된 환자 정보를 전달하여 환자 정보를 수정하도록한다.
       const res = await editPatient(p_idx, body);
-      if (res === 'SUCCESS') {
+      if (res === "SUCCESS") {
         onComplete({
           ...patientInfo,
           p_chart_no: `${org.o_code}_${p_serial_no}`,
         });
       } else {
-        console.log('환자 정보 수정 실패');
+        console.log("환자 정보 수정 실패");
       }
     }
   };
@@ -173,15 +173,15 @@ export default function PatientModalBox({
   const handleChangeInput = (ev: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = ev.target;
 
-    if (name === 'p_serial_no') {
+    if (name === "p_serial_no") {
       if (!value.trim().length) {
         if (patientInfo.p_id.trim().length) {
-          setPatientInfo((prev) => ({ ...prev, p_id: '' }));
-          setPIdCheck('ready');
+          setPatientInfo((prev) => ({ ...prev, p_id: "" }));
+          setPIdCheck("ready");
         }
       }
-      if (chartIdCheck === 'success') {
-        setChartIdCheck('ready');
+      if (chartIdCheck === "success") {
+        setChartIdCheck("ready");
         setInputAlert((prev) => ({ ...prev, p_serial_no: false }));
       }
     }
@@ -194,7 +194,7 @@ export default function PatientModalBox({
     if (dates && !Array.isArray(dates)) {
       setPatientInfo((prev) => ({
         ...prev,
-        birthday: dayjs(dates).format('YYYYMMDD'),
+        birthday: dayjs(dates).format("YYYYMMDD"),
       }));
     }
   }, []);
@@ -218,8 +218,8 @@ export default function PatientModalBox({
 
   // 계정 생성
   const createAccount = () => {
-    if (chartIdCheck !== 'success') {
-      setPIdCheck('fail');
+    if (chartIdCheck !== "success") {
+      setPIdCheck("fail");
       setInputAlert((prev) => ({ ...prev }));
       return;
     } else {
@@ -227,7 +227,7 @@ export default function PatientModalBox({
         ...prev,
         p_id: prev.p_serial_no,
       }));
-      setPIdCheck('success');
+      setPIdCheck("success");
     }
   };
 
@@ -235,24 +235,24 @@ export default function PatientModalBox({
   const checkSerialNumber = async () => {
     if (!patientInfo.p_serial_no.trim().length) return;
     try {
-      const res = await instance.post('/serial_no_duplicate', {
+      const res = await instance.post("/serial_no_duplicate", {
         p_serial_no: patientInfo.p_serial_no,
       });
 
       // 환자 serial number 사용 가능한 경우
-      if (res.data.result === 'USABLE') {
-        setChartIdCheck('success');
+      if (res.data.result === "USABLE") {
+        setChartIdCheck("success");
 
         setInputAlert((prev) => ({ ...prev, p_serial_no: true }));
-        if (patientInfo.p_id || pIdCheck === 'fail') {
-          setPIdCheck('success');
+        if (patientInfo.p_id || pIdCheck === "fail") {
+          setPIdCheck("success");
           setPatientInfo((prev) => ({
             ...prev,
             p_id: patientInfo.p_serial_no,
           }));
         }
       } else {
-        setChartIdCheck('fail');
+        setChartIdCheck("fail");
 
         setInputAlert((prev) => ({ ...prev, p_serial_no: true }));
       }
@@ -277,12 +277,12 @@ export default function PatientModalBox({
     <div className="patient-modal-box">
       <ModalFrame
         title={
-          type === 'new'
+          type === "new"
             ? langFile[lang].PATIENT_MODAL_NEW_TITLE_TEXT // 환자 등록
             : langFile[lang].PATIENT_MODAL_MANAGE_TITLE_TEXT // 환자 정보 수정
         }
         completeBtnText={
-          lang !== 'ko' ? langFile[lang].PATIENT_MODAL_COMPLETE_BUTTON_TEXT : ''
+          lang !== "ko" ? langFile[lang].PATIENT_MODAL_COMPLETE_BUTTON_TEXT : ""
         }
         onClose={closeModal}
         onComplete={handleSubmit}
@@ -301,7 +301,7 @@ export default function PatientModalBox({
                   value={patientInfo.u_name_eng}
                   type="text"
                   className={`input ${
-                    inputAlert.u_name_eng ? 'alert-border-color' : ''
+                    inputAlert.u_name_eng ? "alert-border-color" : ""
                   }`}
                   id="u_name_eng"
                   name="u_name_eng"
@@ -326,7 +326,7 @@ export default function PatientModalBox({
                 <input
                   autoComplete="off"
                   onChange={handleChangeInput}
-                  value={patientInfo.weight || ''}
+                  value={patientInfo.weight || ""}
                   type="text"
                   className="input"
                   id="weight"
@@ -345,7 +345,7 @@ export default function PatientModalBox({
                   id="tel"
                   name="tel"
                   onChange={handleChangeInput}
-                  value={patientInfo.tel || ''}
+                  value={patientInfo.tel || ""}
                 />
               </div>
             </section>
@@ -362,7 +362,7 @@ export default function PatientModalBox({
                   value={
                     patientInfo.birthday
                       ? new Date(
-                          dayjs(patientInfo.birthday).format('YYYY-MM-DD')
+                          dayjs(patientInfo.birthday).format("YYYY-MM-DD")
                         )
                       : null
                   }
@@ -381,7 +381,7 @@ export default function PatientModalBox({
                   id="tall"
                   name="tall"
                   onChange={handleChangeInput}
-                  value={patientInfo.tall || ''}
+                  value={patientInfo.tall || ""}
                 />
               </div>
 
@@ -393,7 +393,7 @@ export default function PatientModalBox({
                 <input
                   autoComplete="off"
                   onChange={handleChangeInput}
-                  value={patientInfo.visit_paths || ''}
+                  value={patientInfo.visit_paths || ""}
                   type="text"
                   className="input"
                   id="visit_paths"
@@ -409,7 +409,7 @@ export default function PatientModalBox({
                 <input
                   autoComplete="off"
                   onChange={handleChangeInput}
-                  value={patientInfo.p_email || ''}
+                  value={patientInfo.p_email || ""}
                   type="text"
                   className="input"
                   id="p_email"
@@ -431,7 +431,7 @@ export default function PatientModalBox({
               className="input"
               name="address"
               onChange={handleChangeInput}
-              value={patientInfo.address || ''}
+              value={patientInfo.address || ""}
             />
           </div>
 
@@ -448,10 +448,10 @@ export default function PatientModalBox({
                 label
                 selected={
                   patientInfo.nurse_idx
-                    ? lang === 'ko'
+                    ? lang === "ko"
                       ? patientInfo.nurse_name_kor
                       : patientInfo.nurse_name_eng
-                    : ''
+                    : ""
                 }
                 disabled={false}
               />
@@ -467,19 +467,19 @@ export default function PatientModalBox({
               </label>
 
               <CheckDuplicateInput
-                disabled={type === 'manage'}
+                disabled={type === "manage"}
                 name="p_serial_no"
                 handleInputChange={handleChangeInput}
                 value={patientInfo.p_serial_no}
                 alert={inputAlert.p_serial_no}
-                alertType={chartIdCheck === 'success' ? 'success' : 'fail'}
+                alertType={chartIdCheck === "success" ? "success" : "fail"}
                 checkDuplicate={checkSerialNumber}
                 alertText={
-                  chartIdCheck === 'success'
+                  chartIdCheck === "success"
                     ? langFile[lang].PATIENT_SERIAL_NUMBER_AVAILABLE_TEXT
-                    : chartIdCheck === 'fail'
+                    : chartIdCheck === "fail"
                     ? langFile[lang].PATIENT_SERIAL_NUMBER_DUPLICATED_TEXT
-                    : ''
+                    : ""
                 }
               />
             </div>
@@ -497,7 +497,7 @@ export default function PatientModalBox({
               className="input"
               name="note"
               onChange={handleChangeInput}
-              value={patientInfo.note || ''}
+              value={patientInfo.note || ""}
             />
           </div>
 
@@ -514,27 +514,27 @@ export default function PatientModalBox({
 
             <div
               className={`w-full relative id-box input flex input-disabled ${
-                pIdCheck === 'success'
-                  ? 'success-border-color'
-                  : pIdCheck === 'fail'
-                  ? 'alert-border-color'
-                  : ''
+                pIdCheck === "success"
+                  ? "success-border-color"
+                  : pIdCheck === "fail"
+                  ? "alert-border-color"
+                  : ""
               }`}
             >
               <div className="w-full p_id">
-                {patientInfo.p_id ? 'ID: ' + patientInfo.p_id : ''}
+                {patientInfo.p_id ? "ID: " + patientInfo.p_id : ""}
               </div>
 
               <span className="alert-text-absolute">
-                {pIdCheck === 'fail'
+                {pIdCheck === "fail"
                   ? langFile[lang].PATIENT_SERIAL_NUMBER_FIRST_TEXT // 환자 일련번호를 먼저 등록해주세요
-                  : pIdCheck === 'success' && type === 'manage'
+                  : pIdCheck === "success" && type === "manage"
                   ? langFile[lang].EDIT_PATIENT_ACCOUNT_TEXT // 일련번호에 따라 계정이 수정되었습니다. 환자에게도 알려주세요
-                  : ''}
+                  : ""}
               </span>
 
               <button
-                disabled={type === 'manage'}
+                disabled={type === "manage"}
                 type="button"
                 onClick={createAccount}
                 className="h-full shrink-0"
@@ -553,12 +553,12 @@ export default function PatientModalBox({
 function getSexOptions() {
   return [
     {
-      key: 'M',
-      value: 'M',
+      key: "M",
+      value: "M",
     },
     {
-      key: 'F',
-      value: 'F',
+      key: "F",
+      value: "F",
     },
   ];
 }

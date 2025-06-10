@@ -2,6 +2,7 @@ const lang = {
   // 공용
   COUNTRY_KOREA: "Korea",
   COUNTRY_MONGOLIA: "Mongolia",
+  COUNTRY_KAZAKHSTAN: "Kazakhstan",
   ATTACHED_FILE: "Attachments",
   ATTACHED_FILE_PLACEHOLDER:
     "Add file or drag here (20MB or less, maximum 10, jpg, png, gif, pdf, xls, ppt, hwp, doc, zuo)",
@@ -281,9 +282,9 @@ const lang = {
   WORKFLOW_MODAL_PT_TEL: "Phone number",
 
   WORKFLOW_MODAL_CHART_INFO: "Medical staff in charge",
-  WORKFLOW_MODAL_CHART_INFO_NURSE1: "Mongolian nurse",
+  WORKFLOW_MODAL_CHART_INFO_NURSE1: "Local nurse",
   WORKFLOW_MODAL_CHART_INFO_NURSE2: "Korean nurse",
-  WORKFLOW_MODAL_CHART_INFO_DOCTOR1: "Mongolian doctor",
+  WORKFLOW_MODAL_CHART_INFO_DOCTOR1: "Local doctor",
   WORKFLOW_MODAL_CHART_INFO_DOCTOR2: "Korean doctor",
 
   WORKFLOW_MODAL_PT_MEDICAL_INFO: "Patient's medical information",

@@ -1,10 +1,10 @@
-import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import duration from 'dayjs/plugin/duration';
-import utc from 'dayjs/plugin/utc';
-import 'dayjs/locale/ko';
-import { LangType } from '@/context/LanguageContext';
-import { Value } from '@/components/common/inputs/DateInput';
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import duration from "dayjs/plugin/duration";
+import utc from "dayjs/plugin/utc";
+import "dayjs/locale/ko";
+import { LangType } from "@/context/LanguageContext";
+import { Value } from "@/components/common/inputs/DateInput";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -12,7 +12,7 @@ dayjs.extend(duration);
 
 // 달력 날짜를 문자열로 변환한다.
 function getDateToStr(value: Value, sep: string) {
-  let str = '';
+  let str = "";
   if (Array.isArray(value)) {
     str += `${dayjs(value[0]).format(`YYYY${sep}MM${sep}DD`)}~${dayjs(
       value[1]
@@ -31,14 +31,21 @@ function convertTimeToStr(
 ) {
   let str;
 
-  const koDate = dayjs(utcTime).tz('Asia/Seoul');
-  const mnDate = dayjs(utcTime).tz('Asia/Ulaanbaatar');
+  const koDate = dayjs(utcTime).tz("Asia/Seoul");
+  const mnDate = dayjs(utcTime).tz("Asia/Ulaanbaatar");
+  const kzDate = dayjs(utcTime).tz("Asia/Almaty");
 
-  if (country === 'KR' || country === 'korea') {
+  if (country === "KR" || country === "korea") {
     if (format) {
       str = dayjs(koDate).format(format);
     } else {
       str = dayjs(koDate).format(`YYYY${sep}MM${sep}DD`);
+    }
+  } else if (country === "KZ" || country === "kazakhstan") {
+    if (format) {
+      str = dayjs(kzDate).format(format);
+    } else {
+      str = dayjs(kzDate).format(`YYYY${sep}MM${sep}DD`);
     }
   } else {
     if (format) {
@@ -62,29 +69,39 @@ function convertChatTime(
 
   // const time = utcTime.toISOString();
 
-  const koDate = dayjs(utcTime).tz('Asia/Seoul');
-  const mnDate = dayjs(utcTime).tz('Asia/Ulaanbaatar');
+  const koDate = dayjs(utcTime).tz("Asia/Seoul");
+  const mnDate = dayjs(utcTime).tz("Asia/Ulaanbaatar");
+  const kzDate = dayjs(utcTime).tz("Asia/Almaty");
 
-  const ko = koDate.locale('ko');
-  const mn = mnDate.locale('en');
+  const ko = koDate.locale("ko");
+  const mn = mnDate.locale("en");
+  const kz = kzDate.locale("en");
 
-  if (country === 'KR' || country === 'korea') {
-    if (lang === 'ko') {
-      if (title) str = ko.format('YYYY.M.D(ddd) a h:mm'); // 한글 (채팅 생성)
-      else str = ko.format('YYYY년 M월 D일 a h:mm'); // 한글(채팅)
+  if (country === "KR" || country === "korea") {
+    if (lang === "ko") {
+      if (title) str = ko.format("YYYY.M.D(ddd) a h:mm"); // 한글 (채팅 생성)
+      else str = ko.format("YYYY년 M월 D일 a h:mm"); // 한글(채팅)
     } else {
-      const ko = koDate.locale('en');
-      str = ko.format('MMM d, YYYY tt h:mm A');
-      str = str.replace('tt', 'at');
+      const ko = koDate.locale("en");
+      str = ko.format("MMM d, YYYY tt h:mm A");
+      str = str.replace("tt", "at");
+    }
+  } else if (country === "KZ" || country === "kazakhstan") {
+    if (lang === "ko") {
+      if (title) str = kz.format("YYYY.M.D(ddd) a h:mm"); // 한글 (채팅 생성)
+      else str = kz.format("YYYY년 M월 D일 a h:mm"); // 한글(채팅)
+    } else {
+      str = kz.format("MMM d, YYYY tt h:mm A");
+      str = str.replace("tt", "at");
     }
   } else {
-    if (lang === 'ko') {
-      const mn = mnDate.locale('ko');
-      if (title) str = mn.format('YYYY.M.D(ddd) a h:mm'); // 한글 (채팅 생성)
-      else str = mn.format('YYYY년 M월 D일 a h:mm'); // 한글(채팅)
+    if (lang === "ko") {
+      const mn = mnDate.locale("ko");
+      if (title) str = mn.format("YYYY.M.D(ddd) a h:mm"); // 한글 (채팅 생성)
+      else str = mn.format("YYYY년 M월 D일 a h:mm"); // 한글(채팅)
     } else {
-      str = mn.format('MMM d, YYYY tt h:mm A');
-      str = str.replace('tt', 'at');
+      str = mn.format("MMM d, YYYY tt h:mm A");
+      str = str.replace("tt", "at");
     }
   }
 
@@ -98,16 +115,18 @@ function getDayDiff(
   float?: boolean
 ) {
   let local;
-  if (country === 'korea') {
-    local = 'Asia/Seoul';
+  if (country === "korea") {
+    local = "Asia/Seoul";
+  } else if (country === "KZ" || country === "kazakhstan") {
+    local = "Asia/Almaty";
   } else {
-    local = 'Asia/Ulaanbaatar';
+    local = "Asia/Ulaanbaatar";
   }
 
   const s_date = dayjs(start).tz(local);
   const e_date = dayjs(end).tz(local);
 
-  return dayjs(e_date).diff(s_date, 'day', float);
+  return dayjs(e_date).diff(s_date, "day", float);
 }
 
 function getTimeElapsed(
@@ -117,10 +136,12 @@ function getTimeElapsed(
 ): { type: string; val: number } {
   let local;
 
-  if (country === 'korea') {
-    local = 'Asia/Seoul';
+  if (country === "korea") {
+    local = "Asia/Seoul";
+  } else if (country === "KZ" || country === "kazakhstan") {
+    local = "Asia/Almaty";
   } else {
-    local = 'Asia/Ulaanbaatar';
+    local = "Asia/Ulaanbaatar";
   }
 
   const s_date = dayjs(start).tz(local);
@@ -129,15 +150,15 @@ function getTimeElapsed(
   const duration = dayjs.duration(e_date.diff(s_date));
 
   if (duration.asYears() >= 1) {
-    return { type: 'year', val: Math.floor(duration.asYears()) };
+    return { type: "year", val: Math.floor(duration.asYears()) };
   } else if (duration.asMonths() >= 1) {
-    return { type: 'month', val: Math.floor(duration.asMonths()) };
+    return { type: "month", val: Math.floor(duration.asMonths()) };
   } else if (duration.asDays() >= 1) {
-    return { type: 'day', val: Math.floor(duration.asDays()) };
+    return { type: "day", val: Math.floor(duration.asDays()) };
   } else if (duration.asHours() >= 1) {
-    return { type: 'hour', val: Math.floor(duration.asHours()) };
+    return { type: "hour", val: Math.floor(duration.asHours()) };
   } else {
-    return { type: 'minute', val: Math.floor(duration.asMinutes()) };
+    return { type: "minute", val: Math.floor(duration.asMinutes()) };
   }
 }
 
