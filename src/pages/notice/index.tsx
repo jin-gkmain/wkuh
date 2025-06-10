@@ -1,7 +1,7 @@
-import Layout from '@/components/common/Layout';
-import AddButton from '@/components/common/inputs/AddButton';
-import TableHead from '@/components/common/table/TableHead';
-import useModal from '@/hooks/useModal';
+import Layout from "@/components/common/Layout";
+import AddButton from "@/components/common/inputs/AddButton";
+import TableHead from "@/components/common/table/TableHead";
+import useModal from "@/hooks/useModal";
 import React, {
   ReactElement,
   useContext,
@@ -9,22 +9,22 @@ import React, {
   useState,
   useEffect,
   useCallback,
-} from 'react';
-import TableRow from '@/components/common/table/TableRow';
-import NoticeModal from '@/components/modal/NoticeModal';
-import useAlertModal from '@/hooks/useAlertModal';
-import ConfirmAlertBox from '@/components/common/ConfirmAlertBox';
-import CheckAlertbox from '@/components/common/CheckAlertBox';
-import Select, { SelectOptionType } from '@/components/common/inputs/Select';
-import langFile from '@/lang';
-import { LanguageContext } from '@/context/LanguageContext';
-import MyHead from '@/components/common/MyHead';
-import { useAppSelector } from '@/store';
-import getOrgs from '@/data/org';
-import { convertTimeToStr } from '@/utils/date';
-import { useRouter } from 'next/router';
-import getNoticeList, { deleteNotice, getNotice } from '@/data/notice';
-import SearchNoticeContent from '@/components/pages/notice/SearchNoticeContent';
+} from "react";
+import TableRow from "@/components/common/table/TableRow";
+import NoticeModal from "@/components/modal/NoticeModal";
+import useAlertModal from "@/hooks/useAlertModal";
+import ConfirmAlertBox from "@/components/common/ConfirmAlertBox";
+import CheckAlertbox from "@/components/common/CheckAlertBox";
+import Select, { SelectOptionType } from "@/components/common/inputs/Select";
+import langFile from "@/lang";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
+import MyHead from "@/components/common/MyHead";
+import { useAppSelector } from "@/store";
+import getOrgs from "@/data/org";
+import { convertTimeToStr } from "@/utils/date";
+import { useRouter } from "next/router";
+import getNoticeList, { deleteNotice, getNotice } from "@/data/notice";
+import SearchNoticeContent from "@/components/pages/notice/SearchNoticeContent";
 
 export type NoticeSearchOptions = {
   title: string;
@@ -50,16 +50,16 @@ export default function NoticePage() {
   const [hospitalsOptions, setHospitalsOptions] = useState<SelectOptionType[]>(
     []
   );
-  const [selectedHospital, setSelectedHospital] = useState('');
+  const [selectedHospital, setSelectedHospital] = useState("");
 
   const [noticeList, setNoticeList] = useState<Notice[] | null>(null);
   const [searchInputs, setSearchInputs] = useState<NoticeSearchOptions>({
-    title: '',
-    regist_u_name: '',
-    regist_date: '',
-    content: '',
+    title: "",
+    regist_u_name: "",
+    regist_date: "",
+    content: "",
   });
-  const [modalType, setModalType] = useState<ModalType>('new');
+  const [modalType, setModalType] = useState<ModalType>("new");
 
   const { ModalPortal, openModal, closeModal } = useModal();
   const {
@@ -69,7 +69,7 @@ export default function NoticePage() {
   } = useModal();
   const { AlertModalPortal, closeAlertModal, openAlertModal } = useAlertModal();
 
-  const selectedNotice = useRef('');
+  const selectedNotice = useRef("");
   const router = useRouter();
 
   const modalOpen = (type: ModalType) => {
@@ -79,25 +79,25 @@ export default function NoticePage() {
 
   const handleMenu = (type: string, noticeId: number) => {
     selectedNotice.current = noticeId.toString();
-    if (type === 'manage') {
+    if (type === "manage") {
       modalOpen(type);
-    } else if (type === 'remove') {
-      setModalType('remove');
+    } else if (type === "remove") {
+      setModalType("remove");
       openRemoveModal();
     }
   };
 
   const handleRowBtnClick = (noticeId: number) => {
     selectedNotice.current = noticeId.toString();
-    setModalType('view');
+    setModalType("view");
     openModal();
   };
 
   const handleModalComplete = async (notice: NoticeModal | number) => {
     // 공지 추가 성공한 경우
-    if (typeof notice === 'number') {
+    if (typeof notice === "number") {
       const res = await getNotice(notice);
-      if (res !== 'ServerError' && res) {
+      if (res !== "ServerError" && res) {
         setNoticeList((prev) => (prev ? [res, ...prev] : [res]));
       }
     } //
@@ -115,7 +115,7 @@ export default function NoticePage() {
   const removeNotice = async () => {
     // ✨ notice 삭제 api 통신...
     const res = await deleteNotice(parseInt(selectedNotice.current));
-    if (res === 'SUCCESS') {
+    if (res === "SUCCESS") {
       setNoticeList((prev) =>
         prev.filter((item) => item.n_idx.toString() != selectedNotice.current)
       );
@@ -148,7 +148,7 @@ export default function NoticePage() {
       return;
     }
 
-    let search = userInfo.country === 'korea' ? 'parent_o_idx' : 'o_idx';
+    let search = userInfo.country === "korea" ? "parent_o_idx" : "o_idx";
     let search_key = userInfo.o_idx;
 
     const fetchOrgs = async () => {
@@ -157,10 +157,10 @@ export default function NoticePage() {
         search_key,
       });
 
-      if (h !== 'ServerError') {
+      if (h !== "ServerError") {
         setHospitals(h);
       } else {
-        console.log('병원 목록 데이터 받기 실패');
+        console.log("병원 목록 데이터 받기 실패");
       }
     };
 
@@ -172,8 +172,8 @@ export default function NoticePage() {
     let options: SelectOptionType[] = [];
     hospitals.forEach((o) => {
       const option: SelectOptionType = {
-        key: o.o_name_kor || '',
-        keyEn: o.o_name_eng || '',
+        key: o.o_name_kor || "",
+        keyEn: o.o_name_eng || "",
         value: o.o_idx.toString(),
       };
       options.push(option);
@@ -184,7 +184,7 @@ export default function NoticePage() {
     if (options.length) {
       setSelectedHospital(options[0].value);
     } else {
-      setSelectedHospital('');
+      setSelectedHospital("");
     }
   }, [hospitals]);
 
@@ -197,7 +197,7 @@ export default function NoticePage() {
           searchInputs
         );
 
-        if (res !== 'ServerError') {
+        if (res !== "ServerError") {
           setNoticeList(res);
         }
       };
@@ -213,10 +213,10 @@ export default function NoticePage() {
     if (userInfo) {
       let { country, permission } = userInfo;
       let dropOptions = [];
-      if (country === 'korea') {
-        if (permission === 'admin') {
-          dropOptions.push('remove');
-          dropOptions.push('manage');
+      if (country === "korea") {
+        if (permission === "admin") {
+          dropOptions.push("remove");
+          dropOptions.push("manage");
         }
       }
 
@@ -234,7 +234,7 @@ export default function NoticePage() {
           modalType={modalType}
           id={selectedNotice.current}
           organization={
-            userInfo.country === 'korea'
+            userInfo.country === "korea"
               ? hospitals.find((h) => h.o_idx === parseInt(selectedHospital))
               : hospitals[0]
           }
@@ -261,16 +261,16 @@ export default function NoticePage() {
       <AlertModalPortal>
         <CheckAlertbox
           title={
-            modalType === 'new'
+            modalType === "new"
               ? langFile[lang].ADD_NOTICE_ALERT_TITLE // 공지사항 등록 완료
-              : modalType === 'manage'
+              : modalType === "manage"
               ? langFile[lang].EDIT_NOTICE_ALERT_TITLE // 공지사랑 수정 완료'
               : langFile[lang].CP_DELETE_NOTICE_ALERT_TITLE // 공지사항 삭제 완료'
           }
           desc={
-            modalType === 'new'
+            modalType === "new"
               ? langFile[lang].ADD_NOTICE_ALERT_DESC // 공지사항 등록이 완료되었습니다.'
-              : modalType === 'manage'
+              : modalType === "manage"
               ? langFile[lang].EDIT_NOTICE_ALERT_DESC // 공지사랑 수정이 완료되었습니다.'
               : langFile[lang].CP_DELETE_NOTICE_ALERT_DESC // 공지사항 삭제가 완료되었습니다.'
           }
@@ -282,8 +282,8 @@ export default function NoticePage() {
       <SearchNoticeContent handleSearch={handleSearch} />
 
       {userInfo &&
-        userInfo.country === 'korea' &&
-        userInfo.permission === 'admin' && (
+        userInfo.country === "korea" &&
+        userInfo.permission === "admin" && (
           <div className="controll-table-area">
             <div className="flex justify-between">
               <Select
@@ -295,7 +295,7 @@ export default function NoticePage() {
               <AddButton
                 text={langFile[lang].ADD_NOTICE_BUTTON_TEXT} // 공지 추가하기
                 onClick={() => {
-                  modalOpen('new');
+                  modalOpen("new");
                 }}
               />
             </div>
@@ -333,20 +333,20 @@ export default function NoticePage() {
                   <td className="body">{content}</td>
                   <td>
                     {regist_u_idx
-                      ? lang === 'ko'
+                      ? lang === "ko"
                         ? regist_name_kor
                         : regist_name_eng
-                      : '-'}
+                      : "-"}
                   </td>
                   <td>
                     {convertTimeToStr(
                       userInfo?.country,
-                      new Date(registdate_utc + ' UTC').toISOString(),
-                      '.'
+                      new Date(registdate_utc + " UTC").toISOString(),
+                      "."
                     )}
                   </td>
                   <td>
-                    {lang === 'ko'
+                    {lang === "ko"
                       ? getCurOrg().o_name_kor
                       : getCurOrg().o_name_eng}
                   </td>
@@ -363,49 +363,49 @@ NoticePage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-function getTableHeadData(lang: 'ko' | 'en') {
+function getTableHeadData(lang: LangType) {
   const tds: TableHeadCol[] = [
     {
       key: langFile[lang].NOTICE_NUMBER_TEXT, // 공지번호
-      valueType: 'id',
-      type: 'text',
+      valueType: "id",
+      type: "text",
     },
     {
       key: langFile[lang].NOTICE_TITLE_TEXT, // 제목
-      value: 'title',
-      valueType: 'title',
-      type: 'text',
+      value: "title",
+      valueType: "title",
+      type: "text",
     },
     {
       key: langFile[lang].NOTICE_CONTENTS_TEXT, // 내용
-      valueType: 'body',
-      type: 'text',
+      valueType: "body",
+      type: "text",
     },
     {
       key: langFile[lang].NOTICE_WRITER_TEXT, // 작성자
-      value: 'writer',
-      valueType: 'name',
-      type: 'text',
+      value: "writer",
+      valueType: "name",
+      type: "text",
     },
     {
       key: langFile[lang].USER_REGIST_DATE_TEXT, // 등록일
-      valueType: 'date',
-      type: 'text',
+      valueType: "date",
+      type: "text",
     },
     {
       key: langFile[lang].NOTICE_TARGE_ORG_TEXT, // 대상기관
-      valueType: 'organization',
-      type: 'text',
+      valueType: "organization",
+      type: "text",
     },
     {
-      key: '',
+      key: "",
       value: null,
-      type: 'button',
+      type: "button",
     },
     {
-      key: '',
+      key: "",
       value: null,
-      type: 'menu',
+      type: "menu",
     },
   ];
   return tds;

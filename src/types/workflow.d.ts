@@ -1,6 +1,7 @@
 type Diagnosis = {
   w_idx: number; // 진료 일련번호
   w_code: string | null; // 진료코드 ( 기관코드_W_일련번호5자리)
+  o_idx: number; // 기관 일련번호
   p_idx: number; // 환자 일련번호
 
   pa_symptoms: string; // 환자정보_증상
@@ -121,7 +122,7 @@ type PostPrescription = {
 
 type PostPrescriptionDetail = Omit<
   PostPrescription,
-  'regist_name_kor' | 'regist_name_eng'
+  "regist_name_kor" | "regist_name_eng"
 > & {
   regist_u_name_kor: string;
   regist_u_name_eng: string;
@@ -129,14 +130,14 @@ type PostPrescriptionDetail = Omit<
 
 type PostPrescriptionModal = Omit<
   PostPrescription,
-  | 'w_idx'
-  | 'p_chart_no'
-  | 'registdate_utc'
-  | 'regist_name_kor'
-  | 'regist_name_eng'
+  | "w_idx"
+  | "p_chart_no"
+  | "registdate_utc"
+  | "regist_name_kor"
+  | "regist_name_eng"
 >;
 
 type DiagnosisModal = Omit<
   Diagnosis,
-  'registdate_local' | 'registdate_utc' | 'update_registdate_utc'
+  "registdate_local" | "registdate_utc" | "update_registdate_utc"
 >;

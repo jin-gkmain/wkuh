@@ -5,22 +5,23 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from 'react';
-import DropFileInput from '../common/inputs/DropFileInput';
-import ModalFrame from '../modal/ModalFrame';
-import DateInput, { Value } from '../common/inputs/DateInput';
-import SelectInput from '../common/inputs/SelectInput';
-import FlagKoreaSq from '../common/icons/FlagKoreaSq';
-import langFile from '@/lang';
-import { LangType, LanguageContext } from '@/context/LanguageContext';
-import Select from '../common/inputs/Select';
-import dayjs from 'dayjs';
-import { useAppSelector } from '@/store';
-import { editOrg, registOrg } from '@/data/org';
-import getFiles, { deleteFile, uploadFiles } from '@/data/file';
-import getVideoFiles, { uploadVideoFiles } from '@/data/video_file';
-import { editVideo, registVideo } from '@/data/video';
-import { getPatient } from '@/data/patient';
+} from "react";
+import DropFileInput from "../common/inputs/DropFileInput";
+import ModalFrame from "../modal/ModalFrame";
+import DateInput, { Value } from "../common/inputs/DateInput";
+import SelectInput from "../common/inputs/SelectInput";
+import FlagKoreaSq from "../common/icons/FlagKoreaSq";
+import langFile from "@/lang";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
+import Select from "../common/inputs/Select";
+import dayjs from "dayjs";
+import { useAppSelector, useAppDispatch } from "@/store";
+import { editOrg, registOrg } from "@/data/org";
+import getFiles, { deleteFile, uploadFiles } from "@/data/file";
+import getVideoFiles, { uploadVideoFiles } from "@/data/video_file";
+import { editVideo, registVideo, getVideo } from "@/data/video";
+import { getPatient } from "@/data/patient";
+import { videoActions } from "@/store/modules/videoSlice";
 
 type Props = {
   item: Video | null;
@@ -29,46 +30,47 @@ type Props = {
   onComplete: (data?: any) => void;
 };
 
-
 function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   const { userInfo } = useAppSelector(({ user }) => user);
   const { lang } = useContext(LanguageContext);
+  const dispatch = useAppDispatch();
 
   const [modalInfo, setModalInfo] = useState<VideoModal>({
-    video: {
+    video: item || {
       v_idx: 0,
       p_idx: 0,
-      di_hospital: '',
-      di_doctor: '',
-      di_date: null,
-      di_memo: '',
-      gubun: '',
+      di_hospital: "",
+      di_doctor: "",
+      di_date: "",
+      di_memo: "",
+      gubun: "",
       videos: [],
     },
     patient: {
       p_idx: 0,
-      o_idx: 0, 
+      o_idx: 0,
       nurse_idx: null,
-      p_chart_no: null, 
-      u_name_eng: '', 
-      sex: '', 
-      birthday: '', 
-      weight: '', 
-      tall: '', 
-      tel: '', 
-      address: '', 
-      note: '', 
-      registdate_locale: new Date(), 
-      registdate_utc: new Date(), 
-      visit_paths: '', 
-      p_serial_no: '', 
-    
-      nurse_name_eng: '',
-      nurse_name_kor: '',
-      p_email: '',
-      p_id: '',
+      p_chart_no: null,
+      u_name_eng: "",
+      sex: "",
+      birthday: "",
+      weight: "",
+      tall: "",
+      tel: "",
+      address: "",
+      note: "",
+      registdate_locale: new Date(),
+      registdate_utc: new Date(),
+      visit_paths: "",
+      p_serial_no: "",
+
+      nurse_name_eng: "",
+      nurse_name_kor: "",
+      p_email: "",
+      p_id: "",
     },
   });
+
   const [inputAlert, setInputAlert] = useState({
     di_hospital: false,
     di_doctor: false,
@@ -85,12 +87,10 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   const handleRemove = async (id: string) => {
     if (isSavedFile(videos[0])) {
       const res = await deleteFile(parseInt(id));
-      if (res === 'SUCCESS') {
+      if (res === "SUCCESS") {
         setVideos((prev) =>
           (prev as VideoFile[]).filter((file) => file.f_idx.toString() !== id)
         );
-      } else {
-        console.log('파일 삭제 실패');
       }
     } else {
       setVideos((prev) => (prev as File[]).filter((file) => file.name !== id));
@@ -99,15 +99,12 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
 
   // 파일 설정
   const setSelectedFiles = async (acceptedFiles: File[]) => {
-    if (type === 'manage') {
+    if (type === "manage") {
       const formData = getFormDataWithFiles(acceptedFiles);
-      const res = await uploadVideoFiles(
-        formData,
-        modalInfo.video.v_idx,
-      );
-      if (res === 'SUCCESS') {
+      const res = await uploadVideoFiles(formData, modalInfo.video.v_idx);
+      if (res === "SUCCESS") {
         const res = await getVideoFiles(modalInfo.video.v_idx);
-        if (res !== 'ServerError') {
+        if (res !== "ServerError") {
           setVideos(res);
         }
       }
@@ -123,20 +120,25 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
     if (Array.isArray(dates)) {
       setModalInfo((prev) => ({
         ...prev,
-        contract_sd: dayjs(dates[0]!).format('YYYY.MM.DD'),
-        contract_ed: dayjs(dates[1]!).format('YYYY.MM.DD'),
+        contract_sd: dayjs(dates[0]!).format("YYYY.MM.DD"),
+        contract_ed: dayjs(dates[1]!).format("YYYY.MM.DD"),
       }));
     }
   }, []);
 
   // 모달 필수항목 확인
   const checkRequirements = (keys: Array<keyof Video>) => {
+    console.log("checkRequirements 시작, keys:", keys);
     let submitable = true;
     keys.forEach((k) => {
       let val =
-        typeof modalInfo[k] === 'string' ? modalInfo[k].trim() : modalInfo[k];
+        typeof modalInfo.video[k] === "string"
+          ? modalInfo.video[k].trim()
+          : modalInfo.video[k];
 
+      console.log(`Field ${k}:`, val);
       if (!val) {
+        console.log(`Field ${k} 비어있음`);
         setInputAlert((prev) => ({ ...prev, [k]: true }));
         submitable = false;
       } else {
@@ -144,6 +146,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
       }
     });
 
+    console.log("checkRequirements 결과:", submitable);
     return submitable;
   };
 
@@ -151,206 +154,348 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   const getFormDataWithFiles = (acceptedFiles: (VideoFile | File)[]) => {
     const formData = new FormData();
     acceptedFiles.forEach((file) => {
-      if (!('f_idx' in file)) {
-        formData.append('files', file);
+      if (!("f_idx" in file)) {
+        formData.append("files", file);
       }
     });
 
     return formData;
   };
 
-  // 기관 등록, 수정
+  // 비디오 등록, 수정
   const handleSubmit = async (ev: FormEvent) => {
+    console.log("handleSubmit 시작");
     ev.preventDefault();
     const {
-      video: {
-        v_idx,
+      video: { v_idx, p_idx, di_hospital, di_doctor, di_date, di_memo, gubun },
+    } = modalInfo;
+
+    console.log("modalInfo.video:", modalInfo.video);
+    console.log("type:", type);
+
+    let submitable = checkRequirements([
+      "di_hospital",
+      "di_doctor",
+      "di_date",
+      "di_memo",
+      "gubun",
+    ]);
+
+    console.log("submitable:", submitable);
+    if (!submitable) {
+      console.log("validation 실패로 함수 종료");
+      return;
+    }
+
+    if (type === "new") {
+      // 새로 등록하는 경우
+      let body: any = {
         p_idx,
         di_hospital,
         di_doctor,
-        di_date,
+        di_date: di_date,
         di_memo,
-        gubun,
-      }
-    } = modalInfo;
+        v_sep: gubun,
+        regist_u_idx: userInfo.u_idx,
+      };
 
-    let submitable = checkRequirements([
-      'di_hospital',
-      'di_doctor',
-      'di_date',
-      'di_memo',
-      'gubun',
-    ]);
-
-    if (!submitable) return;
-
-    // 비디오 등록 모달에서 submit 한 경우
-    let body: any = {
-      v_idx,
-      p_idx,
-      di_hospital,
-      di_doctor,
-      di_date,
-      di_memo,
-      gubun,
-    };
-
-
-    const data = await registVideo(body);
-    if (data.message === 'SUCCESS') {
-      const formData = getFormDataWithFiles(videos);
-      const res = await uploadVideoFiles(
-        formData,
-        data.v_idx,
-      );
-      if (res === 'SUCCESS') {
-        onComplete();
+      const data = await registVideo(body);
+      if (data.message === "SUCCESS") {
+        if (videos.length > 0) {
+          const formData = getFormDataWithFiles(videos);
+          const res = await uploadVideoFiles(formData, data.v_idx);
+          if (res === "SUCCESS") {
+            // 새로 등록된 비디오 정보를 가져와서 Redux store에 추가
+            const newVideo = await getVideo(data.v_idx);
+            if (newVideo !== "ServerError" && newVideo) {
+              dispatch(videoActions.addVideo(newVideo));
+            }
+            onComplete();
+          } else {
+            console.error("비디오 파일 업로드 실패:", res);
+          }
+        } else {
+          // 파일이 없는 경우에도 비디오 정보를 Redux store에 추가
+          const newVideo = await getVideo(data.v_idx);
+          if (newVideo !== "ServerError" && newVideo) {
+            dispatch(videoActions.addVideo(newVideo));
+          }
+          onComplete();
+        }
       } else {
-        console.log('비디오 등록은 성공했는데, 파일 업로드에 실패한 경우');
+        console.error("비디오 등록 실패:", data);
       }
     } else {
-      console.log('비디오 등록 실패');
+      // 수정하는 경우
+      let body: any = {
+        di_hospital,
+        di_doctor,
+        di_date: di_date,
+        di_memo,
+        v_sep: gubun,
+      };
+
+      const editResult = await editVideo(v_idx, body);
+      if (editResult === "SUCCESS") {
+        if (videos.length > 0) {
+          const formData = getFormDataWithFiles(videos);
+          const res = await uploadVideoFiles(formData, v_idx);
+          if (res === "SUCCESS") {
+            // 수정된 비디오 정보를 가져와서 Redux store 업데이트
+            const updatedVideo = await getVideo(v_idx);
+            if (updatedVideo !== "ServerError" && updatedVideo) {
+              dispatch(videoActions.updateVideo(updatedVideo));
+            }
+            onComplete();
+          } else {
+            console.error("비디오 파일 업로드 실패:", res);
+          }
+        } else {
+          // 파일이 없는 경우에도 비디오 정보를 Redux store에 업데이트
+          const updatedVideo = await getVideo(v_idx);
+          if (updatedVideo !== "ServerError" && updatedVideo) {
+            dispatch(videoActions.updateVideo(updatedVideo));
+          }
+          onComplete();
+        }
+      } else {
+        console.error("비디오 수정 실패:", editResult);
+      }
     }
   };
 
-
   // input onChange시 변경된 값 반영
-  const handleOnChange = (ev: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (
+    ev: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const target = ev.target;
     const { name, value } = target;
-    setModalInfo((prev) => ({ ...prev, [name]: value }));
+    setModalInfo((prev) => ({
+      ...prev,
+      video: { ...prev.video, [name]: value },
+    }));
   };
 
-
-  // 기관수정의 경우 page에서 props로 기관 정보를 받아와 초기 설정
+  // item이 변경될 때 modalInfo 업데이트
   useEffect(() => {
-    const patient = getPatient(item?.p_idx).then((patient) => {
-      if (patient != 'ServerError') {
-        setModalInfo({
-          video: item,
-          patient: patient,
-        });
-      } else {
-        console.log('환자 정보 불러오기 실패');
-      }
-    });
+    if (item?.p_idx) {
+      getPatient(item.p_idx).then((patient) => {
+        if (patient !== "ServerError" && patient) {
+          setModalInfo({
+            video: item,
+            patient: patient,
+          });
+        }
+      });
+    }
   }, [item]);
 
   return (
     <div className="org-modal-box">
       <ModalFrame
-        title={
-            langFile[lang].VIDEO_MODAL_TITLE_TEXT
-        }
-        completeBtnText={
-          lang !== 'ko' ? langFile[lang].VIDEO_MODAL_COMPLETE_BUTTON_TEXT : ''
-        }
+        title={`영상 정보 등록(${
+          modalInfo.patient.u_name_eng || "환자명"
+        }_영문)`}
+        completeBtnText="저장"
         onClose={closeModal}
         onComplete={handleSubmit}
       >
         <div className="input-col-wrap">
+          <h3 className="section-title">환자 기본정보</h3>
+
           <div className="input-row-wrap">
-            <section className="flex-1 input-col-wrap">
-              <div className="input-col-wrap">
-                <label htmlFor="u_name_eng" className="label">
-                  *{langFile[lang].WORKFLOW_MODAL_PT_NAME}
-                  {/* 환자명 */}
-                </label>
-                <input
-                  autoComplete="off"
-                  value={modalInfo.patient.u_name_eng!}
-                  onChange={handleOnChange}
-                  type="text"
-                  className="input-disabled"
-                  id="u_name_eng"
-                  name="u_name_eng"
-                />
-              </div>
+            <div className="input-col-wrap flex-1">
+              <label htmlFor="u_name_eng" className="label">
+                이름
+              </label>
+              <input
+                autoComplete="off"
+                value={modalInfo.patient.u_name_eng || ""}
+                type="text"
+                className="input-disabled"
+                id="u_name_eng"
+                name="u_name_eng"
+                disabled
+              />
+            </div>
 
-              <div className="input-col-wrap">
-                <span className="label">
-                  *{langFile[lang].WORKFLOW_MODAL_PT_BIRTH}
-                  {/* 생년월일 */}
-                </span>
-                <div className="input input-disabled">
-                  {modalInfo.patient.birthday}
-                </div>
-              </div>
+            <div className="input-col-wrap flex-1">
+              <label className="label">나이</label>
+              <input
+                type="text"
+                className="input-disabled"
+                value={(() => {
+                  if (!modalInfo.patient.birthday) return "";
+                  const birthYear = new Date(
+                    modalInfo.patient.birthday
+                  ).getFullYear();
+                  const currentYear = new Date().getFullYear();
+                  const age = currentYear - birthYear;
+                  return isNaN(age) ? "" : age.toString();
+                })()}
+                disabled
+              />
+            </div>
 
-              <div className="input-col-wrap">
-                <label htmlFor="sex" className="label">
-                  {langFile[lang].WORKFLOW_MODAL_PT_GENDER}
-                  {/* 성별 */}
-                </label>
-                <div className="input input-disabled">
-                  {modalInfo.patient.sex}
-                </div>
-              </div>
-
-              <div className="input-col-wrap">
-                <label htmlFor="tell" className="label">
-                  *{langFile[lang].WORKFLOW_MODAL_PT_TEL}
-                  {/* 연락처 */}
-                </label>
-                <div className="input input-disabled">
-                  {modalInfo.patient.tel}
-                </div>
-              </div>
-
-              <div className="input-col-wrap">
-                <span className="label flex gap-3 align-center">
-                  <FlagKoreaSq />*{langFile[lang].WORKFLOW_MODAL_PT_HEIGHT}
-                  {/* 키 */}
-                </span>
-                <div className="input input-disabled">
-                  {modalInfo.patient.tall}
-                </div>
-              </div>
-            </section>
-
-            <section className="flex-1 input-col-wrap">
-              <div className="input-col-wrap">
-                <label htmlFor="o_name_eng" className="label">
-                  {langFile[lang].WORKFLOW_MODAL_PT_WEIGHT}
-                  {/* 몸무게 */}
-                </label>  
-                <div className="input input-disabled">
-                  {modalInfo.patient.weight}
-                </div>
-              </div>
-            </section>
+            <div className="input-col-wrap flex-1">
+              <label className="label">성별</label>
+              <input
+                type="text"
+                className="input"
+                value={modalInfo.patient.sex || ""}
+                disabled
+              />
+            </div>
           </div>
 
-          <div className="input-col-wrap upload-area">
-            <label className="label" htmlFor="note">
-              {langFile[lang].ORG_MODAL_MEMO_TEXT}
-              {/* 메모 */}
-            </label>
-            <input
-              autoComplete="off"
-              type="text"
-              name="note"
-              id="note"
-              className="input"
-              value={modalInfo.video.di_memo || ''}
-              onChange={handleOnChange}
-            />
+          <div className="input-row-wrap">
+            <div className="input-col-wrap flex-1">
+              <label className="label">생년월일</label>
+              <input
+                type="text"
+                className="input-disabled"
+                value={modalInfo.patient.birthday || ""}
+                disabled
+              />
+            </div>
+
+            <div className="input-col-wrap flex-1">
+              <label className="label">키(cm)</label>
+              <input
+                type="text"
+                className="input-disabled"
+                value={
+                  modalInfo.patient.tall
+                    ? modalInfo.patient.tall.toString()
+                    : ""
+                }
+                disabled
+              />
+            </div>
+
+            <div className="input-col-wrap flex-1">
+              <label className="label">몸무게(kg)</label>
+              <input
+                type="text"
+                className="input-disabled"
+                value={
+                  modalInfo.patient.weight
+                    ? modalInfo.patient.weight.toString()
+                    : ""
+                }
+                disabled
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="input-col-wrap">
+          <h3 className="section-title">영상 데이터 정보</h3>
+
+          <div className="input-row-wrap">
+            <div className="input-col-wrap flex-1">
+              <label htmlFor="di_hospital" className="label">
+                진단 병원명
+              </label>
+              <input
+                autoComplete="off"
+                value={modalInfo.video.di_hospital || ""}
+                onChange={handleOnChange}
+                type="text"
+                className={`input ${
+                  inputAlert.di_hospital ? "input-alert" : ""
+                }`}
+                id="di_hospital"
+                name="di_hospital"
+              />
+            </div>
+
+            <div className="input-col-wrap flex-1">
+              <label htmlFor="di_doctor" className="label">
+                진단 의사
+              </label>
+              <input
+                autoComplete="off"
+                value={modalInfo.video.di_doctor || ""}
+                onChange={handleOnChange}
+                type="text"
+                className={`input ${inputAlert.di_doctor ? "input-alert" : ""}`}
+                id="di_doctor"
+                name="di_doctor"
+              />
+            </div>
           </div>
 
-          <div className="input-col-wrap upload-area">
-            <p className="label">
-              {langFile[lang].ORG_MODAL_ATTACH_CONTRACT_FILE}
-              {/* 계약서 파일 첨부 */}
-            </p>
-
-            <DropFileInput
-              labelText={true}
-              files={new Array<File>().concat(videos as File[])}
-              setFiles={setSelectedFiles}
-              onRemove={handleRemove}
-              type="pdf"
-            />
+          <div className="input-row-wrap">
+            <div className="input-col-wrap flex-1">
+              <label htmlFor="di_date" className="label">
+                진단 일자
+              </label>
+              <input
+                autoComplete="off"
+                value={modalInfo.video.di_date || ""}
+                onChange={handleOnChange}
+                type="date"
+                className={`input ${inputAlert.di_date ? "input-alert" : ""}`}
+                id="di_date"
+                name="di_date"
+              />
+            </div>
           </div>
+
+          <div className="input-row-wrap">
+            <div className="input-col-wrap flex-1">
+              <label className="label" htmlFor="di_memo">
+                메모사항
+              </label>
+              <textarea
+                autoComplete="off"
+                name="di_memo"
+                id="di_memo"
+                className={`input ${inputAlert.di_memo ? "input-alert" : ""}`}
+                value={modalInfo.video.di_memo || ""}
+                onChange={handleOnChange}
+                rows={4}
+                placeholder="1. N11.0 : 역류와 관련된 비폐색성 만성 신우신염&#10;2. E11.0 : 인슐린 재합성 당뇨병"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="input-col-wrap">
+          <h3 className="section-title">영상정보 첨부</h3>
+
+          <div className="input-row-wrap">
+            <div className="input-col-wrap" style={{ width: "150px" }}>
+              <select
+                value={modalInfo.video.gubun || ""}
+                onChange={(e) =>
+                  setModalInfo((prev) => ({
+                    ...prev,
+                    video: {
+                      ...prev.video,
+                      gubun: e.target.value as Video["gubun"],
+                    },
+                  }))
+                }
+                className={`input ${inputAlert.gubun ? "input-alert" : ""}`}
+              >
+                <option value="">선택</option>
+                <option value="MRI">MRI</option>
+                <option value="CT">CT</option>
+                <option value="X-RAY">X-RAY</option>
+                <option value="ETC">기타</option>
+              </select>
+            </div>
+          </div>
+
+          <DropFileInput
+            labelText={true}
+            files={new Array<File>().concat(videos as File[])}
+            setFiles={setSelectedFiles}
+            onRemove={handleRemove}
+            type="dicom"
+          />
         </div>
       </ModalFrame>
     </div>
@@ -358,4 +503,3 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
 }
 
 export default React.memo(VideoModalBox);
-

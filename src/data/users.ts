@@ -65,6 +65,22 @@ async function getUsersByOIdx(
   }
 }
 
+async function getUserByUIdx(u_idx: number): Promise<User | "ServerError"> {
+  try {
+    const res = await instance.post("/user_detail", {
+      u_idx,
+    });
+    const data: MyResponse<User> = res.data;
+    if (data.result) {
+      return data.result;
+    } else {
+      return null;
+    }
+  } catch (err) {
+    return "ServerError";
+  }
+}
+
 async function deleteUser(u_idx: number) {
   try {
     const res = await instance.post("/user_delete", {
@@ -117,4 +133,11 @@ async function editUser(u_idx: number, body: { [key: string]: any }) {
   }
 }
 
-export { getAllUsers, getUsersByOIdx, deleteUser, registUser, editUser };
+export {
+  getAllUsers,
+  getUsersByOIdx,
+  getUserByUIdx,
+  deleteUser,
+  registUser,
+  editUser,
+};

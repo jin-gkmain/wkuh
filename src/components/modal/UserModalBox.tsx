@@ -395,7 +395,7 @@ function getJobOptions(lang: LangType, job: string) {
   return jobList;
 }
 
-function getMedicalDeptOptions(lang: LangType, job: string) {
+export function getMedicalDeptOptions(lang: LangType, job: string) {
   const medicalDeptList = [
     {
       key: langFile[lang].USER_MODAL_USER_SPECIALTY1, // 내과

@@ -84,7 +84,7 @@ export default function WorkflowModal({ closeModal }: Props) {
   const { lang } = useContext(LanguageContext);
   const tds = getTableHeadData(lang);
   const [tableMenuOptions, setTableMenuOptions] = useState(() =>
-    getTableRowMenuOptions("remove", lang)
+    getTableRowMenuOptions("remove", lang as "ko" | "en")
   );
   const tabs = getTabs(lang);
   const selectedId = useRef<string>();
@@ -114,6 +114,7 @@ export default function WorkflowModal({ closeModal }: Props) {
   const [alertList, setAlertList] = useState<Alert[] | null>(null);
   const [chartInfo, setChartInfo] = useState<DiagnosisModal>({
     w_idx: 0,
+    o_idx: null,
 
     w_code: null,
     p_idx: patientId || 0,
@@ -1153,7 +1154,7 @@ export default function WorkflowModal({ closeModal }: Props) {
 
   // 언어, 사용자 권한에 따른 처방 요청정보 삭제 권한 제한
   useEffect(() => {
-    let m = getTableRowMenuOptions("remove", lang);
+    let m = getTableRowMenuOptions("remove", lang as "ko" | "en");
     m = m.map((i) =>
       userInfo.country === "korea" && userInfo.permission === "admin"
         ? { ...i, allowed: true }
