@@ -28,7 +28,7 @@ import CheckAlertbox from "@/components/common/CheckAlertBox";
 import getTableRowMenuOptions from "@/utils/table";
 import { convertTimeToStr } from "@/utils/date";
 import dayjs from "dayjs";
-import getPatients, { getPatient } from "@/data/patient";
+import { getPatients, getPatient } from "@/data/patient";
 import getWorkflows, { deleteWorkflow, getWorkflow } from "@/data/workflow";
 import { useAppSelector } from "@/store";
 import { registWorkflow } from "../../../data/workflow";
@@ -610,7 +610,6 @@ function getTableMedicalHeadData(lang: LangType) {
       type: "text",
     },
     {
-      icon: <FlagMongolSq />,
       key: langFile[lang].CHART_NURSE_TEXT,
       valueType: "localName",
       type: "text",
@@ -622,7 +621,6 @@ function getTableMedicalHeadData(lang: LangType) {
       type: "text",
     },
     {
-      icon: <FlagMongolSq />,
       key: langFile[lang].CHART_DOCTOR_TEXT,
       valueType: "localName",
       type: "text",
@@ -724,7 +722,6 @@ function getInfoBoxHeadData(lang: LangType) {
       title: langFile[lang].CHART_INFO_BOX_PT_WEIGHT,
     },
     {
-      defaultIcon: <FlagMongolSq />,
       iconType: "nurse",
       title: langFile[lang].CHART_INFO_BOX_PT_NURSE_IN_CHARGE,
     },

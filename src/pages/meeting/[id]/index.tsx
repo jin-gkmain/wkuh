@@ -1,12 +1,12 @@
-import MeetingRoom from '@/components/pages/meeting/MeetingRoom';
-import { LanguageContext } from '@/context/LanguageContext';
-import getPatients, { getPatient } from '@/data/patient';
-import { getWorkflow } from '@/data/workflow';
-import useMe from '@/hooks/useMe';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState, useContext } from 'react';
-import langFile from '@/lang';
-import SendbirdMeetingRoom from '@/components/pages/meeting/sendbirdtest/SendbirdMeetingRoom';
+import MeetingRoom from "@/components/pages/meeting/MeetingRoom";
+import { LanguageContext } from "@/context/LanguageContext";
+import { getPatients, getPatient } from "@/data/patient";
+import { getWorkflow } from "@/data/workflow";
+import useMe from "@/hooks/useMe";
+import { useRouter } from "next/router";
+import React, { useEffect, useState, useContext } from "react";
+import langFile from "@/lang";
+import SendbirdMeetingRoom from "@/components/pages/meeting/sendbirdtest/SendbirdMeetingRoom";
 
 export type MeetingInfo = {
   startDate: string;
@@ -21,12 +21,12 @@ export type MeetingInfo = {
 export default function MeetingPage() {
   const { lang } = useContext(LanguageContext);
   const { userInfo, loading } = useMe();
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
   const [meetingDate, setMeetingDate] = useState({
-    startDate: '',
-    endDate: '',
+    startDate: "",
+    endDate: "",
   });
-  const [meetingId, setMeetingId] = useState('');
+  const [meetingId, setMeetingId] = useState("");
   const [meetingInfo, setMeetingInfo] = useState<MeetingInfo | null>(null);
 
   const [chartInfo, setChartInfo] = useState<Diagnosis | null>(null);
@@ -36,7 +36,7 @@ export default function MeetingPage() {
 
   const fetchMeetingInfo = async (meetingId: string) => {
     const response = await fetch(`/api/meeting/${meetingId}`, {
-      method: 'GET',
+      method: "GET",
     });
 
     const data = await response.json();
@@ -72,27 +72,27 @@ export default function MeetingPage() {
       if (p_idx && w_idx) {
         const fetchData = async () => {
           let pass = true;
-          if (userInfo.country === 'korea') {
-            console.log('로그인ok > korea');
+          if (userInfo.country === "korea") {
+            console.log("로그인ok > korea");
             const data = await getPatient(parseInt(p_idx));
-            if (data !== 'ServerError' && data) {
+            if (data !== "ServerError" && data) {
               setPatientInfo(data);
             } else {
-              console.log('환자정보 가져오기 실패');
+              console.log("환자정보 가져오기 실패");
               pass = false;
             }
           } //
           else {
-            console.log('로그인ok > mongol');
+            console.log("로그인ok > mongol");
             const data = await getPatients(userInfo.o_idx, {
-              search: 'p_idx',
+              search: "p_idx",
               search_key: p_idx,
             });
 
-            if (data !== 'ServerError' && data.length) {
+            if (data !== "ServerError" && data.length) {
               setPatientInfo(data[0]);
             } else {
-              console.log('환자정보 가져오기 실패');
+              console.log("환자정보 가져오기 실패");
               pass = false;
             }
           }
@@ -100,10 +100,10 @@ export default function MeetingPage() {
           // 환자정보 가져오기 성공인 경우
           if (pass) {
             const w = await getWorkflow(parseInt(w_idx));
-            if (w !== 'ServerError' && w) {
+            if (w !== "ServerError" && w) {
               setChartInfo(w);
             } else {
-              console.log('진료정보 가져오기 실패');
+              console.log("진료정보 가져오기 실패");
               pass = false;
             }
           } //
@@ -122,7 +122,7 @@ export default function MeetingPage() {
               setMeetingInfo(m);
               setUserName(userInfo.u_name_eng);
             } else {
-              console.log('회의정보 가져오기 실패');
+              console.log("회의정보 가져오기 실패");
               pass = false;
             }
           } //
@@ -147,7 +147,7 @@ export default function MeetingPage() {
     }
   }, [userInfo, router.query]);
 
-  if (loading !== 'completed') return null;
+  if (loading !== "completed") return null;
   else {
     if (!userInfo && !userName) {
       return (

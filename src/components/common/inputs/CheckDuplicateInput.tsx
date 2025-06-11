@@ -4,15 +4,16 @@ import React, {
   useContext,
   useState,
   useEffect,
-} from 'react';
-import langFile from '@/lang';
-import { LanguageContext } from '@/context/LanguageContext';
+} from "react";
+import langFile from "@/lang";
+import { LanguageContext } from "@/context/LanguageContext";
+import { ChartIdDuplicated } from "@/components/modal/PatientModalBox";
 
 type Props = {
   disabled?: boolean;
   children?: ReactNode;
   alert: boolean;
-  alertType: 'success' | 'fail';
+  alertType: ChartIdDuplicated;
   alertText?: string;
   checkDuplicate: () => Promise<void>;
   name: string;
@@ -37,11 +38,11 @@ export default function CheckDuplicateInput({
     <div
       className={`check-duplicate-input relative input ${
         alert
-          ? alertType === 'success'
-            ? 'success-border-color'
-            : 'alert-border-color'
-          : ''
-      } ${disabled ? 'input-disabled' : ''}`}
+          ? alertType === "success"
+            ? "success-border-color"
+            : "alert-border-color"
+          : ""
+      } ${disabled ? "input-disabled" : ""}`}
     >
       <input
         disabled={disabled}
@@ -52,13 +53,13 @@ export default function CheckDuplicateInput({
         // className={`w-full ${
         //   alert ? (alertType === 'success' ? 'success' : 'fail') : ''
         // }`}
-        className="w-full"
+        className="w-full h-full"
         onChange={handleInputChange}
-        value={value || ''}
+        value={value || ""}
       />
       {alert && alertText && (
         <span
-          className={`shrink-0 ${alertType === 'success' ? 'success' : 'fail'}`}
+          className={`shrink-0 ${alertType === "success" ? "success" : "fail"}`}
         >
           {alertText}
         </span>

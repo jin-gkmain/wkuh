@@ -1039,6 +1039,10 @@
 
 /* DropFileInput component */
 
+.drop-file-input {
+  min-width: 230px;
+}
+
 .drop-file-input .file-drop-area {
   position: relative;
 }
@@ -1698,6 +1702,7 @@ thead th .fc-scroller {
   flex-direction: row;
   width: 80vw;
   min-width: 320px;
+  max-width: 1325px;
 }
 
 .workflow-modal {
@@ -1923,7 +1928,7 @@ thead th .fc-scroller {
 }
 
 .workflow-modal .input {
-  min-width: 150px;
+  min-width: 230px;
 }
 
 .workflow-modal .radio-box {

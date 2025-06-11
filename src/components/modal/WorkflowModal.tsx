@@ -111,6 +111,7 @@ export default function WorkflowModal({ closeModal }: Props) {
 
   const [patientInfo, setPatientInfo] = useState<Patient>();
   const [org, setOrg] = useState<Organization | null>(null);
+  const [patientOrg, setPatientOrg] = useState<Organization | null>(null);
   const [alertList, setAlertList] = useState<Alert[] | null>(null);
   const [chartInfo, setChartInfo] = useState<DiagnosisModal>({
     w_idx: 0,
@@ -1034,6 +1035,7 @@ export default function WorkflowModal({ closeModal }: Props) {
   };
 
   // 원격협진 날짜, 내원 날짜 지정
+
   const setSchedule = (ev: ChangeEvent<HTMLInputElement>) => {
     const { name } = ev.target;
 
@@ -1124,6 +1126,13 @@ export default function WorkflowModal({ closeModal }: Props) {
         } else {
           console.log("기관정보 불러오기 실패");
         }
+      }
+
+      const patientOrg = await getOrg(patientInfo?.o_idx || 0);
+      if (patientOrg !== "ServerError") {
+        setPatientOrg(patientOrg);
+      } else {
+        console.log("환자 기관정보 불러오기 실패");
       }
 
       const pp = await getPostPrescriptions(chartId);
@@ -1289,6 +1298,7 @@ export default function WorkflowModal({ closeModal }: Props) {
         onComplete={saveWorkflow}
         onClose={closeModal}
         title={langFile[lang].WORKFLOW_MODAL_TITLE} // 진료 워크플로우 진행
+        // width={window.innerWidth > 1024 ? "extra-large" : "small"}
         width="extra-large"
       >
         {/* tab */}
@@ -1456,10 +1466,10 @@ export default function WorkflowModal({ closeModal }: Props) {
                   <div className="input input-disabled">
                     {chartInfo.te_date
                       ? convertTimeToStr(
-                          "mongolia",
+                          patientOrg?.country || "korea",
                           chartInfo.te_date.toString(),
                           null,
-                          "YYYY-MM-DD,a hh:mm"
+                          "YYYY-MM-DD a hh:mm"
                         )
                       : ""}
                   </div>
@@ -2360,7 +2370,7 @@ export default function WorkflowModal({ closeModal }: Props) {
             </div>
 
             {/* visa 요청 */}
-            <div className="files-area">
+            <div className="">
               <div className="content-header">
                 <h3>
                   {langFile[lang].WORKFLOW_MODAL_VF_VISA_REQUEST}
@@ -2522,7 +2532,6 @@ export default function WorkflowModal({ closeModal }: Props) {
 
                   <div className="input-col-wrap flex-1">
                     <span className="label flex gap-3 align-center">
-                      <FlagMongolSq />
                       {langFile[lang].WORKFLOW_MODAL_VI_VISIT_DATE}
                       {/* 진료예약일 */}
                       <span className="desc">
@@ -2538,17 +2547,17 @@ export default function WorkflowModal({ closeModal }: Props) {
                     <div className="input input-disabled">
                       {chartInfo.vii_tad
                         ? convertTimeToStr(
-                            "mongolia",
+                            patientOrg?.country || "korea",
                             chartInfo.vii_tad.toString(),
                             null,
-                            "YYYY-MM-DD,a hh:mm"
+                            "YYYY-MM-DD a hh:mm"
                           )
                         : ""}
                     </div>
                   </div>
                 </div>
 
-                <div className="input-row-wrap justify-content files-area">
+                <div className="input-row-wrap">
                   <div className="input-col-wrap">
                     <label className="label" htmlFor="vii_cost">
                       {langFile[lang].WORKFLOW_MODAL_VI_VISIT_COST}
@@ -2696,7 +2705,7 @@ export default function WorkflowModal({ closeModal }: Props) {
               </div>
 
               <div className="input-col-wrap files-row">
-                <div className="input-row-wrap files-area">
+                <div className="input-row-wrap">
                   <div className="input-col-wrap">
                     <span className="label">
                       {langFile[lang].WORKFLOW_MODAL_VI_VEHICLE_INFO}
@@ -2800,7 +2809,7 @@ export default function WorkflowModal({ closeModal }: Props) {
               </div>
 
               <div className="input-col-wrap">
-                <div className="input-row-wrap justify-content files-area">
+                <div className="input-row-wrap">
                   <div className="input-col-wrap">
                     <span className="label">
                       {langFile[lang].WORKFLOW_MODAL_VR_PRESCRIPTIONS}
@@ -2853,7 +2862,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                   </div>
                 </div>
 
-                <div className="input-row-wrap justify-content files-area">
+                <div className="input-row-wrap justify-content">
                   <div className="input-col-wrap">
                     <span className="label">
                       {langFile[lang].WORKFLOW_MODAL_VR_PROCEDURE_AGREEMENT}
@@ -2939,7 +2948,7 @@ export default function WorkflowModal({ closeModal }: Props) {
               </div>
 
               <div className="flex flex-col gap-10">
-                <div className="flex justify-between">
+                <div className="input-row-wrap">
                   <div className="input-col-wrap">
                     <label htmlFor="p_name_eng" className="label">
                       {langFile[lang].WORKFLOW_MODAL_PT_NAME}
@@ -2999,7 +3008,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                   </div>
                 </div>
 
-                <div className="flex justify-between">
+                <div className="input-row-wrap">
                   <div className="input-col-wrap">
                     <label className="label" htmlFor="p_birthday">
                       {langFile[lang].WORKFLOW_MODAL_PT_BIRTH}

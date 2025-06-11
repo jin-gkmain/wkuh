@@ -22,6 +22,7 @@ import getVideoFiles, { uploadVideoFiles } from "@/data/video_file";
 import { editVideo, registVideo, getVideo } from "@/data/video";
 import { getPatient } from "@/data/patient";
 import { videoActions } from "@/store/modules/videoSlice";
+import DropVideoFileInput from "../common/inputs/DropVideoFileInput";
 
 type Props = {
   item: Video | null;
@@ -72,10 +73,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   });
 
   const [inputAlert, setInputAlert] = useState({
-    di_hospital: false,
-    di_doctor: false,
-    di_date: false,
-    di_memo: false,
+    videos: false,
     gubun: false,
   });
   const [videos, setVideos] = useState<File[] | VideoFile[]>([]);
@@ -126,25 +124,27 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
     }
   }, []);
 
-  // 모달 필수항목 확인
-  const checkRequirements = (keys: Array<keyof Video>) => {
-    console.log("checkRequirements 시작, keys:", keys);
+  // 모달 필수항목 확인 - 영상 1개 이상 및 영상유형 체크
+  const checkRequirements = () => {
+    console.log("checkRequirements 시작, videos length:", videos.length);
+    console.log("gubun:", modalInfo.video.gubun);
     let submitable = true;
-    keys.forEach((k) => {
-      let val =
-        typeof modalInfo.video[k] === "string"
-          ? modalInfo.video[k].trim()
-          : modalInfo.video[k];
 
-      console.log(`Field ${k}:`, val);
-      if (!val) {
-        console.log(`Field ${k} 비어있음`);
-        setInputAlert((prev) => ({ ...prev, [k]: true }));
-        submitable = false;
-      } else {
-        setInputAlert((prev) => ({ ...prev, [k]: false }));
-      }
-    });
+    if (videos.length === 0) {
+      console.log("영상이 없음");
+      setInputAlert((prev) => ({ ...prev, videos: true }));
+      submitable = false;
+    } else {
+      setInputAlert((prev) => ({ ...prev, videos: false }));
+    }
+
+    if (!modalInfo.video.gubun || modalInfo.video.gubun.trim() === "") {
+      console.log("영상유형이 선택되지 않음");
+      setInputAlert((prev) => ({ ...prev, gubun: true }));
+      submitable = false;
+    } else {
+      setInputAlert((prev) => ({ ...prev, gubun: false }));
+    }
 
     console.log("checkRequirements 결과:", submitable);
     return submitable;
@@ -173,13 +173,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
     console.log("modalInfo.video:", modalInfo.video);
     console.log("type:", type);
 
-    let submitable = checkRequirements([
-      "di_hospital",
-      "di_doctor",
-      "di_date",
-      "di_memo",
-      "gubun",
-    ]);
+    let submitable = checkRequirements();
 
     console.log("submitable:", submitable);
     if (!submitable) {
@@ -312,7 +306,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
                 autoComplete="off"
                 value={modalInfo.patient.u_name_eng || ""}
                 type="text"
-                className="input-disabled"
+                className="input"
                 id="u_name_eng"
                 name="u_name_eng"
                 disabled
@@ -323,7 +317,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
               <label className="label">나이</label>
               <input
                 type="text"
-                className="input-disabled"
+                className="input"
                 value={(() => {
                   if (!modalInfo.patient.birthday) return "";
                   const birthYear = new Date(
@@ -353,7 +347,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
               <label className="label">생년월일</label>
               <input
                 type="text"
-                className="input-disabled"
+                className="input"
                 value={modalInfo.patient.birthday || ""}
                 disabled
               />
@@ -363,7 +357,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
               <label className="label">키(cm)</label>
               <input
                 type="text"
-                className="input-disabled"
+                className="input"
                 value={
                   modalInfo.patient.tall
                     ? modalInfo.patient.tall.toString()
@@ -377,7 +371,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
               <label className="label">몸무게(kg)</label>
               <input
                 type="text"
-                className="input-disabled"
+                className="input"
                 value={
                   modalInfo.patient.weight
                     ? modalInfo.patient.weight.toString()
@@ -402,9 +396,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
                 value={modalInfo.video.di_hospital || ""}
                 onChange={handleOnChange}
                 type="text"
-                className={`input ${
-                  inputAlert.di_hospital ? "input-alert" : ""
-                }`}
+                className="input"
                 id="di_hospital"
                 name="di_hospital"
               />
@@ -419,7 +411,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
                 value={modalInfo.video.di_doctor || ""}
                 onChange={handleOnChange}
                 type="text"
-                className={`input ${inputAlert.di_doctor ? "input-alert" : ""}`}
+                className="input"
                 id="di_doctor"
                 name="di_doctor"
               />
@@ -436,7 +428,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
                 value={modalInfo.video.di_date || ""}
                 onChange={handleOnChange}
                 type="date"
-                className={`input ${inputAlert.di_date ? "input-alert" : ""}`}
+                className="input"
                 id="di_date"
                 name="di_date"
               />
@@ -452,50 +444,79 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
                 autoComplete="off"
                 name="di_memo"
                 id="di_memo"
-                className={`input ${inputAlert.di_memo ? "input-alert" : ""}`}
+                className="input"
+                style={{ resize: "none", height: "100px" }}
+                draggable={false}
                 value={modalInfo.video.di_memo || ""}
                 onChange={handleOnChange}
                 rows={4}
-                placeholder="1. N11.0 : 역류와 관련된 비폐색성 만성 신우신염&#10;2. E11.0 : 인슐린 재합성 당뇨병"
+                placeholder="메모사항을 입력해주세요."
               />
             </div>
           </div>
         </div>
 
-        <div className="input-col-wrap">
+        <div className="input-col-wrap" style={{ marginTop: "20px" }}>
           <h3 className="section-title">영상정보 첨부</h3>
 
           <div className="input-row-wrap">
             <div className="input-col-wrap" style={{ width: "150px" }}>
-              <select
-                value={modalInfo.video.gubun || ""}
-                onChange={(e) =>
-                  setModalInfo((prev) => ({
-                    ...prev,
-                    video: {
-                      ...prev.video,
-                      gubun: e.target.value as Video["gubun"],
-                    },
-                  }))
-                }
-                className={`input ${inputAlert.gubun ? "input-alert" : ""}`}
+              <label htmlFor="gubun" className="label">
+                영상 유형
+              </label>
+              <div
+                className={`select-wrapper ${
+                  inputAlert.gubun ? "select-alert" : ""
+                }`}
               >
-                <option value="">선택</option>
-                <option value="MRI">MRI</option>
-                <option value="CT">CT</option>
-                <option value="X-RAY">X-RAY</option>
-                <option value="ETC">기타</option>
-              </select>
+                <Select
+                  selectType="gubun"
+                  options={[
+                    { key: "선택", value: "" },
+                    { key: "MRI", value: "MRI" },
+                    { key: "CT", value: "CT" },
+                    { key: "X-RAY", value: "X-RAY" },
+                    { key: "기타", value: "ETC" },
+                  ]}
+                  selected={modalInfo.video.gubun || ""}
+                  setSelected={(selected: string) =>
+                    setModalInfo((prev) => ({
+                      ...prev,
+                      video: {
+                        ...prev.video,
+                        gubun: selected as Video["gubun"],
+                      },
+                    }))
+                  }
+                />
+              </div>
+              {inputAlert.gubun && (
+                <div
+                  className="input-alert-text"
+                  style={{ color: "red", fontSize: "12px", marginTop: "5px" }}
+                >
+                  영상유형을 선택해주세요.
+                </div>
+              )}
             </div>
           </div>
 
-          <DropFileInput
+          <DropVideoFileInput
             labelText={true}
             files={new Array<File>().concat(videos as File[])}
             setFiles={setSelectedFiles}
             onRemove={handleRemove}
             type="dicom"
           />
+          {inputAlert.videos && (
+            <div
+              className="input-alert-text"
+              style={{ color: "red", fontSize: "12px", marginTop: "5px" }}
+            >
+              영상을 1개 이상 업로드해주세요.
+            </div>
+          )}
+          <div style={{ height: "100px" }}></div>
         </div>
       </ModalFrame>
     </div>

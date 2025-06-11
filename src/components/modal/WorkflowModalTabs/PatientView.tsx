@@ -205,7 +205,7 @@ export function PatientView({
       </div>
       {/* TODO 환자 기본정보 카자흐 경우 추가 필요 */}
       {/* 진료 기본정보 */}
-      <div className="diagnosis-info-container">
+      <div className="diagnosis-info-container" style={{ marginTop: "10px" }}>
         <div className="content-header">
           <h3>
             {langFile[lang].WORKFLOW_MODAL_CHART_INFO}
@@ -728,6 +728,7 @@ export function OpinionView({
             id="op_contents"
             value={chartInfo.op_contents || ""}
             onChange={handleInputChange}
+            style={{ height: "300px" }}
           ></textarea>
         </div>
 

@@ -7,6 +7,9 @@ const lang = {
   ATTACHED_FILE_PLACEHOLDER:
     "파일 추가 혹은 여기로 드래그 (20MB 이하, 최대 10개, jpg, png, gif, pdf, xls, ppt, hwp, doc, zuo)",
   ATTACHED_FILE_PLACEHOLDER2: "파일 첨부",
+  ATTACHED_VIDEO_FILE_PLACEHOLDER:
+    "영상 파일 추가 혹은 여기로 드래그 (20MB 이하, 최대 10개, mp4, avi, mov, wmv, flv, mkv, webm, m4v, m4a, m4b, m4p)",
+  ATTACHED_VIDEO_FILE_PLACEHOLDER2: "영상 파일 첨부",
   SEARCH_INPUT_PLACEHOLDER: "검색 버튼 클릭하여 담당자를 선택해주세요",
   SEARCH_INPUT_BUTTON: "검색",
 
@@ -33,7 +36,7 @@ const lang = {
   LOGIN_TITLE_TEXT: "원격협진 서비스 접속",
   LOGIN_EMAIL_LABLE_TEXT: "이메일 주소",
   LOGIN_PASSWORD_LABLE_TEXT: "비밀번호",
-  LOGIN_BUTTON_TEXT: "로그인하기",
+  LOGIN_BUTTON_TEXT: "로그인",
   LOGIN_FORGET_PASSWORD_TEXT: "비밀번호를 잊으셨나요?",
 
   LOGIN_FIND_PSW_TITLE_TEXT: "비밀번호 찾기",

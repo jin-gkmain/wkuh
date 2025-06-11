@@ -25,7 +25,7 @@ import { convertTimeToStr } from "@/utils/date";
 import SearchPatientsContent from "@/components/pages/organizations/SearchPatientsContent";
 import { useAppSelector } from "@/store";
 import getOrgs from "@/data/org";
-import getPatients, { deletePatient } from "@/data/patient";
+import { getPatients, deletePatient } from "@/data/patient";
 import MyHead from "@/components/common/MyHead";
 
 export type searchOptions = {
@@ -140,7 +140,7 @@ export default function WorkflowPage() {
     setSearchInputs(searchOptions);
   }, []);
 
-  // 가관 등록하기 버튼 클릭시 동작
+  // 환자 등록하기 버튼 클릭시 동작
   const addPatient = () => {
     if (userInfo && userInfo.country === "korea") {
       if (!selectedHospital)

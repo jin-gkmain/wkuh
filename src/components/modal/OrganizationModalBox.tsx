@@ -16,8 +16,10 @@ import { LangType, LanguageContext } from "@/context/LanguageContext";
 import Select from "../common/inputs/Select";
 import dayjs from "dayjs";
 import { useAppSelector } from "@/store";
-import { editOrg, registOrg } from "@/data/org";
+import getOrgs, { editOrg, registOrg } from "@/data/org";
 import getFiles, { deleteFile, uploadFiles } from "@/data/file";
+import CheckDuplicateInput from "../common/inputs/CheckDuplicateInput";
+import { ChartIdDuplicated } from "./PatientModalBox";
 
 type Props = {
   item: Organization | null;
@@ -33,6 +35,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
   const { userInfo } = useAppSelector(({ user }) => user);
   const { lang } = useContext(LanguageContext);
   const countrySelectOptions = getCountryOptions(lang);
+  const [domainCheck, setDomainCheck] = useState<ChartIdDuplicated>("ready");
 
   const [modalInfo, setModalInfo] = useState<OrganizationModal>({
     o_idx: 0,
@@ -235,6 +238,35 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
     const { name, value } = target;
     setModalInfo((prev) => ({ ...prev, [name]: value }));
   };
+  const handleChangeInput = (ev: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = ev.target;
+
+    if (name === "domain") {
+      if (!value.trim().length) {
+        setDomainCheck("ready");
+        setInputAlert((prev) => ({ ...prev, domain: false }));
+      }
+      if (domainCheck === "success") {
+        setDomainCheck("ready");
+        setInputAlert((prev) => ({ ...prev, domain: false }));
+      }
+    }
+
+    setModalInfo((prev) => ({ ...prev, [name]: value }));
+  };
+  const checkDomainDuplicate = async () => {
+    const res: Organization[] | "ServerError" = await getOrgs();
+    if (res !== "ServerError") {
+      for (const org of res) {
+        if (org.domain.replace("@", "") === modalInfo.domain.replace("@", "")) {
+          setDomainCheck("fail");
+          return;
+        }
+      }
+      setDomainCheck("success");
+      setInputAlert((prev) => ({ ...prev, domain: true }));
+    }
+  };
 
   const getCountry = useCallback((country: string) => {
     return countrySelectOptions.find((i) => i.value === country).key;
@@ -338,16 +370,14 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
                   *{langFile[lang].ORG_MODAL_DOMAIN_FOR_MAIL}
                   {/* 메일용 도메인 */}
                 </label>
-                <input
-                  autoComplete="off"
+                <CheckDuplicateInput
                   value={modalInfo.domain}
-                  onChange={handleOnChange}
-                  type="text"
-                  className={`input ${
-                    inputAlert.domain ? "alert-border-color" : ""
-                  }`}
-                  id="domain"
+                  handleInputChange={handleChangeInput}
                   name="domain"
+                  alert={inputAlert.domain}
+                  alertType={domainCheck}
+                  checkDuplicate={checkDomainDuplicate}
+                  alertText=""
                 />
               </div>
 

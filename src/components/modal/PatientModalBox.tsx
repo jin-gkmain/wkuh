@@ -14,7 +14,7 @@ import { LanguageContext } from "@/context/LanguageContext";
 import langFile from "@/lang";
 import instance from "@/utils/myAxios";
 import dayjs from "dayjs";
-import { editPatient, registPatient } from "@/data/patient";
+import { editPatient, getPatients, registPatient } from "@/data/patient";
 import Select from "../common/inputs/Select";
 import CheckDuplicateInput from "../common/inputs/CheckDuplicateInput";
 import { getOrg } from "@/data/org";
@@ -261,6 +261,23 @@ export default function PatientModalBox({
 
   // 환자정보를 수정하는 경우로, 선택한 환자 정보의 초기 설정을 수행
   useEffect(() => {
+    getPatients(org.o_idx, {}).then((res) => {
+      if (res !== "ServerError") {
+        setPatientInfo((prev) => ({
+          ...prev,
+          p_serial_no:
+            org.domain.replace("@", "").split(".")[0] +
+            "-" +
+            (res.length + 1).toString().padStart(4, "0"),
+        }));
+      } else {
+        setPatientInfo((prev) => ({
+          ...prev,
+          p_serial_no: org.o_code + "-" + "1",
+        }));
+      }
+    });
+
     if (patient) {
       setPatientInfo(patient);
       // 환자 계정 변경 여부를 파악하기 위해 환자의 계정이 있는 경우 그 값을 ref에 저장한다.
@@ -271,7 +288,7 @@ export default function PatientModalBox({
         serialNoRef.current = patient.p_serial_no;
       }
     }
-  }, [patient]);
+  }, [patient, org]);
 
   return (
     <div className="patient-modal-box">
@@ -467,7 +484,6 @@ export default function PatientModalBox({
               </label>
 
               <CheckDuplicateInput
-                disabled={type === "manage"}
                 name="p_serial_no"
                 handleInputChange={handleChangeInput}
                 value={patientInfo.p_serial_no}

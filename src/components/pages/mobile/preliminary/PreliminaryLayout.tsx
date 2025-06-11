@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import getPatients from "@/data/patient";
+import { getPatients } from "@/data/patient";
 import { log } from "console";
 import { LangType, LanguageContext } from "@/context/LanguageContext";
 import langFile from "@/lang";
