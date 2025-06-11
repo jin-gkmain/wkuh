@@ -22,6 +22,7 @@ import TableRow from "@/components/common/table/TableRow";
 import langFile from "@/lang";
 import { LangType, LanguageContext } from "@/context/LanguageContext";
 import { useAppSelector } from "@/store";
+import { getPatient } from "@/data/patient";
 
 // dayjs 플러그인 추가
 dayjs.extend(isBetween);
@@ -45,6 +46,9 @@ export default function HistoryPage() {
   // 사용자 정보와 Organization 정보 캐시
   const [userCache, setUserCache] = useState<Map<number, User>>(new Map());
   const [orgCache, setOrgCache] = useState<Map<number, Organization>>(
+    new Map()
+  );
+  const [patientCache, setPatientCache] = useState<Map<number, string>>(
     new Map()
   );
 
@@ -112,6 +116,24 @@ export default function HistoryPage() {
     return null;
   };
 
+  const getPatientSerialNo = async (
+    p_idx: number | null
+  ): Promise<string | null> => {
+    if (!p_idx) return null;
+
+    try {
+      const patient = await getPatient(p_idx);
+      if (patient !== "ServerError" && patient) {
+        return patient.p_serial_no;
+      } else {
+        console.error(`Patient 정보 조회 실패 (p_idx: ${p_idx}):`, patient);
+      }
+    } catch (error) {
+      console.error(`Patient 정보 조회 실패 (p_idx: ${p_idx}):`, error);
+    }
+    return null;
+  };
+
   // 페이지 로드 시 모든 진료내역 가져오기
   useEffect(() => {
     const fetchWorkflows = async () => {
@@ -148,14 +170,20 @@ export default function HistoryPage() {
           // 필요한 사용자와 organization 정보 미리 로드
           const userIds = new Set<number>();
           const orgIds = new Set<number>();
+          const patientIds = new Set<number>();
 
-          sortedWorkflows.forEach((workflow) => {
+          sortedWorkflows.forEach(async (workflow) => {
             // 사용자 ID 수집
             if (workflow.doctor1_idx) userIds.add(workflow.doctor1_idx);
             if (workflow.doctor2_idx) userIds.add(workflow.doctor2_idx);
 
             // Organization ID 수집
             orgIds.add(workflow.o_idx);
+
+            // Patient Serial No 수집
+            if (workflow.p_idx) {
+              patientIds.add(workflow.p_idx);
+            }
           });
 
           // 현재 유저의 organization도 추가
@@ -181,8 +209,22 @@ export default function HistoryPage() {
             return { o_idx, org };
           });
 
+          // Patient Serial No 정보 미리 로드
+          const patientPromises = Array.from(patientIds).map(async (p_idx) => {
+            const patientSerialNo = await getPatientSerialNo(p_idx);
+            if (patientSerialNo) {
+              setPatientCache(
+                (prev) => new Map(prev.set(p_idx, patientSerialNo))
+              );
+            }
+          });
+
           // 모든 데이터 로드 완료 대기
-          await Promise.all([...userPromises, ...orgPromises]);
+          await Promise.all([
+            ...userPromises,
+            ...orgPromises,
+            ...patientPromises,
+          ]);
 
           // 병원 리스트 추출 (workflow의 o_idx 기준으로 organization 이름들 수집)
           const hospitalSet = new Set<string>();
@@ -847,11 +889,18 @@ export default function HistoryPage() {
                       {(() => {
                         // 무조건 workflow의 o_idx 기준으로 국가 표시
                         const org = orgCache.get(workflow.o_idx);
-                        return org?.country || "알 수 없음";
+                        return (
+                          org?.country || langFile[lang].HISTORY_TABLE_DONT_KNOW
+                        );
                       })()}
                     </td>
                     <td style={{ padding: "12px 8px", textAlign: "center" }}>
-                      {workflow.w_code}
+                      {(() => {
+                        const patientSerialNo = patientCache.get(
+                          workflow.p_idx
+                        );
+                        return patientSerialNo || "-";
+                      })()}
                     </td>
                     <td style={{ padding: "12px 8px", textAlign: "center" }}>
                       {getStatusText(workflow)}
@@ -859,7 +908,7 @@ export default function HistoryPage() {
                     <td style={{ padding: "12px 8px", textAlign: "center" }}>
                       {workflow.te_date
                         ? dayjs(workflow.te_date).format("YYYY-MM-DD")
-                        : langFile[lang].HISTORY_TABLE_TELE_DATE_NOT_SURE}
+                        : "-"}
                     </td>
                   </tr>
                 ))
