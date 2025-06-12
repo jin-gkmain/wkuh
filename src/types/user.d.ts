@@ -14,6 +14,7 @@ type User = {
   registdate_utc: Date; // utc 등록시간
   use_ch: "y" | "n"; // 활성화, 비활성화
   medical_dept: string | null; // 전문분야
+  country: string | null; // 국가
 };
 
 type UserModal = Omit<User, "registdate_local" | "registdate_utc" | "use_ch">;

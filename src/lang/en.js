@@ -249,12 +249,33 @@ const lang = {
   VIDEO_CREATED_DATE_TEXT: "Created Date",
 
   // 비디오 등록 모달
-  VIDEO_MODAL_TITLE_TEXT: "Add Video Info",
-  VIDEO_MODAL_ATTACH_VIDEO_FILE: "Attach video file",
+  VIDEO_MODAL_TITLE_TEXT: "Video Information Registration",
+  VIDEO_MODAL_PATIENT_INFO: "Patient Basic Information",
   VIDEO_MODAL_COMPLETE_BUTTON_TEXT: "Save",
-
   VIDEO_MODAL_CONFIRM_ADD_VIDEO:
     "Are you sure you want to add video information?",
+  VIDEO_MODAL_AGE: "Age",
+  VIDEO_MODAL_NAME: "Name",
+  VIDEO_MODAL_BIRTHDAY: "Birthday",
+  VIDEO_MODAL_GENDER: "Gender",
+  VIDEO_MODAL_HEIGHT: "Height(cm)",
+  VIDEO_MODAL_WEIGHT: "Weight(kg)",
+  VIDEO_MODAL_TEL: "Phone Number",
+  VIDEO_MODAL_VIDEO_INFO: "Video Data Information",
+  VIDEO_MODAL_HOS_NAME_TEXT: "Diagnosis Hospital Name",
+  VIDEO_MODAL_DOCTOR_TEXT: "Diagnosis Doctor",
+  VIDEO_MODAL_DIAGNOSIS_DATE_TEXT: "Diagnosis Date",
+  VIDEO_MODAL_MEMO_TEXT: "Memo",
+  VIDEO_MODAL_MEMO_PLACEHOLDER: "Enter memo",
+  VIDEO_MODAL_ATTACH_VIDEO_FILE: "Attach Video File",
+  VIDEO_MODAL_VIDEO_TYPE: "Video Type",
+  VIDEO_MODAL_MRI: "MRI",
+  VIDEO_MODAL_CT: "CT",
+  VIDEO_MODAL_X_RAY: "X-RAY",
+  VIDEO_MODAL_ETC: "ETC",
+  VIDEO_MODAL_SELECT: "Select",
+  VIDEO_MODAL_VIDEO_TYPE_ALERT: "Select video type",
+  VIDEO_MODAL_VIDEO_ALERT: "Upload at least one video",
 
   // 진료 워크플로우 모달
   WORKFLOW_MODAL_TITLE: "Chart Workflow",

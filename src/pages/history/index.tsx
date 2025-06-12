@@ -212,24 +212,41 @@ export default function HistoryPage() {
           // Patient Serial No 정보 미리 로드
           const patientPromises = Array.from(patientIds).map(async (p_idx) => {
             const patientSerialNo = await getPatientSerialNo(p_idx);
-            if (patientSerialNo) {
-              setPatientCache(
-                (prev) => new Map(prev.set(p_idx, patientSerialNo))
-              );
-            }
+            return { p_idx, patientSerialNo };
           });
 
           // 모든 데이터 로드 완료 대기
-          await Promise.all([
-            ...userPromises,
-            ...orgPromises,
-            ...patientPromises,
+          const [userResults, orgResults, patientResults] = await Promise.all([
+            Promise.all(userPromises),
+            Promise.all(orgPromises),
+            Promise.all(patientPromises),
           ]);
 
-          // 병원 리스트 추출 (workflow의 o_idx 기준으로 organization 이름들 수집)
+          // 로컬 orgCache 빌드
+          const localOrgCache = new Map<number, Organization>();
+          orgResults.forEach(({ o_idx, org }) => {
+            if (org) {
+              localOrgCache.set(o_idx, org);
+            }
+          });
+
+          // 로컬 patientCache 빌드
+          const localPatientCache = new Map<number, string>();
+          patientResults.forEach(({ p_idx, patientSerialNo }) => {
+            if (patientSerialNo) {
+              localPatientCache.set(p_idx, patientSerialNo);
+            }
+          });
+
+          // 상태 업데이트
+          setOrgCache(localOrgCache);
+          setPatientCache(localPatientCache);
+
+          // 병원 리스트 추출 (로컬 orgCache 사용)
           const hospitalSet = new Set<string>();
+          console.log("localOrgCache >", localOrgCache);
           sortedWorkflows.forEach((workflow) => {
-            const org = orgCache.get(workflow.o_idx);
+            const org = localOrgCache.get(workflow.o_idx);
             if (org) {
               const orgName =
                 lang === "ko"
