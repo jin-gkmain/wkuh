@@ -9,6 +9,7 @@ import registAlert, { getAlertList } from "@/data/alert";
 import ArrowRightLine from "@/components/common/icons/ArrowRightLine";
 import ArrowLeftLine from "@/components/common/icons/ArrowLeftLine";
 import { LanguageContext } from "@/context/LanguageContext";
+import { WorkflowTabType } from "@/store/modules/workflowModalSlice";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -37,6 +38,15 @@ export default function MeetingRoom({
   const [err, setErr] = useState(false);
   const [patientViewOpened, setPatientViewOpened] = useState(true);
   const { lang, setLang } = useContext(LanguageContext);
+
+  // 디버깅을 위한 로그
+  console.log("MeetingRoom render - patientInfo:", !!patientInfo, "chartInfo:", !!chartInfo);
+
+  useEffect(() => {
+    console.log("patientViewOpened changed:", patientViewOpened);
+    console.log("patientInfo exists:", !!patientInfo);
+    console.log("chartInfo exists:", !!chartInfo);
+  }, [patientViewOpened, patientInfo, chartInfo]);
 
   const handleLeave = async () => {
     if (!userInfo || !chartInfo || !patientInfo) return;
@@ -90,24 +100,29 @@ export default function MeetingRoom({
         <div className="teleconsulting-area">
           {patientInfo && chartInfo && (
             <div
-              className={`patient-info-area ${patientViewOpened ? "" : "hide"}`}
+              className={`patient-info-area ${patientViewOpened ? "opened" : "closed"}`}
             >
-              {/* <PatientView
-              chartInfo={chartInfo}
-              patientInfo={patientInfo}
-              lang={lang}
-              handleInputChange={handleInputChange}
-              handleSelect={handleSelect}
-              org={org}
-              userInfo={userInfo}
-              handleTopBtnClick={handleTopBtnClick}
-              patient={!!(userInfo && userInfo.p_idx)}
-              filesData={filesData}
-              getFileGubun={getFileGubun}
-              onRemove={onRemove}
-              tabType={tabType}
-              handleSetFiles={handleSetFiles}
-              /> */}
+              <PatientView
+                org={null}
+                chartInfo={chartInfo}
+                patientInfo={patientInfo}
+                lang={lang}
+                userInfo={userInfo}
+                patient={!!(userInfo && userInfo.p_idx)}
+                handleInputChange={() => {}}
+                handleSelect={() => {}}
+                handleTopBtnClick={() => {}}
+                view={true}
+                handleSetFiles={() => {}}
+                filesData={{
+                  환자정보: {
+                    첨부: [],
+                  },
+                }}
+                getFileGubun={getFileGubun}
+                onRemove={() => {}}
+                tabType={"patient"}
+              />
             </div>
           )}
 
@@ -122,7 +137,9 @@ export default function MeetingRoom({
               <button
                 className="sidebar-controller"
                 onClick={() => {
+                  console.log("Sidebar button clicked, current state:", patientViewOpened);
                   setPatientViewOpened(!patientViewOpened);
+                  console.log("New state will be:", !patientViewOpened);
                 }}
               >
                 {patientViewOpened && chartInfo && patientInfo ? (
@@ -144,3 +161,43 @@ export default function MeetingRoom({
       </>
     );
 }
+
+const getFileGubun = (tabType: WorkflowTabType) => {
+  let gubun1: Gubun1;
+  switch (tabType) {
+    case "patient": {
+      gubun1 = "환자정보";
+      break;
+    }
+    case "opinion": {
+      gubun1 = "소견서정보";
+      break;
+    }
+    case "carePlans": {
+      gubun1 = "치료계획서";
+      break;
+    }
+    case "visitForm": {
+      gubun1 = "내원준비";
+      break;
+    }
+    case "visitInfo": {
+      gubun1 = "내원상담";
+      break;
+    }
+    case "visitResult": {
+      gubun1 = "내원결과";
+      break;
+    }
+    case "postConsulting": {
+      gubun1 = "사후상담";
+      break;
+    }
+    case "postPrescript": {
+      gubun1 = "사후처방";
+      break;
+    }
+  }
+
+  return gubun1;
+};

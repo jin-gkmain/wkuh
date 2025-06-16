@@ -84,13 +84,11 @@ export default function MeetingPage() {
           } //
           else {
             console.log("로그인ok > mongol");
-            const data = await getPatients(userInfo.o_idx, {
-              search: "p_idx",
-              search_key: p_idx,
-            });
 
-            if (data !== "ServerError" && data.length) {
-              setPatientInfo(data[0]);
+            const data = await getPatient(parseInt(p_idx));
+            console.log("data", data);
+            if (data !== "ServerError" && data) {
+              setPatientInfo(data);
             } else {
               console.log("환자정보 가져오기 실패");
               pass = false;
