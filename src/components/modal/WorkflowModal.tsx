@@ -64,6 +64,11 @@ import { getSystemAlertText } from "@/utils/alert";
 import { disconnectSocket, emitEvent, onEvent } from "@/utils/socket";
 import { OpinionView, PatientView } from "./WorkflowModalTabs/PatientView";
 import { PreliminaryView } from "./WorkflowModalTabs/PreliminaryView";
+import {
+  editPreliminary,
+  getPreliminariesByPIdx,
+  getPreliminaryByWIdx,
+} from "@/data/preliminary";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -92,6 +97,10 @@ export default function WorkflowModal({ closeModal }: Props) {
   const { openModal: openTeleModal, closeModal: closeTeleModal } = useContext(
     TeleconsultingModalContext
   );
+  const [preliminaryInfo, setPreliminaryInfo] = useState<Preliminary | null>(
+    null
+  );
+  const isPreliminary = useRef(false);
   const {
     ModalPortal,
     closeModal: closePrescriptionModal,
@@ -1115,10 +1124,40 @@ export default function WorkflowModal({ closeModal }: Props) {
       const p = await getPatient(patientId);
       if (p !== "ServerError") {
         setPatientInfo(p);
+
+        // patientInfo가 설정된 후에 관련 작업들 수행
+        const patientOrg = await getOrg(p.o_idx || 0);
+        if (patientOrg !== "ServerError") {
+          setPatientOrg(patientOrg);
+        } else {
+          console.log("환자 기관정보 불러오기 실패");
+        }
+        const preliminary = await getPreliminaryByWIdx(chartId);
+        console.log("🔍 디버깅 - preliminary:", preliminary);
+        if (preliminary !== "ServerError" && preliminary) {
+          setPreliminaryInfo(preliminary);
+          isPreliminary.current = true;
+        } else {
+          const pidx = p.p_idx;
+          const preliminary = await getPreliminariesByPIdx(pidx || 0);
+          if (preliminary !== "ServerError" && preliminary) {
+            for (const preliminaryItem of preliminary) {
+              if (!preliminaryItem.w_idx) {
+                setPreliminaryInfo(preliminaryItem);
+                editPreliminary(preliminaryItem.pl_idx, {
+                  w_idx: chartId,
+                });
+                isPreliminary.current = true;
+              }
+            }
+          } else {
+            isPreliminary.current = false;
+            console.log("사전정보 불러오기 실패");
+          }
+        }
       } else {
         console.log("환자정보 불러오기 실패 / 500");
       }
-
       if (userInfo && userInfo.country !== "korea") {
         const org = await getOrg(userInfo.o_idx);
         if (org !== "ServerError") {
@@ -1126,13 +1165,6 @@ export default function WorkflowModal({ closeModal }: Props) {
         } else {
           console.log("기관정보 불러오기 실패");
         }
-      }
-
-      const patientOrg = await getOrg(patientInfo?.o_idx || 0);
-      if (patientOrg !== "ServerError") {
-        setPatientOrg(patientOrg);
-      } else {
-        console.log("환자 기관정보 불러오기 실패");
       }
 
       const pp = await getPostPrescriptions(chartId);
@@ -1331,53 +1363,19 @@ export default function WorkflowModal({ closeModal }: Props) {
             handleSetFiles={handleSetFiles}
           />
         )}
-        {tabType === "preliminary" && (
+        {tabType === "preliminary" && isPreliminary.current && (
           <PreliminaryView
-            preliminaryInfo={
-              {
-                pw_idx: 0,
-                p_chart_no: "",
-                pw_date: new Date(),
-                pw_weight: 0,
-                pw_height: 0,
-                pw_bmi: 0,
-                pw_memo: "",
-                pw_registdate_utc: new Date(),
-                pw_registdate_local: new Date(),
-              } as Preliminary
-            }
+            preliminaryInfo={preliminaryInfo}
             patientInfo={patientInfo}
             lang={lang}
             userInfo={userInfo}
             handleTopBtnClick={handleTopBtnClick}
             handleInputChange={handleInputChange}
-            org={{
-              o_idx: 0,
-              u_idx: 0,
-              o_code: "",
-              parent_o_idx: 0,
-              o_name_kor: "",
-              o_name_eng: "",
-              country: "",
-              domain: "",
-              contract_sd: "",
-              contract_ed: "",
-              contract_email: "",
-              contract_tel: "",
-              note: "",
-              registdate_local: undefined,
-              registdate_utc: undefined,
-              completed_tele_number: 0,
-              completed_visit_number: 0,
-              u_number: 0,
-              p_number: 0,
-              u_name_kor: "",
-              u_name_eng: "",
-              use_ch: "n",
-              qr_code: "",
-            }}
             chartInfo={undefined}
           />
+        )}
+        {tabType === "preliminary" && !isPreliminary.current && (
+          <div>불러올 수 있는 사전문진 정보가 없습니다.</div>
         )}
 
         {tabType === "opinion" && (

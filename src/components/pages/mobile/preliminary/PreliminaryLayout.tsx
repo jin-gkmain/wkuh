@@ -16,6 +16,7 @@ import { log } from "console";
 import { LangType, LanguageContext } from "@/context/LanguageContext";
 import langFile from "@/lang";
 import PatientInfoLayout from "./PatientInfoLayout";
+import { registPreliminary } from "@/data/preliminary";
 // import './PaperWeightLayout.css'; // 스타일 파일 (필요시)
 
 // 새로운 타입 정의
@@ -173,6 +174,37 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
 
   const home = () => {
     router.back(); // 또는 특정 경로로 이동 router.push('/');
+  };
+
+  const submitPreliminary = async () => {
+    console.log(answers);
+    const preliminary: Preliminary = {
+      p_idx: patientInfo?.p_idx || 0,
+      p_serial_no: patientInfo?.p_serial_no || "",
+      p_birthday: patientInfo?.birthday || "",
+      pl_data: {
+        symptoms: answers["userSymptoms"] || [],
+        pain_degree: answers["userPain"] || "",
+        diagnosis: answers["userDiagnosis"] || "",
+        treatment: answers["userTreatment"] || "",
+        specific: answers["userSpecific"] || "",
+        past_history: answers["userPastHistory"] || [],
+        family_history: answers["userFamilyHistory"] || [],
+        smoke: answers["userSmoke"] || "",
+        drink: answers["userDrink"] || "",
+        past_surgeries: answers["userPastSurgeries"] || [],
+        medical_history: answers["userMedicalHistory"] || "",
+        allergy: answers["userAllergy"] || [],
+        todoc: answers["userTodoc"] || "",
+      },
+    };
+    const res = await registPreliminary(preliminary);
+    if (res === "SUCCESS") {
+      showToast(langFile[lang].MOBILE_PRELIMINARY_SUCCESS);
+      home();
+    } else {
+      showToast(langFile[lang].MOBILE_PRELIMINARY_FAIL);
+    }
   };
 
   const pass = () => {
@@ -375,7 +407,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                 isCurrentPageSummary ||
                 slidesContent[currentPageIndex]?.[0]?.isSummary
               ) {
-                home();
+                submitPreliminary();
               } else {
                 next();
               }

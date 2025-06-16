@@ -1,11 +1,24 @@
 type Preliminary = {
-  pw_idx: number;
-  p_chart_no: string;
-  pw_date: Date;
-  pw_weight: number;
-  pw_height: number;
-  pw_bmi: number;
-  pw_memo: string;
-  pw_registdate_utc: Date;
-  pw_registdate_local: Date;
+  pl_idx?: number;
+  p_idx: number;
+  w_idx?: number;
+  p_serial_no: string;
+  p_birthday: string;
+  pl_data: PreliminaryData;
+};
+
+type PreliminaryData = {
+  symptoms: string[];
+  pain_degree: string;
+  diagnosis: string;
+  treatment: string;
+  specific: string;
+  past_history: string[];
+  family_history: string[];
+  smoke: string;
+  drink: string;
+  past_surgeries: string[];
+  medical_history: string;
+  allergy: string[];
+  todoc: string;
 };
