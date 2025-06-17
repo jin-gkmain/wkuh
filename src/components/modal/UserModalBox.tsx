@@ -47,6 +47,7 @@ export default function UserModalBox({
     job: "doctor",
     note: "",
     medical_dept: "1",
+    country: "korea",
   });
   const jobOptions = getJobOptions(lang, user.job);
   const medicalDeptOptions = getMedicalDeptOptions(lang, user.job);

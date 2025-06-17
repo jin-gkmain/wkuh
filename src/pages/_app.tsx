@@ -1,6 +1,7 @@
 import '@/styles/normalize.css';
 import '@/styles/globals.css';
 import '@/styles/basic.css';
+import '@/styles/mobile.css';
 import type { AppProps } from 'next/app';
 import { NextPage } from 'next';
 import { ReactElement, ReactNode, useEffect, useState } from 'react';
@@ -60,12 +61,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         }
     }
   }, []);
-
-  useEffect(() => {
-    if (router.pathname.startsWith('/mobile/')) {
-      import('@/styles/mobile.css').catch(err => console.log("Failed to load mobile.css", err));
-    }
-  }, [router.pathname]);
 
   return (
     <StoreProvider>

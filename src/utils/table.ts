@@ -1,8 +1,9 @@
+import { LangType } from '@/context/LanguageContext';
 import langFile from '@/lang';
 
 export default function getTableRowMenuOptions(
   options: 'remove' | 'manage' | 'all' | '',
-  lang: 'ko' | 'en'
+  lang: LangType
 ): DropdownOption<TableMenuOption>[] {
   const tableMenuOptions: DropdownOption<TableMenuOption>[] = [];
   if (options === 'remove') {
@@ -31,7 +32,7 @@ export default function getTableRowMenuOptions(
 
 export function getTableDropMenuOptions(
   options: TableMenuOption[] | 'all',
-  lang: 'ko' | 'en'
+  lang: LangType
 ): DropdownOption<TableMenuOption>[] {
   const allOptions: DropdownOption<TableMenuOption>[] = [
     {

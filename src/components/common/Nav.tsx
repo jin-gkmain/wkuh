@@ -19,7 +19,7 @@ import LogoImage from '../../../public/images/wkuh.logo.png';
 
 type UserSettingOptions = 'password' | 'logout';
 
-function getUserSettingOptions(lang: 'ko' | 'en') {
+function getUserSettingOptions(lang: LangType) {
   const userSettingOptions: DropdownOption<UserSettingOptions>[] = [
     {
       text: langFile[lang].DROP_EDIT_PSW_TEXT, // 비밀번호수정
