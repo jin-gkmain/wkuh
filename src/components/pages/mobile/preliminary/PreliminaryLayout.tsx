@@ -89,7 +89,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
     const patients = (await getPatients(Number(hos), {})) as Patient[];
     for (const patient of patients) {
       console.log(answers["patientNum"], patient.p_serial_no);
-      if (answers["patientNum"] === patient.p_serial_no.toString()) {
+      if (answers["patientNum"] === patient.p_serial_no) {
         openPatientInfo(patient);
         return;
       }

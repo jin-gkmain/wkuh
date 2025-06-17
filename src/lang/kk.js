@@ -96,6 +96,17 @@ const lang = {
     "Басқа өткен медициналық тарихты енгізіңіз",
   MOBILE_PRELIMINARY_PAST_HISTORY_NOT_SURE: "Білмеймін",
 
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_DESC:
+    "Сізде қандай да бір аурулары бар ма?",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE1: "Гипертония",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE2: "Қант диабеті",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE3: "Туберкулез",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE4: "Ауру",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE5: "Басқа",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_INPUT_PLACEHOLDER:
+    "Басқа ауруларыңызды енгізіңіз",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_NOT_SURE: "Білмеймін",
+
   MOBILE_PRELIMINARY_SMOKE_DESC: "Темекі шегесіз бе?",
   MOBILE_PRELIMINARY_SMOKE_YES: "Иә",
   MOBILE_PRELIMINARY_SMOKE_NO: "Жоқ",
@@ -144,7 +155,7 @@ const lang = {
     "Дәрігерге айтқыңыз келетін мазмұнды енгізіңіз",
   MOBILE_PRELIMINARY_TODOCTOR_NOT_SURE: "Жоқ",
 
-  MOBILE_PRELIMINARY_SUMMARY_DESC: "Дәрігерге айтқыңыз келетін нәрсе бар ма?",
+  MOBILE_PRELIMINARY_SUMMARY_DESC: "Илгээж дууссан",
 };
 
 export default lang;

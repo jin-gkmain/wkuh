@@ -91,6 +91,8 @@ export default function WorkflowModal({ closeModal }: Props) {
   const [tableMenuOptions, setTableMenuOptions] = useState(() =>
     getTableRowMenuOptions("remove", lang as "ko" | "en")
   );
+  const [preliminaryTab, setPreliminaryTab] = useState<number>(0);
+  const preliminaryTabs = [];
   const tabs = getTabs(lang);
   const selectedId = useRef<string>();
   const [loading, setLoading] = useState(false);
@@ -1118,6 +1120,11 @@ export default function WorkflowModal({ closeModal }: Props) {
     }
   };
 
+  const handlePreliminaryTab = (ev: React.MouseEvent<HTMLLIElement>) => {
+    const { tab } = ev.currentTarget.dataset;
+    setPreliminaryTab(Number(tab));
+  };
+
   // 환자정보 설정
   useEffect(() => {
     (async () => {
@@ -1335,7 +1342,7 @@ export default function WorkflowModal({ closeModal }: Props) {
       >
         {/* tab */}
         <ul className="tabs flex gap-10 relative" onClick={handleTab}>
-          {tabs.map(({ key, value }, idx) => (
+          {preliminaryTabs.map(({ key, value }, idx) => (
             <li
               key={value + idx}
               data-tab={value}
@@ -1364,15 +1371,29 @@ export default function WorkflowModal({ closeModal }: Props) {
           />
         )}
         {tabType === "preliminary" && isPreliminary.current && (
-          <PreliminaryView
-            preliminaryInfo={preliminaryInfo}
-            patientInfo={patientInfo}
-            lang={lang}
-            userInfo={userInfo}
-            handleTopBtnClick={handleTopBtnClick}
-            handleInputChange={handleInputChange}
-            chartInfo={undefined}
-          />
+          <>
+            <ul className="tabs flex gap-10 relative">
+              {tabs.map(({ key }, idx) => (
+                <li
+                  key={idx}
+                  data-tab={idx}
+                  onClick={handlePreliminaryTab}
+                  className={preliminaryTab === idx ? "selected" : ""}
+                >
+                  {key}
+                </li>
+              ))}
+            </ul>
+            <PreliminaryView
+              preliminaryInfo={preliminaryInfo}
+              patientInfo={patientInfo}
+              lang={lang}
+              userInfo={userInfo}
+              handleTopBtnClick={handleTopBtnClick}
+              handleInputChange={handleInputChange}
+              chartInfo={undefined}
+            />
+          </>
         )}
         {tabType === "preliminary" && !isPreliminary.current && (
           <div>불러올 수 있는 사전문진 정보가 없습니다.</div>

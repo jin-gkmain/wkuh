@@ -1002,7 +1002,7 @@ const lang = {
   HISTORY_TABLE_TELE_DATE_NOT_SURE: "Not sure",
   HISTORY_TABLE_DONT_KNOW: "Don't know",
 
-  MOBILE_PRELIMINARY_SUMMARY_DESC: "Have you submitted the questionnaire?",
+  MOBILE_PRELIMINARY_SUMMARY_DESC: "Submission completed",
 };
 
 export default lang;

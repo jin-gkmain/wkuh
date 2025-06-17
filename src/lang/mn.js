@@ -98,6 +98,17 @@ const lang = {
     "Бусад оношлогдож байсан өвчнөө оруулна уу",
   MOBILE_PRELIMINARY_PAST_HISTORY_NOT_SURE: "Білмеймін",
 
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_DESC:
+    "Таны амьдралын өвчнүүдээс оношлогдож байсан бол бүгдийг нь сонгоно уу.",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE1: "Цусны даралт ихсэлт",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE2: "Чихрийн шижин",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE3: "Сүрьеэ",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE4: "Хорт хавдар",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_TITLE5: "Бусад",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_INPUT_PLACEHOLDER:
+    "Бусад оношлогдож байсан өвчнөө оруулна уу",
+  MOBILE_PRELIMINARY_FAMILY_HISTORY_NOT_SURE: "Білмеймін",
+
   MOBILE_PRELIMINARY_SMOKE_DESC: "Та тамхи татдаг уу?",
   MOBILE_PRELIMINARY_SMOKE_YES: "Тийм",
   MOBILE_PRELIMINARY_SMOKE_NO: "Үгүй",
@@ -146,7 +157,7 @@ const lang = {
     "Эмчид хэлэхийг хүссэн зүйлээ оруулна уу",
   MOBILE_PRELIMINARY_TODOCTOR_NOT_SURE: "Байхгүй",
 
-  MOBILE_PRELIMINARY_SUMMARY_DESC: "Та эмчид хэлэх зүйл байна уу?",
+  MOBILE_PRELIMINARY_SUMMARY_DESC: "Жіберу аяқталды",
 };
 
 export default lang;

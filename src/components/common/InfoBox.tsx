@@ -1,32 +1,33 @@
-import React, { ReactNode } from 'react';
-import DoctorChart from './icons/DoctorChart';
-import Patient from './icons/Patient';
-import Location from './icons/Location';
-import Calendar from './icons/Calendar';
-import Gender from './icons/Gender';
-import Height from './icons/Height';
-import Weight from './icons/Weight';
-import Nurse from './icons/Nurse';
-import Phone from './icons/Phone';
-import Hospitals from './icons/Hospitals';
-import Email from './icons/Email';
-import User from './icons/User';
-import Qr from './icons/Qr'
+import React, { ReactNode } from "react";
+import DoctorChart from "./icons/DoctorChart";
+import Patient from "./icons/Patient";
+import Location from "./icons/Location";
+import Calendar from "./icons/Calendar";
+import Gender from "./icons/Gender";
+import Height from "./icons/Height";
+import Weight from "./icons/Weight";
+import Nurse from "./icons/Nurse";
+import Phone from "./icons/Phone";
+import Hospitals from "./icons/Hospitals";
+import Email from "./icons/Email";
+import User from "./icons/User";
+import Qr from "./icons/Qr";
+import Download from "./icons/Download";
 
 export type InfoBoxIconType =
-  | 'patient'
-  | 'calendar'
-  | 'gender'
-  | 'height'
-  | 'weight'
-  | 'nurse'
-  | 'phone'
-  | 'address'
-  | 'organization'
-  | 'user'
-  | 'chart'
-  | 'mail'
-  | 'qr';
+  | "patient"
+  | "calendar"
+  | "gender"
+  | "height"
+  | "weight"
+  | "nurse"
+  | "phone"
+  | "address"
+  | "organization"
+  | "user"
+  | "chart"
+  | "mail"
+  | "qr";
 
 export type InfoBoxType = {
   defaultIcon?: ReactNode;
@@ -43,29 +44,29 @@ type Props<T> = {
 export default function InfoBox<T>({ keys, data }: Props<T>) {
   const keysArr = keys.map((keyObj) => {
     switch (keyObj.iconType) {
-      case 'patient':
+      case "patient":
         return { ...keyObj, icon: <Patient /> };
-      case 'calendar':
+      case "calendar":
         return { ...keyObj, icon: <Calendar /> };
-      case 'gender':
+      case "gender":
         return { ...keyObj, icon: <Gender /> };
-      case 'height':
+      case "height":
         return { ...keyObj, icon: <Height /> };
-      case 'weight':
+      case "weight":
         return { ...keyObj, icon: <Weight /> };
-      case 'nurse':
+      case "nurse":
         return { ...keyObj, icon: <Nurse /> };
-      case 'phone':
+      case "phone":
         return { ...keyObj, icon: <Phone /> };
-      case 'address':
+      case "address":
         return { ...keyObj, icon: <Location /> };
-      case 'organization':
+      case "organization":
         return { ...keyObj, icon: <Hospitals /> };
-      case 'mail':
+      case "mail":
         return { ...keyObj, icon: <Email /> };
-      case 'user':
+      case "user":
         return { ...keyObj, icon: <User /> };
-      case 'qr':
+      case "qr":
         return { ...keyObj, icon: <Qr /> };
       default:
         return { ...keyObj, icon: <DoctorChart /> };
@@ -75,8 +76,8 @@ export default function InfoBox<T>({ keys, data }: Props<T>) {
     <div className="info-box">
       {keysArr.map(({ title, icon, defaultIcon, onDownload }, idx) => {
         const value = data ? Object.values(data)[idx] : null;
-        const key = data ? Object.keys(data)[idx] : '';
-        
+        const key = data ? Object.keys(data)[idx] : "";
+
         return (
           <div key={title} className="info-item flex flex-col justify-between">
             <span className="flex gap-5 align-center">
@@ -84,18 +85,20 @@ export default function InfoBox<T>({ keys, data }: Props<T>) {
             </span>
 
             <div className="flex items-center">
-              {(onDownload && key === 'qr_code' && value) ? (
-                <button 
+              {onDownload && key === "qr_code" && value ? (
+                <button
                   onClick={() => onDownload(value)}
                   className="primary-btn flex align-center font-semi-bold"
                   style={{
-                    padding:'5px 10px',
-                    fontSize:'12px'
+                    padding: "5px 10px",
+                    fontSize: "12px",
                   }}
                 >
-                  다운로드
+                  <Download />
                 </button>
-              ) : <span>{value ?? '-'}</span>}
+              ) : (
+                <span>{value ?? "-"}</span>
+              )}
             </div>
           </div>
         );
