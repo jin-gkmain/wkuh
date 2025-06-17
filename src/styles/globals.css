@@ -2526,8 +2526,21 @@ thead th .fc-scroller {
 
 .teleconsulting-area .hide {
   width: 0 !important;
+  overflow: hidden;
+  transition: width 0.3s ease;
   display: block;
   border: 0;
+}
+
+.teleconsulting-area .patient-info-area.closed {
+  width: 0 !important;
+  overflow: hidden;
+  transition: width 0.3s ease;
+  border: 0;
+}
+
+.teleconsulting-area .patient-info-area.opened {
+  transition: width 0.3s ease;
 }
 
 .teleconsulting-area
@@ -2636,9 +2649,9 @@ thead th .fc-scroller {
   }
 }
 
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1100px) {
   .teleconsulting-area .patient-info-area {
-    width: 0px;
+    width: 0px !important;
   }
 
   .teleconsulting-area .meeting-area {

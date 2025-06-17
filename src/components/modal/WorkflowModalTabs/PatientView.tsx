@@ -651,7 +651,7 @@ export function PatientView({
             </span>
             <DropFileInput
               labelText
-              disabled={false}
+              disabled={view}
               type="첨부"
               files={filesData[getFileGubun(tabType)]["첨부"]}
               onRemove={onRemove}
