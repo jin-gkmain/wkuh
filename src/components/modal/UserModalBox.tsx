@@ -32,7 +32,7 @@ export default function UserModalBox({
   userData,
 }: Props) {
   const { lang } = useContext(LanguageContext);
-  const permissionOptions = getPermissionOptions(lang);
+  const permissionOptions = getPermissionOptions(lang as "ko" | "en");
 
   const [user, setUser] = useState<UserModal>({
     u_idx: 0,
@@ -47,9 +47,13 @@ export default function UserModalBox({
     job: "doctor",
     note: "",
     medical_dept: "1",
+    country: "korea",
   });
-  const jobOptions = getJobOptions(lang, user.job);
-  const medicalDeptOptions = getMedicalDeptOptions(lang, user.job);
+  const jobOptions = getJobOptions(lang as "ko" | "en", user.job);
+  const medicalDeptOptions = getMedicalDeptOptions(
+    lang as "ko" | "en",
+    user.job
+  );
   const [idDuplicated, setIdDuplicated] = useState<
     "ready" | "success" | "duplicated"
   >("ready");

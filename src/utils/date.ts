@@ -62,7 +62,7 @@ function convertTimeToStr(
 function convertChatTime(
   country: string, // 시간 계산 ( 회원의 국적에 따른 시간계산 )
   utcTime: string,
-  lang?: LangType, // 언어에 따른 형식
+  lang?: "ko" | "en", // 언어에 따른 형식
   title?: boolean
 ) {
   let str;

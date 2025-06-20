@@ -12,7 +12,7 @@ import DateInput, { Value } from "../common/inputs/DateInput";
 import SelectInput from "../common/inputs/SelectInput";
 import FlagKoreaSq from "../common/icons/FlagKoreaSq";
 import langFile from "@/lang";
-import { LangType, LanguageContext } from "@/context/LanguageContext";
+import { LanguageContext } from "@/context/LanguageContext";
 import Select from "../common/inputs/Select";
 import dayjs from "dayjs";
 import { useAppSelector, useAppDispatch } from "@/store";
@@ -33,7 +33,7 @@ type Props = {
 
 function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
+  const { lang } = useContext(LanguageContext) as { lang: "ko" | "en" };
   const dispatch = useAppDispatch();
 
   const [modalInfo, setModalInfo] = useState<VideoModal>({

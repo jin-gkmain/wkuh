@@ -235,16 +235,18 @@ export default function UsersPage() {
               handleClose={closeModal}
               handleMainClick={handleConfirm}
               iconType={modalTypeVal}
-              title={getConfirmModalText(modalTypeVal, lang).title}
-              desc={getConfirmModalText(modalTypeVal, lang).desc}
+              title={
+                getConfirmModalText(modalTypeVal, lang as "ko" | "en").title
+              }
+              desc={getConfirmModalText(modalTypeVal, lang as "ko" | "en").desc}
             />
           )}
         </ModalPortal>
 
         <AlertModalPortal>
           <CheckAlertbox
-            title={getAlertModalText(modalTypeVal, lang).title}
-            desc={getAlertModalText(modalTypeVal, lang).desc}
+            title={getAlertModalText(modalTypeVal, lang as "ko" | "en").title}
+            desc={getAlertModalText(modalTypeVal, lang as "ko" | "en").desc}
             handleClose={closeAlertModal}
           />
         </AlertModalPortal>

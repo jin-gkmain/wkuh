@@ -1,18 +1,17 @@
-import '@/styles/normalize.css';
-import '@/styles/globals.css';
-import '@/styles/basic.css';
-import type { AppProps } from 'next/app';
-import { NextPage } from 'next';
-import { ReactElement, ReactNode, useEffect, useState } from 'react';
-import StoreProvider from '@/store/StoreProvider';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { LangType, LanguageContext } from '@/context/LanguageContext';
-import { Noto_Sans } from 'next/font/google';
-import SendBirdCall from 'sendbird-calls';
+import "@/styles/normalize.css";
+import "@/styles/globals.css";
+import "@/styles/basic.css";
+import "@/styles/mobile.css";
+import type { AppProps } from "next/app";
+import { NextPage } from "next";
+import { ReactElement, ReactNode, useEffect, useState } from "react";
+import StoreProvider from "@/store/StoreProvider";
+import Head from "next/head";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
+import { Noto_Sans } from "next/font/google";
+import SendBirdCall from "sendbird-calls";
 
-
-const NotoSans = Noto_Sans({ subsets: ['latin'] });
+const NotoSans = Noto_Sans({ subsets: ["latin"] });
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -23,49 +22,42 @@ type AppPropsWithLayout = AppProps & {
 };
 
 const correctLang = (lang: string): lang is LangType => {
-  return lang === 'ko' || lang === 'en' || lang === 'kk' || lang === 'mn';
+  return lang === "ko" || lang === "en" || lang === "kk" || lang === "mn";
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  const router = useRouter();
-  const [lang, setLang] = useState<LangType>('ko');
+  const [lang, setLang] = useState<LangType>("ko");
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
   const changeLang = (newLang: LangType) => {
     setLang(newLang);
-    if (typeof window !== 'undefined') {
-        sessionStorage.setItem('lang', newLang);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("lang", newLang);
     }
   };
 
   useEffect(() => {
     SendBirdCall.init(process.env.NEXT_PUBLIC_SENDBIRD_APP_ID!);
-    if (typeof window !== 'undefined') {
-        const webLang = navigator.language.slice(0, 2);
-        const sessionLang = sessionStorage.getItem('lang');
+    if (typeof window !== "undefined") {
+      const webLang = navigator.language.slice(0, 2);
+      const sessionLang = sessionStorage.getItem("lang");
 
-        if (sessionLang && correctLang(sessionLang)) {
-          setLang(sessionLang);
-        } else {
-          if (webLang) {
-            if (correctLang(webLang)) {
-                setLang(webLang);
-                sessionStorage.setItem('lang', webLang);
-            } else {
-                setLang('ko');
-                sessionStorage.setItem('lang', 'ko');
-            }
+      if (sessionLang && correctLang(sessionLang)) {
+        setLang(sessionLang);
+      } else {
+        if (webLang) {
+          if (correctLang(webLang)) {
+            setLang(webLang);
+            sessionStorage.setItem("lang", webLang);
+          } else {
+            setLang("ko");
+            sessionStorage.setItem("lang", "ko");
           }
         }
+      }
     }
   }, []);
-
-  useEffect(() => {
-    if (router.pathname.startsWith('/mobile/')) {
-      import('@/styles/mobile.css').catch(err => console.log("Failed to load mobile.css", err));
-    }
-  }, [router.pathname]);
 
   return (
     <StoreProvider>
@@ -76,11 +68,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <div className={NotoSans.className}>
-            {getLayout(<Component {...pageProps} />)}
+          {getLayout(<Component {...pageProps} />)}
         </div>
         <div id="root-modal"></div>
         <div id="sub-modal"></div>
       </LanguageContext.Provider>
     </StoreProvider>
   );
-} 
+}

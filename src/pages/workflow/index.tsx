@@ -40,7 +40,7 @@ export default function WorkflowPage() {
   const [tableDropOptions, setTableDropOptions] = useState<TableMenuOption[]>(
     []
   );
-  const tds = getTableHeadData(lang);
+  const tds = getTableHeadData(lang as "ko" | "en");
   const [patients, setPatients] = useState<Patient[]>([]);
   const [hospitals, setHospitals] = useState<Organization[]>([]);
   const [hospitalsOptions, setHospitalsOptions] = useState<SelectOptionType[]>(
@@ -290,7 +290,7 @@ export default function WorkflowPage() {
 
       {/* 검색 영역 */}
       <SearchPatientsContent
-        lang={lang}
+        lang={lang as "ko" | "en"}
         onComplete={handleSearchComplete}
         o_idx={selectedHospital}
       />
@@ -341,7 +341,7 @@ export default function WorkflowPage() {
                 onClickMenu={(type) => onClickMenu(type, p_idx)}
                 // menuOptions={tableMenuOptions}
                 tableRowOptionType={tableDropOptions}
-                lang={lang}
+                lang={lang as "ko" | "en"}
               >
                 <td>{p_chart_no ? p_chart_no : "-"}</td>
                 <td>{u_name_eng}</td>
@@ -374,7 +374,7 @@ WorkflowPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-function getTableHeadData(lang: LangType) {
+function getTableHeadData(lang: "ko" | "en") {
   const tds: TableHeadCol[] = [
     {
       key: langFile[lang].PATIENT_CODE_TEXT, // 환자번호

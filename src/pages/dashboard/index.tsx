@@ -5,18 +5,18 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from 'react';
-import Layout from '@/components/common/Layout';
-import MyHead from '@/components/common/MyHead';
-import MyBarChart from '@/components/common/chart/MyBarChart';
-import MyLineChart from '@/components/common/chart/MyLineChart';
-import MyPieChart from '@/components/common/chart/MyPieChart';
-import { LangType, LanguageContext } from '@/context/LanguageContext';
-import { useAppSelector } from '@/store';
-import { convertTimeToStr } from '@/utils/date';
-import { useRouter } from 'next/router';
-import langFile from '@/lang';
-import dayjs from 'dayjs';
+} from "react";
+import Layout from "@/components/common/Layout";
+import MyHead from "@/components/common/MyHead";
+import MyBarChart from "@/components/common/chart/MyBarChart";
+import MyLineChart from "@/components/common/chart/MyLineChart";
+import MyPieChart from "@/components/common/chart/MyPieChart";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
+import { useAppSelector } from "@/store";
+import { convertTimeToStr } from "@/utils/date";
+import { useRouter } from "next/router";
+import langFile from "@/lang";
+import dayjs from "dayjs";
 import {
   getChartInfo,
   getCompletedVisitist,
@@ -26,9 +26,9 @@ import {
   getTodayTelePatients,
   getTodayVisitPatients,
   getUserListByJob,
-} from '@/data/dashboard';
-import Select, { SelectOptionType } from '@/components/common/inputs/Select';
-import getOrgs from '@/data/org';
+} from "@/data/dashboard";
+import Select, { SelectOptionType } from "@/components/common/inputs/Select";
+import getOrgs from "@/data/org";
 
 type DefaultChartInfo = {
   o_idx: number;
@@ -74,19 +74,19 @@ export default function DashBoardPage() {
 
   // test2.용 (병원 선택)
   const [orgOptions, setOrgOptions] = useState<SelectOptionType[] | null>(null);
-  const [selectedOrg, setSelectedOrg] = useState('0');
+  const [selectedOrg, setSelectedOrg] = useState("0");
 
   const jobs = [
     {
-      key: 'nurse',
+      key: "nurse",
       name: langFile[lang].USER_MODAL_USER_JOB1,
     },
     {
-      key: 'doctor',
+      key: "doctor",
       name: langFile[lang].USER_MODAL_USER_JOB2,
     },
     {
-      key: 'interpreter',
+      key: "interpreter",
       name: langFile[lang].USER_MODAL_USER_JOB3,
     },
   ];
@@ -98,7 +98,7 @@ export default function DashBoardPage() {
   const getData = (data: DefaultChartInfo[]) => {
     return data
       ? data?.map(({ o_name_kor, o_name_eng, data }) => ({
-          label: lang === 'ko' ? o_name_kor : o_name_eng,
+          label: lang === "ko" ? o_name_kor : o_name_eng,
           data: data,
         }))
       : [];
@@ -142,18 +142,18 @@ export default function DashBoardPage() {
 
   const getMonths = useCallback(() => {
     const months = [
-      'JAN',
-      'FEB',
-      'MAR',
-      'APR',
-      'MAY',
-      'JUN',
-      'JUL',
-      'AUG',
-      'SEP',
-      'OCT',
-      'NOV',
-      'DEC',
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC",
     ];
     return Array.from({ length: 12 }, (_, x) => x).map(
       (i) => langFile[lang][months[i]]
@@ -222,18 +222,18 @@ export default function DashBoardPage() {
   // 협진사용현황 데이터 목록 받아오기
   useEffect(() => {
     if (!userInfo || userInfo.p_idx) return null;
-    let o_idx = userInfo.country !== 'korea' ? userInfo.o_idx : 0;
+    let o_idx = userInfo.country !== "korea" ? userInfo.o_idx : 0;
 
     const fetchPatientChartInfo = async () => {
       const res = await getPatientRegistList(o_idx);
-      if (res !== 'ServerError') {
+      if (res !== "ServerError") {
         setPatientChartInfo(converTotDefaultChartType(res));
       }
     };
 
     const fetchUsersChartInfo = async () => {
       const res = await getUserListByJob(o_idx);
-      if (res !== 'ServerError') {
+      if (res !== "ServerError") {
         setUsersChartList(
           res.map((i) => ({ ...i, color: getRandomRGBColor() }))
         );
@@ -243,12 +243,12 @@ export default function DashBoardPage() {
 
     const fetchTodayAppointments = async () => {
       const te = await getTodayTelePatients(o_idx);
-      if (te !== 'ServerError') {
+      if (te !== "ServerError") {
         let mapped = te.map((i) => ({ ...i, date: i.te_date }));
         setTodayTeAptList(mapped);
       }
       const vii = await getTodayVisitPatients(o_idx);
-      if (vii !== 'ServerError') {
+      if (vii !== "ServerError") {
         let mapped = vii.map((i) => ({ ...i, date: i.vii_tad }));
         setTodayVitAptList(mapped);
       }
@@ -268,10 +268,10 @@ export default function DashBoardPage() {
     }
 
     const fetchOrg = async () => {
-      const search = userInfo.country === 'korea' ? 'parent_o_idx' : 'o_idx';
+      const search = userInfo.country === "korea" ? "parent_o_idx" : "o_idx";
       const res = await getOrgs({ search, search_key: userInfo.o_idx });
 
-      if (res !== 'ServerError') {
+      if (res !== "ServerError") {
         const options = res.map((i) => ({
           key: i.o_name_kor,
           keyEn: i.o_name_eng,
@@ -292,13 +292,13 @@ export default function DashBoardPage() {
     if (!selectedOrg) return;
 
     const fetchTeleChartInfo = async () => {
-      const res = await getChartInfo('te', parseInt(selectedOrg));
+      const res = await getChartInfo("te", parseInt(selectedOrg));
       let body;
-      if (res !== 'ServerError') {
+      if (res !== "ServerError") {
         if (res.length) {
           body = res;
         } else {
-          body = fillEmptyBody('te');
+          body = fillEmptyBody("te");
         }
 
         setTeleChartInfo(converTotDefaultChartType(body));
@@ -306,26 +306,26 @@ export default function DashBoardPage() {
     };
 
     const fetchVisitChartInfo = async () => {
-      const res = await getChartInfo('vir', parseInt(selectedOrg));
+      const res = await getChartInfo("vir", parseInt(selectedOrg));
       let body;
-      if (res !== 'ServerError') {
+      if (res !== "ServerError") {
         if (res.length) {
           body = res;
         } else {
-          body = fillEmptyBody('vir');
+          body = fillEmptyBody("vir");
         }
         setCpVisitChartInfo(converTotDefaultChartType(body));
       }
     };
 
     const fetchPpChartInfo = async () => {
-      const res = await getChartInfo('pp', parseInt(selectedOrg));
+      const res = await getChartInfo("pp", parseInt(selectedOrg));
       let body;
-      if (res !== 'ServerError') {
+      if (res !== "ServerError") {
         if (res.length) {
           body = res;
         } else {
-          body = fillEmptyBody('pp');
+          body = fillEmptyBody("pp");
         }
         setPpChartInfo(converTotDefaultChartType(body));
       }
@@ -347,7 +347,7 @@ export default function DashBoardPage() {
               {langFile[lang].DASHBOARD_CURRENT_USAGE_STATUS_TITLE}
               {/* 사용 현황 */}
             </h2>
-            {userInfo?.country === 'korea' && (
+            {userInfo?.country === "korea" && (
               <div className="select-wrap">
                 <Select
                   options={orgOptions || []}
@@ -358,7 +358,7 @@ export default function DashBoardPage() {
               </div>
             )}
             <div className="chart-wrap">
-              {userInfo && userInfo.country === 'korea' && (
+              {userInfo && userInfo.country === "korea" && (
                 <MyBarChart
                   max={getMaxY(getDataNew()) + 5}
                   step={10}
@@ -366,7 +366,7 @@ export default function DashBoardPage() {
                   data={getDataNew()}
                 />
               )}
-              {userInfo && userInfo.country !== 'korea' && (
+              {userInfo && userInfo.country !== "korea" && (
                 <MyLineChart
                   legend={true}
                   chartRef={chartRef}
@@ -394,7 +394,7 @@ export default function DashBoardPage() {
                     <p
                       key={u.o_idx}
                       className={`pie-option ${
-                        u.o_idx === selectedHospital ? 'selected' : ''
+                        u.o_idx === selectedHospital ? "selected" : ""
                       }`}
                       onClick={() => handleSelectedHospital(u.o_idx)}
                     >
@@ -403,7 +403,7 @@ export default function DashBoardPage() {
                         style={{ backgroundColor: u.color }}
                       ></span>
                       <span className="option-name">
-                        {lang === 'ko' ? u.o_name_kor : u.o_name_eng}
+                        {lang === "ko" ? u.o_name_kor : u.o_name_eng}
                       </span>
                     </p>
                   ))}
@@ -422,13 +422,13 @@ export default function DashBoardPage() {
                 <CardItem
                   userInfo={userInfo}
                   items={todayTeAptisList}
-                  lang={lang}
+                  lang={lang as "ko" | "en"}
                   type="tele"
                 />
                 <CardItem
                   userInfo={userInfo}
                   items={todayViAptList}
-                  lang={lang}
+                  lang={lang as "ko" | "en"}
                   type="visit"
                 />
               </div>
@@ -445,7 +445,7 @@ export default function DashBoardPage() {
             </h2>
 
             <div className="chart-wrap">
-              {userInfo && userInfo.country === 'korea' && (
+              {userInfo && userInfo.country === "korea" && (
                 <MyBarChart
                   max={getMaxY(patientChartInfo) + 5}
                   step={10}
@@ -453,7 +453,7 @@ export default function DashBoardPage() {
                   data={getData(patientChartInfo)}
                 />
               )}
-              {userInfo && userInfo.country !== 'korea' && (
+              {userInfo && userInfo.country !== "korea" && (
                 <MyLineChart
                   chartRef={chartRef}
                   max={getMaxY(patientChartInfo) + 5}
@@ -477,8 +477,8 @@ DashBoardPage.getLayout = function getLayout(page: ReactElement) {
 type CardItemProps = {
   userInfo: StoredUser | null;
   items: TodayAptItem[] | null;
-  lang: LangType;
-  type: 'tele' | 'visit';
+  lang: "ko" | "en";
+  type: "tele" | "visit";
 };
 
 function CardItem({ userInfo, items, lang, type }: CardItemProps) {
@@ -486,7 +486,7 @@ function CardItem({ userInfo, items, lang, type }: CardItemProps) {
     <div className="my-card">
       <header className="card-header">
         <p>
-          {type === 'tele'
+          {type === "tele"
             ? langFile[lang].DASHBOARD_TODAY_TELE_PATIENT
             : langFile[lang].DASHBOARD_TODAY_VISIT_PATIENT}
         </p>
@@ -494,18 +494,18 @@ function CardItem({ userInfo, items, lang, type }: CardItemProps) {
           <span>
             {dayjs(
               convertTimeToStr(
-                userInfo.country || 'korea',
+                userInfo.country || "korea",
                 new Date().toISOString(),
-                '-'
+                "-"
               )
-            ).format('dddd')}
+            ).format("dddd")}
           </span>
           <span className="vertical-bar"></span>
           <span>
             {convertTimeToStr(
-              userInfo.country || 'korea',
+              userInfo.country || "korea",
               new Date().toISOString(),
-              '-'
+              "-"
             )}
           </span>
         </p>
@@ -526,7 +526,7 @@ function CardItem({ userInfo, items, lang, type }: CardItemProps) {
           </li>
           <li className="truncate">
             {
-              type === 'tele'
+              type === "tele"
                 ? langFile[lang].DASHBOARD_TELE_DATE_TEXT // 협진일시
                 : langFile[lang].DASHBOARD_VISIT_DATE_TEXT // 내원일시
             }
@@ -555,15 +555,15 @@ function CardItem({ userInfo, items, lang, type }: CardItemProps) {
                   <span className="truncate">{u_name_eng}</span>
                   <span className="vertical-bar"></span>
                   <span className="truncate">
-                    {lang === 'ko' ? o_name_kor : o_name_eng}
+                    {lang === "ko" ? o_name_kor : o_name_eng}
                   </span>
                   <span className="vertical-bar"></span>
                   <span className="truncate">
-                    {userInfo.country === 'korea'
-                      ? lang === 'ko'
+                    {userInfo.country === "korea"
+                      ? lang === "ko"
                         ? doctor2_name_kor
                         : doctor2_name_eng
-                      : lang === 'ko'
+                      : lang === "ko"
                       ? doctor1_name_kor
                       : doctor1_name_eng}
                   </span>
@@ -574,7 +574,7 @@ function CardItem({ userInfo, items, lang, type }: CardItemProps) {
                         userInfo.country,
                         date,
                         null,
-                        'YYYY-MM-DD'
+                        "YYYY-MM-DD"
                       )}
                     </p>
                     <p className="time">
@@ -582,7 +582,7 @@ function CardItem({ userInfo, items, lang, type }: CardItemProps) {
                         userInfo.country,
                         date,
                         null,
-                        'a hh:mm'
+                        "a hh:mm"
                       )}
                     </p>
                   </span>

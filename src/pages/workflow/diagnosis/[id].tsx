@@ -83,10 +83,12 @@ export default function DiagnosisPage() {
 
   const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
   const [patientInfo, setPatientInfo] = useState<Patient | null>(null);
-  const [infoKeys, setInfoKeys] = useState(() => getInfoBoxHeadData(lang));
+  const [infoKeys, setInfoKeys] = useState(() =>
+    getInfoBoxHeadData(lang as "ko" | "en")
+  );
 
-  const medicaltds = getTableMedicalHeadData(lang);
-  const videotds = getTableVideoHeadData(lang);
+  const medicaltds = getTableMedicalHeadData(lang as "ko" | "en");
+  const videotds = getTableVideoHeadData(lang as "ko" | "en");
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -272,7 +274,7 @@ export default function DiagnosisPage() {
   }, [userInfo, router.query.id]);
 
   useEffect(() => {
-    const newInfoKeys = getInfoBoxHeadData(lang);
+    const newInfoKeys = getInfoBoxHeadData(lang as "ko" | "en");
     setInfoKeys(newInfoKeys);
   }, [lang]);
 

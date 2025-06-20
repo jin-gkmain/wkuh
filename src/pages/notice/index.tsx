@@ -42,7 +42,7 @@ export type NoticeSearchInputs = {
 export default function NoticePage() {
   const { lang } = useContext(LanguageContext);
   const { userInfo } = useAppSelector(({ user }) => user);
-  const tds = getTableHeadData(lang);
+  const tds = getTableHeadData(lang as "ko" | "en");
   const [tableDropOptions, setTableDropOptions] = useState<TableMenuOption[]>(
     []
   );
@@ -326,7 +326,7 @@ export default function NoticePage() {
                   buttonText={langFile[lang].NOTICE_VIEW_TEXT} // 확인하기
                   onClickMenu={(type) => handleMenu(type, n_idx)}
                   tableRowOptionType={tableDropOptions}
-                  lang={lang}
+                  lang={lang as "ko" | "en"}
                 >
                   <td>{idx + 1}</td>
                   <td className="truncate">{title}</td>
@@ -363,7 +363,7 @@ NoticePage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-function getTableHeadData(lang: LangType) {
+function getTableHeadData(lang: "ko" | "en") {
   const tds: TableHeadCol[] = [
     {
       key: langFile[lang].NOTICE_NUMBER_TEXT, // 공지번호

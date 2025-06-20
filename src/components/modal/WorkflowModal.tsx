@@ -86,14 +86,14 @@ type FilesInfo = {
 export default function WorkflowModal({ closeModal }: Props) {
   const prevChartInfo = useRef<null | DiagnosisModal>(null);
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
-  const tds = getTableHeadData(lang);
+  const { lang } = useContext(LanguageContext) as { lang: "ko" | "en" };
+  const tds = getTableHeadData(lang as "ko" | "en");
   const [tableMenuOptions, setTableMenuOptions] = useState(() =>
     getTableRowMenuOptions("remove", lang as "ko" | "en")
   );
   const [preliminaryTab, setPreliminaryTab] = useState<number>(0);
   const preliminaryTabs = [];
-  const tabs = getTabs(lang);
+  const tabs = getTabs(lang as "ko" | "en");
   const selectedId = useRef<string>();
   const [loading, setLoading] = useState(false);
   const { openModal: openTeleModal, closeModal: closeTeleModal } = useContext(
@@ -3285,7 +3285,7 @@ type ChattingProps = {
 const Chatting = ({ tab, alertList }: ChattingProps) => {
   const { chartId } = useAppSelector(({ workflowModal }) => workflowModal);
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
+  const { lang } = useContext(LanguageContext) as { lang: "ko" | "en" };
 
   const [chattingList, setChattingList] = useState<ChatAlert[] | null>(null);
 
@@ -3436,7 +3436,7 @@ const Chatting = ({ tab, alertList }: ChattingProps) => {
 
         <div className="input-area">
           <ChattingInput
-            lang={lang}
+            lang={lang as "ko" | "en"}
             addChat={addComment}
             tab={tab}
             userInfo={userInfo}
@@ -3456,7 +3456,7 @@ function ChattingInput({
   addChat: (comment: string) => Promise<"SUCCESS" | "FAIL">;
   userInfo: StoredUser | null;
   tab: WorkflowTabType;
-  lang: LangType;
+  lang: "ko" | "en";
 }) {
   const [text, setText] = useState("");
   const input = useRef(null);

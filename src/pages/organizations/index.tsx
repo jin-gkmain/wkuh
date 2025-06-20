@@ -270,8 +270,8 @@ export default function OrganizationsPage() {
       <RemoveModalPortal>
         <ConfirmAlertBox
           iconType={modalType}
-          title={getConfirmModalText(modalType, lang).title}
-          desc={getConfirmModalText(modalType, lang).desc}
+          title={getConfirmModalText(modalType, lang as "ko" | "en").title}
+          desc={getConfirmModalText(modalType, lang as "ko" | "en").desc}
           handleClose={closeRemoveModal}
           handleMainClick={handleConfirm}
         />
@@ -280,8 +280,8 @@ export default function OrganizationsPage() {
       {/* 확인 모달 */}
       <AlertModalPortal>
         <CheckAlertbox
-          title={getAlertModalText(modalType, lang).title}
-          desc={getAlertModalText(modalType, lang).desc}
+          title={getAlertModalText(modalType, lang as "ko" | "en").title}
+          desc={getAlertModalText(modalType, lang as "ko" | "en").desc}
           handleClose={closeAlertModal}
         />
       </AlertModalPortal>
@@ -327,7 +327,7 @@ export default function OrganizationsPage() {
                         : ["manage", "activate"]
                       : []
                   }
-                  lang={lang}
+                  lang={lang as "ko" | "en"}
                   key={o_idx}
                   handleClick={() => handleTableRowBtnClick(o_idx)}
                   buttonText={langFile[lang].ORG_TABLE_ROW_BUTTON} // 사용자 목록

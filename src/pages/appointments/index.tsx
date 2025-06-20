@@ -35,7 +35,7 @@ export default function AppointmentsPage() {
   const { userInfo } = useAppSelector(({ user }) => user);
   const { lang } = useContext(LanguageContext);
   const { openModal: openWorkflowModal } = useContext(WorkflowModalContext);
-  const tds = getTableHeadData(lang);
+  const tds = getTableHeadData(lang as "ko" | "en");
   const [hospitals, setHospitals] = useState<Organization[]>([]);
   const [hospitalsOptions, setHospitalsOptions] = useState<SelectOptionType[]>(
     []

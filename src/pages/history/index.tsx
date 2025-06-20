@@ -52,7 +52,7 @@ export default function HistoryPage() {
     new Map()
   );
 
-  const tds = getTableHeadData(lang);
+  const tds = getTableHeadData(lang as "ko" | "en");
 
   // 진료과 변환 헬퍼 함수
   const getMedicalDeptName = (medicalDept: string | null | number): string => {
@@ -990,7 +990,7 @@ HistoryPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-function getTableHeadData(lang: LangType) {
+function getTableHeadData(lang: "ko" | "en") {
   const tds: TableHeadCol[] = [
     {
       key: langFile[lang].HISTORY_TABLE_NO,

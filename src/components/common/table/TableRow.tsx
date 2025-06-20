@@ -1,9 +1,9 @@
-import { ReactNode, useRef, useState, useEffect } from 'react';
-import Next from '../icons/Next';
-import Menu from '../icons/Menu';
-import DropdownOptions from '../DropdownOptions';
-import { LangType } from '@/context/LanguageContext';
-import { getTableDropMenuOptions } from '@/utils/table';
+import { ReactNode, useRef, useState, useEffect } from "react";
+import Next from "../icons/Next";
+import Menu from "../icons/Menu";
+import DropdownOptions from "../DropdownOptions";
+import { LangType } from "@/context/LanguageContext";
+import { getTableDropMenuOptions } from "@/utils/table";
 // import langFile from '@/lang';
 
 type Props<M> = {
@@ -53,12 +53,14 @@ export default function TableRow<M extends string>({
     if (tableRowOptionType) {
       if (tableRowOptionType.length) setVisible(true);
       // if (!tableRowOptionType.length) setVisible(false);
-      setTableMenuOptions(getTableDropMenuOptions(tableRowOptionType, lang));
+      setTableMenuOptions(
+        getTableDropMenuOptions(tableRowOptionType, lang as "ko" | "en")
+      );
     }
   }, [lang, tableRowOptionType]);
 
   return (
-    <tr className={`table-row ${rowDisabled ? 'row-disabled' : ''}`}>
+    <tr className={`table-row ${rowDisabled ? "row-disabled" : ""}`}>
       {children}
       <td className="button">
         <button
@@ -66,7 +68,7 @@ export default function TableRow<M extends string>({
           type="button"
           onClick={handleClick}
           className={`table-btn primary-btn flex align-center font-semi-bold ${
-            !buttonActive ? 'table-btn-disabled' : ''
+            !buttonActive ? "table-btn-disabled" : ""
           }`}
         >
           {buttonText} <Next />
@@ -75,7 +77,7 @@ export default function TableRow<M extends string>({
 
       {menu && (
         <td
-          className={`menu-td relative ${visible ? 'visible' : 'hidden'}`}
+          className={`menu-td relative ${visible ? "visible" : "hidden"}`}
           ref={menuDropRef}
           onClick={handleMenuBtnClick}
         >

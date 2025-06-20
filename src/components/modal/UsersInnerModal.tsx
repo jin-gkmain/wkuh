@@ -1,19 +1,19 @@
-import React, { useContext, useState, useEffect } from 'react';
-import ModalFrame from './ModalFrame';
-import TableHead from '../common/table/TableHead';
-import TableRow from '../common/table/TableRow';
-import langFile from '@/lang';
-import { LangType, LanguageContext } from '@/context/LanguageContext';
-import { useAppSelector } from '@/store';
-import { convertTimeToStr } from '@/utils/date';
-import { getOrg } from '@/data/org';
-import { getUsersByOIdx } from '@/data/users';
+import React, { useContext, useState, useEffect } from "react";
+import ModalFrame from "./ModalFrame";
+import TableHead from "../common/table/TableHead";
+import TableRow from "../common/table/TableRow";
+import langFile from "@/lang";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
+import { useAppSelector } from "@/store";
+import { convertTimeToStr } from "@/utils/date";
+import { getOrg } from "@/data/org";
+import { getUsersByOIdx } from "@/data/users";
 
 export type UsersInnerModalJobType =
-  | 'doctor'
-  | 'nurse'
-  | 'medical'
-  | 'not-patient';
+  | "doctor"
+  | "nurse"
+  | "medical"
+  | "not-patient";
 
 type Props<T> = {
   o_idx: number;
@@ -32,7 +32,7 @@ export default function UsersInnerModal<T>({
 }: Props<T>) {
   const { userInfo } = useAppSelector(({ user }) => user);
   const { lang } = useContext(LanguageContext);
-  const tds = getTableHeadData(lang);
+  const tds = getTableHeadData(lang as "ko" | "en");
   const [users, setUsers] = useState<null | User[]>(null);
   const [org, setOrg] = useState<null | Organization>(null);
 
@@ -40,28 +40,28 @@ export default function UsersInnerModal<T>({
   useEffect(() => {
     (async () => {
       let userData = await getUsersByOIdx(o_idx);
-      if (userData !== 'ServerError') {
+      if (userData !== "ServerError") {
         if (job) {
-          if (job === 'doctor' || job === 'nurse') {
+          if (job === "doctor" || job === "nurse") {
             userData = userData.filter((u) => u.job === job);
-          } else if (job === 'medical') {
+          } else if (job === "medical") {
             userData = userData.filter(
-              (u) => u.job === 'doctor' || u.job === 'nurse'
+              (u) => u.job === "doctor" || u.job === "nurse"
             );
-          } else if (job === 'not-patient') {
-            userData = userData.filter((u) => u.job !== 'patient');
+          } else if (job === "not-patient") {
+            userData = userData.filter((u) => u.job !== "patient");
           }
         }
         setUsers(userData);
       } else {
-        console.log('사용자 목록 불러오기 실패');
+        console.log("사용자 목록 불러오기 실패");
       }
 
       const orgData = await getOrg(o_idx);
-      if (orgData !== 'ServerError') {
+      if (orgData !== "ServerError") {
         setOrg(orgData);
       } else {
-        console.log('기관 detail 정보 불러오기 실패');
+        console.log("기관 detail 정보 불러오기 실패");
       }
     })();
   }, []);
@@ -109,45 +109,45 @@ export default function UsersInnerModal<T>({
                     menu={false}
                   >
                     <td>{u_code}</td>
-                    <td>{lang === 'ko' ? u_name_kor : u_name_eng}</td>
+                    <td>{lang === "ko" ? u_name_kor : u_name_eng}</td>
                     <td>
-                      {permission === 'admin'
+                      {permission === "admin"
                         ? langFile[lang].USER_MODAL_USER_PERMISSION1
                         : langFile[lang].USER_MODAL_USER_PERMISSION2}
                     </td>
                     <td>
-                      {job === 'doctor' && langFile[lang].USER_MODAL_USER_JOB2}
+                      {job === "doctor" && langFile[lang].USER_MODAL_USER_JOB2}
                       {/* 의사 */}
 
-                      {job === 'nurse' && langFile[lang].USER_MODAL_USER_JOB1}
+                      {job === "nurse" && langFile[lang].USER_MODAL_USER_JOB1}
                       {/* 간호사 */}
 
-                      {job === 'interpreter' &&
+                      {job === "interpreter" &&
                         langFile[lang].USER_MODAL_USER_JOB3}
                       {/* 통역사 */}
 
-                      {job === 'admin' && langFile[lang].USER_MODAL_USER_JOB6}
+                      {job === "admin" && langFile[lang].USER_MODAL_USER_JOB6}
                       {/* 관리자 */}
 
-                      {job === 'patient' && langFile[lang].USER_MODAL_USER_JOB5}
+                      {job === "patient" && langFile[lang].USER_MODAL_USER_JOB5}
                       {/* 환자 */}
 
-                      {job === 'ect' && langFile[lang].USER_MODAL_USER_JOB4}
+                      {job === "ect" && langFile[lang].USER_MODAL_USER_JOB4}
                       {/* 기타 */}
                     </td>
                     <td>{u_id}</td>
                     <td>
                       {org
-                        ? lang === 'ko'
+                        ? lang === "ko"
                           ? org.o_name_kor
                           : org.o_name_eng
-                        : ''}
+                        : ""}
                     </td>
                     <td>
                       {convertTimeToStr(
-                        userInfo.country === 'korea' ? 'KR' : 'MN',
+                        userInfo.country === "korea" ? "KR" : "MN",
                         registdate_utc.toString(),
-                        '.'
+                        "."
                       )}
                     </td>
                   </TableRow>
@@ -164,45 +164,45 @@ function getTableHeadData(lang: LangType) {
   const tds: TableHeadCol[] = [
     {
       key: langFile[lang].USER_CODE_TEXT, // 사용자번호
-      valueType: 'id',
-      type: 'text',
+      valueType: "id",
+      type: "text",
     },
     {
       key: langFile[lang].SEARCH_MANAGER_USER_NAME, // 사용자명
-      valueType: 'localName',
-      type: 'text',
+      valueType: "localName",
+      type: "text",
     },
     {
       key: langFile[lang].USER_PERMISSION_TEXT, // 권한
-      valueType: 'number',
-      type: 'text',
+      valueType: "number",
+      type: "text",
     },
     {
       key: langFile[lang].USER_JOB_TEXT, // 직무
-      valueType: 'number',
-      type: 'text',
+      valueType: "number",
+      type: "text",
     },
 
     {
       key: langFile[lang].USER_EMAIL_TEXT, // 이메일(ID)
-      valueType: 'email',
-      type: 'text',
+      valueType: "email",
+      type: "text",
     },
 
     {
       key: langFile[lang].SEARCH_MANAGER_ORGANIZATION, // 소속기관
-      valueType: 'organization',
-      type: 'text',
+      valueType: "organization",
+      type: "text",
     },
     {
       key: langFile[lang].USER_REGIST_DATE_TEXT, // 등록일
-      valueType: 'date',
-      type: 'text',
+      valueType: "date",
+      type: "text",
     },
 
     {
-      key: '',
-      type: 'button',
+      key: "",
+      type: "button",
     },
   ];
 

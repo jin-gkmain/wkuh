@@ -1,34 +1,34 @@
-import React, { useContext, useRef, useState, useEffect } from 'react';
-import Image from 'next/image';
-import User from './icons/User';
-import Global from './icons/Global';
-import ArrowDown from './icons/ArrowDown';
-import DropdownOptions from './DropdownOptions';
-import useModal from '@/hooks/useModal';
-import ResetPswModal from '../modal/ResetPswModal';
-import { LangType, LanguageContext } from '@/context/LanguageContext';
-import useAlertModal from '@/hooks/useAlertModal';
-import CheckAlertbox from './CheckAlertBox';
-import langFile from '@/lang';
-import { useRouter } from 'next/router';
-import { useAppDispatch } from '@/store';
-import { userActions } from '@/store/modules/userSlice';
-import { removeTokens } from '@/utils/tokens';
-import ConfirmAlertBox from './ConfirmAlertBox';
-import LogoImage from '../../../public/images/wkuh.logo.png';
+import React, { useContext, useRef, useState, useEffect } from "react";
+import Image from "next/image";
+import User from "./icons/User";
+import Global from "./icons/Global";
+import ArrowDown from "./icons/ArrowDown";
+import DropdownOptions from "./DropdownOptions";
+import useModal from "@/hooks/useModal";
+import ResetPswModal from "../modal/ResetPswModal";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
+import useAlertModal from "@/hooks/useAlertModal";
+import CheckAlertbox from "./CheckAlertBox";
+import langFile from "@/lang";
+import { useRouter } from "next/router";
+import { useAppDispatch } from "@/store";
+import { userActions } from "@/store/modules/userSlice";
+import { removeTokens } from "@/utils/tokens";
+import ConfirmAlertBox from "./ConfirmAlertBox";
+import LogoImage from "../../../public/images/wkuh.logo.png";
 
-type UserSettingOptions = 'password' | 'logout';
+type UserSettingOptions = "password" | "logout";
 
-function getUserSettingOptions(lang: 'ko' | 'en') {
+function getUserSettingOptions(lang: "ko" | "en") {
   const userSettingOptions: DropdownOption<UserSettingOptions>[] = [
     {
       text: langFile[lang].DROP_EDIT_PSW_TEXT, // 비밀번호수정
-      type: 'password',
+      type: "password",
       allowed: true,
     },
     {
       text: langFile[lang].DROP_LOGOUT_TEXT, // 로그아웃
-      type: 'logout',
+      type: "logout",
       allowed: true,
     },
   ];
@@ -37,13 +37,13 @@ function getUserSettingOptions(lang: 'ko' | 'en') {
 
 const langDropdownOptions: DropdownOption<LangType>[] = [
   {
-    text: 'English',
-    type: 'en',
+    text: "English",
+    type: "en",
     allowed: true,
   },
   {
-    text: '한국어',
-    type: 'ko',
+    text: "한국어",
+    type: "ko",
     allowed: true,
   },
 ];
@@ -52,7 +52,7 @@ export default function Nav() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { lang, setLang } = useContext(LanguageContext);
-  const userSettingOptions = getUserSettingOptions(lang);
+  const userSettingOptions = getUserSettingOptions(lang as "ko" | "en");
   const [profileOpened, setProfileOpened] = useState(false);
   const [langOpened, setLangOpened] = useState(false);
   const { ModalPortal, closeModal, openModal } = useModal();
@@ -70,7 +70,7 @@ export default function Nav() {
     // ✨ token 정보 삭제 후 login page로 이동
     dispatch(userActions.removeUser());
     removeTokens();
-    router.push('/');
+    router.push("/");
   };
 
   const onComplete = (success: boolean) => {
@@ -84,15 +84,15 @@ export default function Nav() {
 
   // 프로필 dropdown 선택 후 실행
   const handleProfileDropdown = (type: UserSettingOptions) => {
-    if (type === 'password') {
+    if (type === "password") {
       openModal();
-    } else if (type === 'logout') {
+    } else if (type === "logout") {
       openLogoutAlertModal();
     }
   };
 
   // 언어 설정
-  const handleLangDropdown = (type: LangType) => {
+  const handleLangDropdown = (type: LangType | "en" | "ko") => {
     setLang(type);
     setLangOpened(false);
   };
@@ -143,7 +143,7 @@ export default function Nav() {
               }}
             />
             {langOpened && (
-              <DropdownOptions<LangType>
+              <DropdownOptions<LangType | "en" | "ko">
                 options={langDropdownOptions}
                 dropRef={langDropRef}
                 onClose={() => setLangOpened(false)}
@@ -163,7 +163,7 @@ export default function Nav() {
             <User roundBg={true} />
             <div className="flex align-center gap-5">
               <span>
-              {langFile[lang].NAV_PROFILE_DROP_TEXT}
+                {langFile[lang].NAV_PROFILE_DROP_TEXT}
                 {/* 프로필 */}
               </span>
               <ArrowDown />

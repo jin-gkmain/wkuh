@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import DropFileInput from "../../common/inputs/DropFileInput";
 
 type PatientViewProps = {
-  lang: LangType;
+  lang: "ko" | "en";
   org: Organization | null;
   chartInfo: DiagnosisModal;
   userInfo: StoredUser | null;
@@ -667,7 +667,7 @@ export function PatientView({
 
 type OpinionViewProps = {
   userInfo: StoredUser | null;
-  lang: LangType;
+  lang: "ko" | "en";
   handleTopBtnClick: (type: ModalType) => void;
   chartInfo: DiagnosisModal;
   handleInputChange: (ev: ChangeEvent) => void;

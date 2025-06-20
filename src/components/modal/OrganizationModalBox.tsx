@@ -34,7 +34,7 @@ const gubun2 = "첨부";
 function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
   const { userInfo } = useAppSelector(({ user }) => user);
   const { lang } = useContext(LanguageContext);
-  const countrySelectOptions = getCountryOptions(lang);
+  const countrySelectOptions = getCountryOptions(lang as "ko" | "en");
   const [domainCheck, setDomainCheck] = useState<ChartIdDuplicated>("ready");
 
   const [modalInfo, setModalInfo] = useState<OrganizationModal>({
