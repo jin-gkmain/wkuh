@@ -196,6 +196,18 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
         v_sep: gubun,
         regist_u_idx: userInfo.u_idx,
       };
+      if (body.di_doctor === "" || body.di_doctor === null) {
+        body.di_doctor = "-";
+      }
+      if (body.di_hospital === "" || body.di_hospital === null) {
+        body.di_hospital = "-";
+      }
+      if (body.di_memo === "" || body.di_memo === null) {
+        body.di_memo = "-";
+      }
+      if (body.di_date === "" || body.di_date === null) {
+        body.di_date = dayjs().format("YYYY-MM-DD");
+      }
 
       const data = await registVideo(body);
       if (data.message === "SUCCESS") {

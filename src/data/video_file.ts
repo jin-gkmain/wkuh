@@ -5,7 +5,7 @@ export default async function getVideoFiles(v_idx: number) {
     v_idx,
   };
   try {
-    const res = await instance.post("/video_file_list", body);
+    const res = await instance.post("/videofile_list", body);
     const data: MyResponse<ListRes<VideoFile>> = res.data;
     if (data.result) return data.result;
     else return [];
@@ -37,7 +37,7 @@ async function uploadVideoFiles(
 
 async function deleteVideoFile(vf_idx: number) {
   try {
-    const res = await instance.post("/video_file_delete", { vf_idx });
+    const res = await instance.post("/videofile_delete", { vf_idx });
     return "SUCCESS";
   } catch (err) {
     return "ServerError";
@@ -46,7 +46,7 @@ async function deleteVideoFile(vf_idx: number) {
 
 async function downloadVideoFile(vf_idx: number) {
   try {
-    const res = await instance.post("/video_file_download", { vf_idx });
+    const res = await instance.post("/videofile_download", { vf_idx });
     const data: { file_url: string; file_name: string } = res.data;
 
     return {
