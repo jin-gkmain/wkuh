@@ -1,12 +1,12 @@
 import "@/styles/normalize.css";
 import "@/styles/globals.css";
 import "@/styles/basic.css";
-import "@/styles/mobile.css";
 import type { AppProps } from "next/app";
 import { NextPage } from "next";
 import { ReactElement, ReactNode, useEffect, useState } from "react";
 import StoreProvider from "@/store/StoreProvider";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { LangType, LanguageContext } from "@/context/LanguageContext";
 import { Noto_Sans } from "next/font/google";
 import SendBirdCall from "sendbird-calls";
