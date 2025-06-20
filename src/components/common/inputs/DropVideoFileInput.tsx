@@ -44,8 +44,7 @@ export default function DropFileInput({
   const inputEle = useRef(null);
 
   const checkExt = (fileName: string) => {
-    const filetypes =
-      /mp4|avi|mov|wmv|flv|mkv|webm|m4v|m4a|m4b|m4p|m4v|m4a|m4b|m4p/;
+    const filetypes = /.*/;
     const ext = fileName.slice(fileName.lastIndexOf("."));
     return filetypes.test(ext.toLowerCase());
   };
