@@ -99,7 +99,11 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   const setSelectedFiles = async (acceptedFiles: File[]) => {
     if (type === "manage") {
       const formData = getFormDataWithFiles(acceptedFiles);
-      const res = await uploadVideoFiles(formData, modalInfo.video.v_idx);
+      const res = await uploadVideoFiles(
+        formData,
+        modalInfo.video.v_idx,
+        userInfo.u_idx
+      );
       if (res === "SUCCESS") {
         const res = await getVideoFiles(modalInfo.video.v_idx);
         if (res !== "ServerError") {
@@ -197,7 +201,11 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
       if (data.message === "SUCCESS") {
         if (videos.length > 0) {
           const formData = getFormDataWithFiles(videos);
-          const res = await uploadVideoFiles(formData, data.v_idx);
+          const res = await uploadVideoFiles(
+            formData,
+            data.v_idx,
+            userInfo.u_idx
+          );
           if (res === "SUCCESS") {
             // 새로 등록된 비디오 정보를 가져와서 Redux store에 추가
             const newVideo = await getVideo(data.v_idx);
@@ -233,7 +241,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
       if (editResult === "SUCCESS") {
         if (videos.length > 0) {
           const formData = getFormDataWithFiles(videos);
-          const res = await uploadVideoFiles(formData, v_idx);
+          const res = await uploadVideoFiles(formData, v_idx, userInfo.u_idx);
           if (res === "SUCCESS") {
             // 수정된 비디오 정보를 가져와서 Redux store 업데이트
             const updatedVideo = await getVideo(v_idx);

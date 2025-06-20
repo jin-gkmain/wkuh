@@ -14,8 +14,13 @@ export default async function getVideoFiles(v_idx: number) {
   }
 }
 
-async function uploadVideoFiles(formData: FormData, v_idx: number) {
+async function uploadVideoFiles(
+  formData: FormData,
+  v_idx: number,
+  regist_u_idx: number
+) {
   formData.append("v_idx", v_idx.toString());
+  formData.append("regist_u_idx", regist_u_idx.toString());
 
   try {
     const res = await instance.post("/videofile_upload", formData, {
