@@ -31,8 +31,8 @@ export default function UserModalBox({
   onComplete,
   userData,
 }: Props) {
-  const { lang } = useContext(LanguageContext);
-  const permissionOptions = getPermissionOptions(lang as "ko" | "en");
+  const { webLang } = useContext(LanguageContext);
+  const permissionOptions = getPermissionOptions(webLang);
 
   const [user, setUser] = useState<UserModal>({
     u_idx: 0,
@@ -49,11 +49,8 @@ export default function UserModalBox({
     medical_dept: "1",
     country: "korea",
   });
-  const jobOptions = getJobOptions(lang as "ko" | "en", user.job);
-  const medicalDeptOptions = getMedicalDeptOptions(
-    lang as "ko" | "en",
-    user.job
-  );
+  const jobOptions = getJobOptions(webLang, user.job);
+  const medicalDeptOptions = getMedicalDeptOptions(webLang, user.job);
   const [idDuplicated, setIdDuplicated] = useState<
     "ready" | "success" | "duplicated"
   >("ready");
@@ -173,7 +170,7 @@ export default function UserModalBox({
       } else {
         setIdDuplicated("duplicated");
         setIdAlert(true);
-        alert(langFile[lang].USER_ALERT_DUPLICATED_ID); // 중복되는 아이디 입니다.
+        alert(langFile[webLang].USER_ALERT_DUPLICATED_ID); // 중복되는 아이디 입니다.
       }
     } catch (err) {
       console.log("아이디 중복확인 에러 / 500");
@@ -198,11 +195,13 @@ export default function UserModalBox({
       <ModalFrame
         title={
           type === "new"
-            ? langFile[lang].USER_MODAL_NEW_TITLE_TEXT // 사용자 등록
-            : langFile[lang].USER_MODAL_MANAGE_TITLE_TEXT // 사용자 정보 수정
+            ? langFile[webLang].USER_MODAL_NEW_TITLE_TEXT // 사용자 등록
+            : langFile[webLang].USER_MODAL_MANAGE_TITLE_TEXT // 사용자 정보 수정
         }
         completeBtnText={
-          lang !== "ko" ? langFile[lang].USER_MODAL_COMPLETE_BUTTON_TEXT : ""
+          webLang !== "ko"
+            ? langFile[webLang].USER_MODAL_COMPLETE_BUTTON_TEXT
+            : ""
         }
         onClose={closeModal}
         onComplete={handleSubmit}
@@ -213,7 +212,7 @@ export default function UserModalBox({
               <section className="flex-1 flex flex-col gap-10">
                 <div className="flex flex-col gap-10">
                   <label htmlFor="u_name_eng" className="label">
-                    {langFile[lang].USER_MODAL_USER_NAME_EN_TEXT}
+                    {langFile[webLang].USER_MODAL_USER_NAME_EN_TEXT}
                     {/* 사용자명(영문) */}
                   </label>
                   <input
@@ -229,7 +228,7 @@ export default function UserModalBox({
 
                 <div className="flex flex-col gap-10">
                   <label htmlFor="u_id" className="label">
-                    *{langFile[lang].USER_EMAIL_TEXT}
+                    *{langFile[webLang].USER_EMAIL_TEXT}
                     {/* 이메일(ID) */}
                   </label>
                   <div className="w-full flex">
@@ -254,7 +253,7 @@ export default function UserModalBox({
 
                 <div className="flex flex-col gap-10">
                   <span className="label">
-                    {langFile[lang].USER_PERMISSION_TEXT}
+                    {langFile[webLang].USER_PERMISSION_TEXT}
                     {/* 권한 */}
                   </span>
                   <Select
@@ -267,7 +266,7 @@ export default function UserModalBox({
                 </div>
                 <div className="flex flex-col gap-10">
                   <label htmlFor="note" className="label">
-                    {langFile[lang].ORG_MODAL_MEMO_TEXT}
+                    {langFile[webLang].ORG_MODAL_MEMO_TEXT}
                     {/* 메모 */}
                   </label>
                   <input
@@ -285,7 +284,7 @@ export default function UserModalBox({
               <section className="flex-1 flex flex-col gap-10">
                 <div className="flex flex-col gap-10">
                   <label htmlFor="u_name_kor" className="label">
-                    {langFile[lang].USER_MODAL_USER_NAME_KO_TEXT}
+                    {langFile[webLang].USER_MODAL_USER_NAME_KO_TEXT}
                     {/* 사용자명(국문) */}
                   </label>
                   <input
@@ -301,7 +300,7 @@ export default function UserModalBox({
 
                 <div className="flex flex-col gap-10">
                   <label htmlFor="tel" className="label">
-                    {langFile[lang].USER_TEL_TEXT}
+                    {langFile[webLang].USER_TEL_TEXT}
                     {/* 연락처 */}
                   </label>
                   <input
@@ -317,7 +316,7 @@ export default function UserModalBox({
 
                 <div className="flex flex-col gap-10">
                   <span className="label">
-                    {langFile[lang].USER_JOB_TEXT}
+                    {langFile[webLang].USER_JOB_TEXT}
                     {/* 직무 */}
                   </span>
                   <Select
@@ -330,7 +329,7 @@ export default function UserModalBox({
                 </div>
                 <div className="flex flex-col gap-10">
                   <span className="label">
-                    {langFile[lang].USER_SPECIALTY_TEXT}
+                    {langFile[webLang].USER_SPECIALTY_TEXT}
                     {/* 진료과 */}
                   </span>
                   <Select

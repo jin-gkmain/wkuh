@@ -1,23 +1,23 @@
-import React, { ChangeEvent, FormEvent, useContext, useState } from 'react';
-import langFile from '@/lang';
-import { LanguageContext } from '@/context/LanguageContext';
-import DateInput, { Value } from '@/components/common/inputs/DateInput';
-import { NoticeSearchInputs } from '@/pages/notice';
-import { getDateToStr } from '@/utils/date';
+import React, { ChangeEvent, FormEvent, useContext, useState } from "react";
+import langFile from "@/lang";
+import { LanguageContext } from "@/context/LanguageContext";
+import DateInput, { Value } from "@/components/common/inputs/DateInput";
+import { NoticeSearchInputs } from "@/pages/notice";
+import { getDateToStr } from "@/utils/date";
 
 type Props = {
   handleSearch: (searchInputs: NoticeSearchInputs) => void;
 };
 export default function SearchNoticeContent({ handleSearch }: Props) {
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   const [searchInputs, setSearchInput] = useState<{
     search_title: string;
     search_content: string;
     search_date: null | Value;
   }>({
-    search_title: '',
+    search_title: "",
     search_date: null,
-    search_content: '',
+    search_content: "",
   });
 
   const handleInputChange = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -40,8 +40,8 @@ export default function SearchNoticeContent({ handleSearch }: Props) {
     handleSearch({
       ...searchInputs,
       search_date: searchInputs.search_date
-        ? getDateToStr(searchInputs.search_date, '-')
-        : '',
+        ? getDateToStr(searchInputs.search_date, "-")
+        : "",
     });
   };
 
@@ -50,7 +50,7 @@ export default function SearchNoticeContent({ handleSearch }: Props) {
       <div className="search-box flex">
         <div className="flex item-row align-center">
           <label htmlFor="search_title">
-            {langFile[lang].NOTICE_TITLE_TEXT}
+            {langFile[webLang].NOTICE_TITLE_TEXT}
             {/** 제목 */}
           </label>
           <input
@@ -65,7 +65,7 @@ export default function SearchNoticeContent({ handleSearch }: Props) {
 
         <div className="flex item-row align-center">
           <span>
-            {langFile[lang].USER_REGIST_DATE_TEXT}
+            {langFile[webLang].USER_REGIST_DATE_TEXT}
             {/** 등록일 */}
           </span>
           <DateInput
@@ -78,7 +78,7 @@ export default function SearchNoticeContent({ handleSearch }: Props) {
 
         <div className="flex item-row align-center">
           <label htmlFor="search_content">
-            {langFile[lang].NOTICE_CONTENTS_TEXT}
+            {langFile[webLang].NOTICE_CONTENTS_TEXT}
             {/** 내용 */}
           </label>
           <input
@@ -92,7 +92,7 @@ export default function SearchNoticeContent({ handleSearch }: Props) {
         </div>
 
         <button className="primary-btn search-btn" type="submit">
-          {langFile[lang].SEARCH_BUTTON_TEXT}
+          {langFile[webLang].SEARCH_BUTTON_TEXT}
           {/* 조회 */}
         </button>
       </div>

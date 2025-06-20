@@ -33,7 +33,7 @@ type Props = {
 
 function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext) as { lang: "ko" | "en" };
+  const { webLang } = useContext(LanguageContext);
   const dispatch = useAppDispatch();
 
   const [modalInfo, setModalInfo] = useState<VideoModal>({
@@ -287,23 +287,23 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   return (
     <div className="org-modal-box">
       <ModalFrame
-        title={`${langFile[lang].VIDEO_MODAL_TITLE_TEXT} (${
+        title={`${langFile[webLang].VIDEO_MODAL_TITLE_TEXT} (${
           modalInfo.patient.u_name_eng ||
-          langFile[lang].VIDEO_MODAL_PATIENT_NAME
-        }_${langFile[lang].VIDEO_MODAL_ENG_NAME})`}
-        completeBtnText={langFile[lang].VIDEO_MODAL_COMPLETE_BUTTON_TEXT}
+          langFile[webLang].VIDEO_MODAL_PATIENT_NAME
+        }_${langFile[webLang].VIDEO_MODAL_ENG_NAME})`}
+        completeBtnText={langFile[webLang].VIDEO_MODAL_COMPLETE_BUTTON_TEXT}
         onClose={closeModal}
         onComplete={handleSubmit}
       >
         <div className="input-col-wrap">
           <h3 className="section-title">
-            {langFile[lang].VIDEO_MODAL_PATIENT_INFO}
+            {langFile[webLang].VIDEO_MODAL_PATIENT_INFO}
           </h3>
 
           <div className="input-row-wrap">
             <div className="input-col-wrap flex-1">
               <label htmlFor="u_name_eng" className="label">
-                {langFile[lang].VIDEO_MODAL_NAME}
+                {langFile[webLang].VIDEO_MODAL_NAME}
               </label>
               <input
                 autoComplete="off"
@@ -317,7 +317,9 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
             </div>
 
             <div className="input-col-wrap flex-1">
-              <label className="label">{langFile[lang].VIDEO_MODAL_AGE}</label>
+              <label className="label">
+                {langFile[webLang].VIDEO_MODAL_AGE}
+              </label>
               <input
                 type="text"
                 className="input"
@@ -336,7 +338,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
 
             <div className="input-col-wrap flex-1">
               <label className="label">
-                {langFile[lang].VIDEO_MODAL_GENDER}
+                {langFile[webLang].VIDEO_MODAL_GENDER}
               </label>
               <input
                 type="text"
@@ -350,7 +352,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
           <div className="input-row-wrap">
             <div className="input-col-wrap flex-1">
               <label className="label">
-                {langFile[lang].VIDEO_MODAL_BIRTHDAY}
+                {langFile[webLang].VIDEO_MODAL_BIRTHDAY}
               </label>
               <input
                 type="text"
@@ -362,7 +364,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
 
             <div className="input-col-wrap flex-1">
               <label className="label">
-                {langFile[lang].VIDEO_MODAL_HEIGHT}
+                {langFile[webLang].VIDEO_MODAL_HEIGHT}
               </label>
               <input
                 type="text"
@@ -378,7 +380,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
 
             <div className="input-col-wrap flex-1">
               <label className="label">
-                {langFile[lang].VIDEO_MODAL_WEIGHT}
+                {langFile[webLang].VIDEO_MODAL_WEIGHT}
               </label>
               <input
                 type="text"
@@ -396,13 +398,13 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
 
         <div className="input-col-wrap">
           <h3 className="section-title">
-            {langFile[lang].VIDEO_MODAL_VIDEO_INFO}
+            {langFile[webLang].VIDEO_MODAL_VIDEO_INFO}
           </h3>
 
           <div className="input-row-wrap">
             <div className="input-col-wrap flex-1">
               <label htmlFor="di_hospital" className="label">
-                {langFile[lang].VIDEO_MODAL_HOS_NAME_TEXT}
+                {langFile[webLang].VIDEO_MODAL_HOS_NAME_TEXT}
               </label>
               <input
                 autoComplete="off"
@@ -417,7 +419,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
 
             <div className="input-col-wrap flex-1">
               <label htmlFor="di_doctor" className="label">
-                {langFile[lang].VIDEO_MODAL_DOCTOR_TEXT}
+                {langFile[webLang].VIDEO_MODAL_DOCTOR_TEXT}
               </label>
               <input
                 autoComplete="off"
@@ -434,7 +436,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
           <div className="input-row-wrap">
             <div className="input-col-wrap flex-1">
               <label htmlFor="di_date" className="label">
-                {langFile[lang].VIDEO_MODAL_DIAGNOSIS_DATE_TEXT}
+                {langFile[webLang].VIDEO_MODAL_DIAGNOSIS_DATE_TEXT}
               </label>
               <input
                 autoComplete="off"
@@ -451,7 +453,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
           <div className="input-row-wrap">
             <div className="input-col-wrap flex-1">
               <label className="label" htmlFor="di_memo">
-                {langFile[lang].VIDEO_MODAL_MEMO_TEXT}
+                {langFile[webLang].VIDEO_MODAL_MEMO_TEXT}
               </label>
               <textarea
                 autoComplete="off"
@@ -463,7 +465,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
                 value={modalInfo.video.di_memo || ""}
                 onChange={handleOnChange}
                 rows={4}
-                placeholder={langFile[lang].VIDEO_MODAL_MEMO_PLACEHOLDER}
+                placeholder={langFile[webLang].VIDEO_MODAL_MEMO_PLACEHOLDER}
               />
             </div>
           </div>
@@ -471,13 +473,13 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
 
         <div className="input-col-wrap" style={{ marginTop: "20px" }}>
           <h3 className="section-title">
-            {langFile[lang].VIDEO_MODAL_ATTACH_VIDEO_FILE}
+            {langFile[webLang].VIDEO_MODAL_ATTACH_VIDEO_FILE}
           </h3>
 
           <div className="input-row-wrap">
             <div className="input-col-wrap" style={{ width: "150px" }}>
               <label htmlFor="gubun" className="label">
-                {langFile[lang].VIDEO_MODAL_VIDEO_TYPE}
+                {langFile[webLang].VIDEO_MODAL_VIDEO_TYPE}
               </label>
               <div
                 className={`select-wrapper ${
@@ -487,11 +489,14 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
                 <Select
                   selectType="gubun"
                   options={[
-                    { key: langFile[lang].VIDEO_MODAL_SELECT, value: "" },
-                    { key: langFile[lang].VIDEO_MODAL_MRI, value: "MRI" },
-                    { key: langFile[lang].VIDEO_MODAL_CT, value: "CT" },
-                    { key: langFile[lang].VIDEO_MODAL_X_RAY, value: "X-RAY" },
-                    { key: langFile[lang].VIDEO_MODAL_ETC, value: "ETC" },
+                    { key: langFile[webLang].VIDEO_MODAL_SELECT, value: "" },
+                    { key: langFile[webLang].VIDEO_MODAL_MRI, value: "MRI" },
+                    { key: langFile[webLang].VIDEO_MODAL_CT, value: "CT" },
+                    {
+                      key: langFile[webLang].VIDEO_MODAL_X_RAY,
+                      value: "X-RAY",
+                    },
+                    { key: langFile[webLang].VIDEO_MODAL_ETC, value: "ETC" },
                   ]}
                   selected={modalInfo.video.gubun || ""}
                   setSelected={(selected: string) =>
@@ -510,7 +515,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
                   className="input-alert-text"
                   style={{ color: "red", fontSize: "12px", marginTop: "5px" }}
                 >
-                  {langFile[lang].VIDEO_MODAL_VIDEO_TYPE_ALERT}
+                  {langFile[webLang].VIDEO_MODAL_VIDEO_TYPE_ALERT}
                 </div>
               )}
             </div>
@@ -528,7 +533,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
               className="input-alert-text"
               style={{ color: "red", fontSize: "12px", marginTop: "5px" }}
             >
-              {langFile[lang].VIDEO_MODAL_VIDEO_ALERT}
+              {langFile[webLang].VIDEO_MODAL_VIDEO_ALERT}
             </div>
           )}
           <div style={{ height: "100px" }}></div>

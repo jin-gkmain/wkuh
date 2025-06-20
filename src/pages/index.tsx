@@ -1,15 +1,15 @@
-import Head from 'next/head';
-import LoginBox from '@/components/LoginBox';
-import { FormEvent, useContext, useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
-import { setTokens } from '@/utils/tokens';
-import instance from '@/utils/myAxios';
-import useMe from '@/hooks/useMe';
-import { LanguageContext } from '@/context/LanguageContext';
-import langFile from '@/lang';
+import Head from "next/head";
+import LoginBox from "@/components/LoginBox";
+import { FormEvent, useContext, useEffect, useRef } from "react";
+import { useRouter } from "next/router";
+import { setTokens } from "@/utils/tokens";
+import instance from "@/utils/myAxios";
+import useMe from "@/hooks/useMe";
+import { LanguageContext } from "@/context/LanguageContext";
+import langFile from "@/lang";
 
 export default function Home() {
-  const { lang } = useContext(LanguageContext);
+  const { lang, webLang } = useContext(LanguageContext);
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -20,7 +20,7 @@ export default function Home() {
     const target = ev.target as HTMLFormElement;
     const { email, password } = target;
     try {
-      const res = await instance.post('/login', {
+      const res = await instance.post("/login", {
         u_id: email.value,
         u_pwd: password.value,
       });
@@ -30,38 +30,38 @@ export default function Home() {
         setTokens(accessToken, refreshToken);
 
         // router.push('/dashboard');
-        const userInfoRes = await instance.post('/user_info');
+        const userInfoRes = await instance.post("/user_info");
         if (userInfoRes.status === 200) {
           const data: MyResponse<ListRes<StoredUser>> = userInfoRes.data;
           if (data.result) {
             const { p_idx } = data.result[0];
             if (p_idx) {
               router.push(`/workflow/diagnosis/${p_idx}`);
-            } else router.push('/dashboard');
+            } else router.push("/dashboard");
           }
         } else {
-          alert(langFile[lang].LOGIN_FAIL_ALERT_TEXT); // 이메일 또는 비밀번호를 확인해주세요.
+          alert(langFile[webLang].LOGIN_FAIL_ALERT_TEXT); // 이메일 또는 비밀번호를 확인해주세요.
           inputRef.current && inputRef.current.focus();
         }
       } else {
-        alert(langFile[lang].LOGIN_FAIL_ALERT_TEXT); // 이메일 또는 비밀번호를 확인해주세요.
+        alert(langFile[webLang].LOGIN_FAIL_ALERT_TEXT); // 이메일 또는 비밀번호를 확인해주세요.
         inputRef.current && inputRef.current.focus();
       }
     } catch (err) {
-      console.log('error', err);
-      alert(langFile[lang].LOGIN_FAIL_ALERT_TEXT); // 이메일 또는 비밀번호를 확인해주세요.
+      console.log("error", err);
+      alert(langFile[webLang].LOGIN_FAIL_ALERT_TEXT); // 이메일 또는 비밀번호를 확인해주세요.
     }
   };
 
   useEffect(() => {
-    if (loading === 'completed' && userInfo) {
+    if (loading === "completed" && userInfo) {
       if (userInfo.p_idx) {
         router.push(`/workflow/diagnosis/${userInfo.p_idx}`);
-      } else router.push('/dashboard');
+      } else router.push("/dashboard");
     }
   }, [loading]);
 
-  if (userInfo || loading !== 'completed') return null;
+  if (userInfo || loading !== "completed") return null;
   else {
     return (
       <>

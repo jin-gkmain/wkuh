@@ -3,7 +3,7 @@ import { Gubun } from "@/store/modules/workflowModalSlice";
 import { AlertStatus } from "@/types/alert";
 import langFile from "@/lang";
 
-function getSystemAlertText(lang: "ko" | "en", tab: Gubun, type: AlertStatus) {
+function getSystemAlertText(lang: LangType, tab: Gubun, type: AlertStatus) {
   let str = ` ${langFile[lang].WORKFLOW_MODAL_CHATTING_ALARM_TEXT1} `;
 
   if (type === "create") {

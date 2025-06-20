@@ -36,11 +36,11 @@ export type searchOptions = {
 
 export default function WorkflowPage() {
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   const [tableDropOptions, setTableDropOptions] = useState<TableMenuOption[]>(
     []
   );
-  const tds = getTableHeadData(lang as "ko" | "en");
+  const tds = getTableHeadData(webLang);
   const [patients, setPatients] = useState<Patient[]>([]);
   const [hospitals, setHospitals] = useState<Organization[]>([]);
   const [hospitalsOptions, setHospitalsOptions] = useState<SelectOptionType[]>(
@@ -144,7 +144,7 @@ export default function WorkflowPage() {
   const addPatient = () => {
     if (userInfo && userInfo.country === "korea") {
       if (!selectedHospital)
-        return alert(langFile[lang].PATIENT_ALERT_ADD_ORG_FIRST); // PATIENT_ALERT_ADD_ORG_FIRST
+        return alert(langFile[webLang].PATIENT_ALERT_ADD_ORG_FIRST); // PATIENT_ALERT_ADD_ORG_FIRST
     }
     openSelectedModal("new");
   };
@@ -262,8 +262,8 @@ export default function WorkflowPage() {
           handleClose={closeRemoveModal}
           handleMainClick={removePatient}
           iconType="remove"
-          title={langFile[lang].DELETE_PATIENT_ALERT_TITLE} // 환자를 삭제하시겠습니까?
-          desc={langFile[lang].DELETE_PATIENT_ALERT_DESC} // 삭제 버튼을 클릭하시면 환자가 삭제됩니다.
+          title={langFile[webLang].DELETE_PATIENT_ALERT_TITLE} // 환자를 삭제하시겠습니까?
+          desc={langFile[webLang].DELETE_PATIENT_ALERT_DESC} // 삭제 버튼을 클릭하시면 환자가 삭제됩니다.
         />
       </RemoveModalPortal>
 
@@ -273,24 +273,24 @@ export default function WorkflowPage() {
           handleClose={closeAlertModal}
           title={
             modalType === "new"
-              ? langFile[lang].ADD_PATIENT_ALERT_TITLE // 환자 등록 완료
+              ? langFile[webLang].ADD_PATIENT_ALERT_TITLE // 환자 등록 완료
               : modalType === "manage"
-              ? langFile[lang].EDIT_PATIENT_ALERT_TITLE // 환자 정보 수정 완료
-              : langFile[lang].CP_DELETE_PATIENT_ALERT_TITLE // 환자 삭제 완료
+              ? langFile[webLang].EDIT_PATIENT_ALERT_TITLE // 환자 정보 수정 완료
+              : langFile[webLang].CP_DELETE_PATIENT_ALERT_TITLE // 환자 삭제 완료
           }
           desc={
             modalType === "new"
-              ? langFile[lang].ADD_PATIENT_ALERT_DESC // 환자 등록이 완료되었습니다.
+              ? langFile[webLang].ADD_PATIENT_ALERT_DESC // 환자 등록이 완료되었습니다.
               : modalType === "manage"
-              ? langFile[lang].EDIT_PATIENT_ALERT_DESC // 환자 정보 수정이 완료되었습니다.
-              : langFile[lang].CP_DELETE_PATIENT_ALERT_DESC // 환자 삭제가 완료되었습니다.
+              ? langFile[webLang].EDIT_PATIENT_ALERT_DESC // 환자 정보 수정이 완료되었습니다.
+              : langFile[webLang].CP_DELETE_PATIENT_ALERT_DESC // 환자 삭제가 완료되었습니다.
           }
         />
       </AlertModalPortal>
 
       {/* 검색 영역 */}
       <SearchPatientsContent
-        lang={lang as "ko" | "en"}
+        lang={webLang}
         onComplete={handleSearchComplete}
         o_idx={selectedHospital}
       />
@@ -313,7 +313,7 @@ export default function WorkflowPage() {
         )}
 
         <AddButton
-          text={langFile[lang].ADD_PATIENT_BUTTON_TEXT} // 환자 등록하기
+          text={langFile[webLang].ADD_PATIENT_BUTTON_TEXT} // 환자 등록하기
           onClick={addPatient}
         />
       </div>
@@ -337,11 +337,11 @@ export default function WorkflowPage() {
               <TableRow<TableMenuOption>
                 key={p_idx}
                 handleClick={() => handleTableRowBtnClick(p_idx)}
-                buttonText={langFile[lang].PATIENT_CHART_LIST_TEXT} // 진료 관리
+                buttonText={langFile[webLang].PATIENT_CHART_LIST_TEXT} // 진료 관리
                 onClickMenu={(type) => onClickMenu(type, p_idx)}
                 // menuOptions={tableMenuOptions}
                 tableRowOptionType={tableDropOptions}
-                lang={lang as "ko" | "en"}
+                lang={webLang}
               >
                 <td>{p_chart_no ? p_chart_no : "-"}</td>
                 <td>{u_name_eng}</td>
@@ -349,7 +349,7 @@ export default function WorkflowPage() {
                 <td>{address ? address : "-"}</td>
                 <td>
                   {nurse_idx
-                    ? lang === "en"
+                    ? webLang === "en"
                       ? nurse_name_eng
                       : nurse_name_kor
                     : "-"}
@@ -374,7 +374,7 @@ WorkflowPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-function getTableHeadData(lang: "ko" | "en") {
+function getTableHeadData(lang: LangType) {
   const tds: TableHeadCol[] = [
     {
       key: langFile[lang].PATIENT_CODE_TEXT, // 환자번호

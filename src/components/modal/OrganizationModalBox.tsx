@@ -33,8 +33,8 @@ const gubun2 = "첨부";
 
 function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
-  const countrySelectOptions = getCountryOptions(lang as "ko" | "en");
+  const { webLang } = useContext(LanguageContext);
+  const countrySelectOptions = getCountryOptions(webLang);
   const [domainCheck, setDomainCheck] = useState<ChartIdDuplicated>("ready");
 
   const [modalInfo, setModalInfo] = useState<OrganizationModal>({
@@ -299,11 +299,13 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
       <ModalFrame
         title={
           type === "new"
-            ? langFile[lang].ORG_MODAL_NEW_TITLE_TEXT // 기관 등록
-            : langFile[lang].ORG_MODAL_MANAGE_TITLE_TEXT // 기관 정보 수정
+            ? langFile[webLang].ORG_MODAL_NEW_TITLE_TEXT // 기관 등록
+            : langFile[webLang].ORG_MODAL_MANAGE_TITLE_TEXT // 기관 정보 수정
         }
         completeBtnText={
-          lang !== "ko" ? langFile[lang].ORG_MODAL_COMPLETE_BUTTON_TEXT : ""
+          webLang !== "ko"
+            ? langFile[webLang].ORG_MODAL_COMPLETE_BUTTON_TEXT
+            : ""
         }
         onClose={closeModal}
         onComplete={handleSubmit}
@@ -313,7 +315,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
             <section className="flex-1 input-col-wrap">
               <div className="input-col-wrap">
                 <label htmlFor="o_name_kor" className="label">
-                  *{langFile[lang].ORG_MODAL_ORG_NAME_KO_TEXT}
+                  *{langFile[webLang].ORG_MODAL_ORG_NAME_KO_TEXT}
                   {/* 기관명(국문) */}
                 </label>
                 <input
@@ -331,7 +333,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
               <div className="input-col-wrap">
                 <span className="label">
-                  *{langFile[lang].ORG_ORG_COUNTRY_TEXT}
+                  *{langFile[webLang].ORG_ORG_COUNTRY_TEXT}
                   {/* 국가 */}
                 </span>
                 <Select
@@ -351,7 +353,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
               <div className="input-col-wrap">
                 <label htmlFor="contract_email" className="label">
-                  {langFile[lang].ORG_MODAL_ORG_CONTACT_EMAIL_TEXT}
+                  {langFile[webLang].ORG_MODAL_ORG_CONTACT_EMAIL_TEXT}
                   {/* 기관 대표 메일 */}
                 </label>
                 <input
@@ -367,7 +369,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
               <div className="input-col-wrap">
                 <label htmlFor="domain" className="label">
-                  *{langFile[lang].ORG_MODAL_DOMAIN_FOR_MAIL}
+                  *{langFile[webLang].ORG_MODAL_DOMAIN_FOR_MAIL}
                   {/* 메일용 도메인 */}
                 </label>
                 <CheckDuplicateInput
@@ -383,7 +385,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
               <div className="input-col-wrap">
                 <span className="label flex gap-3 align-center">
-                  <FlagKoreaSq />*{langFile[lang].ORG_MODAL_MANAGER_TEXT}
+                  <FlagKoreaSq />*{langFile[webLang].ORG_MODAL_MANAGER_TEXT}
                   {/* 담당자 */}
                 </span>
                 <SelectInput
@@ -393,7 +395,9 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
                   onSelect={setManager}
                   label
                   selected={
-                    lang === "en" ? modalInfo.u_name_eng : modalInfo.u_name_kor
+                    webLang === "en"
+                      ? modalInfo.u_name_eng
+                      : modalInfo.u_name_kor
                   }
                 />
               </div>
@@ -402,7 +406,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
             <section className="flex-1 input-col-wrap">
               <div className="input-col-wrap">
                 <label htmlFor="o_name_eng" className="label">
-                  {langFile[lang].ORG_MODAL_ORG_NAME_EN_TEXT}
+                  {langFile[webLang].ORG_MODAL_ORG_NAME_EN_TEXT}
                   {/* 기관명(영문) */}
                 </label>
                 <input
@@ -418,7 +422,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
               <div className="input-col-wrap">
                 <span className="label">
-                  {langFile[lang].ORG_CONTRACT_DURATION_TEXT}
+                  {langFile[webLang].ORG_CONTRACT_DURATION_TEXT}
                   {/* 계약기간 */}
                 </span>
                 <DateInput
@@ -437,7 +441,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
               <div className="input-col-wrap">
                 <label htmlFor="contract_tel" className="label">
-                  {langFile[lang].ORG_MODAL_ORG_CONTACT_TEL_TEXT}
+                  {langFile[webLang].ORG_MODAL_ORG_CONTACT_TEL_TEXT}
                   {/* 기관 대표 연락처 */}
                 </label>
                 <input
@@ -453,7 +457,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
               <div className="input-col-wrap">
                 <label htmlFor="o_code" className="label">
-                  *{langFile[lang].ORG_MODAL_ORG_CODE_TEXT}
+                  *{langFile[webLang].ORG_MODAL_ORG_CODE_TEXT}
                   {/* 기관코드 */}
                 </label>
                 <input
@@ -473,7 +477,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
           <div className="input-col-wrap upload-area">
             <label className="label" htmlFor="note">
-              {langFile[lang].ORG_MODAL_MEMO_TEXT}
+              {langFile[webLang].ORG_MODAL_MEMO_TEXT}
               {/* 메모 */}
             </label>
             <input
@@ -489,7 +493,7 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
 
           <div className="input-col-wrap upload-area">
             <p className="label">
-              {langFile[lang].ORG_MODAL_ATTACH_CONTRACT_FILE}
+              {langFile[webLang].ORG_MODAL_ATTACH_CONTRACT_FILE}
               {/* 계약서 파일 첨부 */}
             </p>
 

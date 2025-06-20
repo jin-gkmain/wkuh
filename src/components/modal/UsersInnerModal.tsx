@@ -31,8 +31,8 @@ export default function UsersInnerModal<T>({
   job,
 }: Props<T>) {
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
-  const tds = getTableHeadData(lang as "ko" | "en");
+  const { webLang } = useContext(LanguageContext);
+  const tds = getTableHeadData(webLang);
   const [users, setUsers] = useState<null | User[]>(null);
   const [org, setOrg] = useState<null | Organization>(null);
 
@@ -80,7 +80,7 @@ export default function UsersInnerModal<T>({
     <div className="users-inner-modal">
       <ModalFrame
         hideBtns={true}
-        title={langFile[lang].SEARCH_MANAGER_MODAL_TITLE_TEXT} // 담당자 선택
+        title={langFile[webLang].SEARCH_MANAGER_MODAL_TITLE_TEXT} // 담당자 선택
         onClose={closeModal}
         onComplete={null}
       >
@@ -103,42 +103,46 @@ export default function UsersInnerModal<T>({
                   <TableRow
                     key={u_idx}
                     buttonText={
-                      langFile[lang].SEARCH_MANAGER_MODAL_SELECT_BUTTON
+                      langFile[webLang].SEARCH_MANAGER_MODAL_SELECT_BUTTON
                     } // 선택하기
                     handleClick={() => onSelectUser(u_idx)}
                     menu={false}
                   >
                     <td>{u_code}</td>
-                    <td>{lang === "ko" ? u_name_kor : u_name_eng}</td>
+                    <td>{webLang === "ko" ? u_name_kor : u_name_eng}</td>
                     <td>
                       {permission === "admin"
-                        ? langFile[lang].USER_MODAL_USER_PERMISSION1
-                        : langFile[lang].USER_MODAL_USER_PERMISSION2}
+                        ? langFile[webLang].USER_MODAL_USER_PERMISSION1
+                        : langFile[webLang].USER_MODAL_USER_PERMISSION2}
                     </td>
                     <td>
-                      {job === "doctor" && langFile[lang].USER_MODAL_USER_JOB2}
+                      {job === "doctor" &&
+                        langFile[webLang].USER_MODAL_USER_JOB2}
                       {/* 의사 */}
 
-                      {job === "nurse" && langFile[lang].USER_MODAL_USER_JOB1}
+                      {job === "nurse" &&
+                        langFile[webLang].USER_MODAL_USER_JOB1}
                       {/* 간호사 */}
 
                       {job === "interpreter" &&
-                        langFile[lang].USER_MODAL_USER_JOB3}
+                        langFile[webLang].USER_MODAL_USER_JOB3}
                       {/* 통역사 */}
 
-                      {job === "admin" && langFile[lang].USER_MODAL_USER_JOB6}
+                      {job === "admin" &&
+                        langFile[webLang].USER_MODAL_USER_JOB6}
                       {/* 관리자 */}
 
-                      {job === "patient" && langFile[lang].USER_MODAL_USER_JOB5}
+                      {job === "patient" &&
+                        langFile[webLang].USER_MODAL_USER_JOB5}
                       {/* 환자 */}
 
-                      {job === "ect" && langFile[lang].USER_MODAL_USER_JOB4}
+                      {job === "ect" && langFile[webLang].USER_MODAL_USER_JOB4}
                       {/* 기타 */}
                     </td>
                     <td>{u_id}</td>
                     <td>
                       {org
-                        ? lang === "ko"
+                        ? webLang === "ko"
                           ? org.o_name_kor
                           : org.o_name_eng
                         : ""}

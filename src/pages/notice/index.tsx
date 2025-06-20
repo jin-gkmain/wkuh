@@ -40,9 +40,9 @@ export type NoticeSearchInputs = {
 };
 
 export default function NoticePage() {
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   const { userInfo } = useAppSelector(({ user }) => user);
-  const tds = getTableHeadData(lang as "ko" | "en");
+  const tds = getTableHeadData(webLang);
   const [tableDropOptions, setTableDropOptions] = useState<TableMenuOption[]>(
     []
   );
@@ -253,8 +253,8 @@ export default function NoticePage() {
           iconType="remove"
           handleClose={closeRemoveModal}
           handleMainClick={removeNotice}
-          title={langFile[lang].DELETE_NOTICE_ALERT_TITLE} // 공지사항을 삭제하시겠습니까?
-          desc={langFile[lang].DELETE_NOTICE_ALERT_DESC} // 삭제 버튼을 클릭하시면 공지사항이 삭제됩니다.
+          title={langFile[webLang].DELETE_NOTICE_ALERT_TITLE} // 공지사항을 삭제하시겠습니까?
+          desc={langFile[webLang].DELETE_NOTICE_ALERT_DESC} // 삭제 버튼을 클릭하시면 공지사항이 삭제됩니다.
         />
       </RemoveModalPortal>
 
@@ -262,17 +262,17 @@ export default function NoticePage() {
         <CheckAlertbox
           title={
             modalType === "new"
-              ? langFile[lang].ADD_NOTICE_ALERT_TITLE // 공지사항 등록 완료
+              ? langFile[webLang].ADD_NOTICE_ALERT_TITLE // 공지사항 등록 완료
               : modalType === "manage"
-              ? langFile[lang].EDIT_NOTICE_ALERT_TITLE // 공지사랑 수정 완료'
-              : langFile[lang].CP_DELETE_NOTICE_ALERT_TITLE // 공지사항 삭제 완료'
+              ? langFile[webLang].EDIT_NOTICE_ALERT_TITLE // 공지사랑 수정 완료'
+              : langFile[webLang].CP_DELETE_NOTICE_ALERT_TITLE // 공지사항 삭제 완료'
           }
           desc={
             modalType === "new"
-              ? langFile[lang].ADD_NOTICE_ALERT_DESC // 공지사항 등록이 완료되었습니다.'
+              ? langFile[webLang].ADD_NOTICE_ALERT_DESC // 공지사항 등록이 완료되었습니다.'
               : modalType === "manage"
-              ? langFile[lang].EDIT_NOTICE_ALERT_DESC // 공지사랑 수정이 완료되었습니다.'
-              : langFile[lang].CP_DELETE_NOTICE_ALERT_DESC // 공지사항 삭제가 완료되었습니다.'
+              ? langFile[webLang].EDIT_NOTICE_ALERT_DESC // 공지사랑 수정이 완료되었습니다.'
+              : langFile[webLang].CP_DELETE_NOTICE_ALERT_DESC // 공지사항 삭제가 완료되었습니다.'
           }
           handleClose={closeAlertModal}
         />
@@ -293,7 +293,7 @@ export default function NoticePage() {
                 setSelected={setSelected}
               />
               <AddButton
-                text={langFile[lang].ADD_NOTICE_BUTTON_TEXT} // 공지 추가하기
+                text={langFile[webLang].ADD_NOTICE_BUTTON_TEXT} // 공지 추가하기
                 onClick={() => {
                   modalOpen("new");
                 }}
@@ -323,17 +323,17 @@ export default function NoticePage() {
                 <TableRow<TableMenuOption>
                   key={n_idx}
                   handleClick={() => handleRowBtnClick(n_idx)}
-                  buttonText={langFile[lang].NOTICE_VIEW_TEXT} // 확인하기
+                  buttonText={langFile[webLang].NOTICE_VIEW_TEXT} // 확인하기
                   onClickMenu={(type) => handleMenu(type, n_idx)}
                   tableRowOptionType={tableDropOptions}
-                  lang={lang as "ko" | "en"}
+                  lang={webLang}
                 >
                   <td>{idx + 1}</td>
                   <td className="truncate">{title}</td>
                   <td className="body">{content}</td>
                   <td>
                     {regist_u_idx
-                      ? lang === "ko"
+                      ? webLang === "ko"
                         ? regist_name_kor
                         : regist_name_eng
                       : "-"}
@@ -346,7 +346,7 @@ export default function NoticePage() {
                     )}
                   </td>
                   <td>
-                    {lang === "ko"
+                    {webLang === "ko"
                       ? getCurOrg().o_name_kor
                       : getCurOrg().o_name_eng}
                   </td>
@@ -363,7 +363,7 @@ NoticePage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-function getTableHeadData(lang: "ko" | "en") {
+function getTableHeadData(lang: LangType) {
   const tds: TableHeadCol[] = [
     {
       key: langFile[lang].NOTICE_NUMBER_TEXT, // 공지번호

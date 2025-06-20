@@ -37,10 +37,15 @@ export default function MeetingRoom({
 }: Poprs) {
   const [err, setErr] = useState(false);
   const [patientViewOpened, setPatientViewOpened] = useState(true);
-  const { lang, setLang } = useContext(LanguageContext);
+  const { webLang, setWebLang } = useContext(LanguageContext);
 
   // 디버깅을 위한 로그
-  console.log("MeetingRoom render - patientInfo:", !!patientInfo, "chartInfo:", !!chartInfo);
+  console.log(
+    "MeetingRoom render - patientInfo:",
+    !!patientInfo,
+    "chartInfo:",
+    !!chartInfo
+  );
 
   useEffect(() => {
     console.log("patientViewOpened changed:", patientViewOpened);
@@ -100,13 +105,15 @@ export default function MeetingRoom({
         <div className="teleconsulting-area">
           {patientInfo && chartInfo && (
             <div
-              className={`patient-info-area ${patientViewOpened ? "opened" : "closed"}`}
+              className={`patient-info-area ${
+                patientViewOpened ? "opened" : "closed"
+              }`}
             >
               <PatientView
                 org={null}
                 chartInfo={chartInfo}
                 patientInfo={patientInfo}
-                lang={lang}
+                lang={webLang as LangType}
                 userInfo={userInfo}
                 patient={!!(userInfo && userInfo.p_idx)}
                 handleInputChange={() => {}}
@@ -137,7 +144,10 @@ export default function MeetingRoom({
               <button
                 className="sidebar-controller"
                 onClick={() => {
-                  console.log("Sidebar button clicked, current state:", patientViewOpened);
+                  console.log(
+                    "Sidebar button clicked, current state:",
+                    patientViewOpened
+                  );
                   setPatientViewOpened(!patientViewOpened);
                   console.log("New state will be:", !patientViewOpened);
                 }}

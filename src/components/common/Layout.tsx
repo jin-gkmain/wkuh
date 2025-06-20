@@ -62,7 +62,7 @@ const tabs = [
 ];
 
 export default function Layout({ children }: Props) {
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   const { userInfo, loading } = useMe();
   const { ModalPortal, modalOpened, openModal, closeModal } = useModal();
   const {
@@ -76,32 +76,32 @@ export default function Layout({ children }: Props) {
   const tabs = [
     {
       tab: "Dashboard",
-      text: langFile[lang].LAYOUT_MENU_1, // 홈
+      text: langFile[webLang].LAYOUT_MENU_1, // 홈
       icon: <Dashboard />,
     },
     {
       tab: "Workflow",
-      text: langFile[lang].LAYOUT_MENU_2, // 진료관리
+      text: langFile[webLang].LAYOUT_MENU_2, // 진료관리
       icon: <Work />,
     },
     {
       tab: "Appointments",
-      text: langFile[lang].LAYOUT_MENU_3, // 일정관리
+      text: langFile[webLang].LAYOUT_MENU_3, // 일정관리
       icon: <Calendar />,
     },
     {
       tab: "Organizations",
-      text: langFile[lang].LAYOUT_MENU_4, // 기관관리
+      text: langFile[webLang].LAYOUT_MENU_4, // 기관관리
       icon: <Hospitals />,
     },
     {
       tab: "Notice",
-      text: langFile[lang].LAYOUT_MENU_5, // 공지사항
+      text: langFile[webLang].LAYOUT_MENU_5, // 공지사항
       icon: <Speaker />,
     },
     {
       tab: "History",
-      text: langFile[lang].LAYOUT_MENU_6, // 히스토리
+      text: langFile[webLang].LAYOUT_MENU_6, // 히스토리
       icon: <History />,
     },
   ];

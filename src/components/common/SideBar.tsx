@@ -80,7 +80,7 @@ export type WorkflowAlert = Appointment & {
 // };
 
 const SideBar = () => {
-  const { lang } = useContext(LanguageContext);
+  const { lang, webLang } = useContext(LanguageContext);
   const [tab, setTab] = useState<SidebarTabType>("appointments");
   const { openModal } = useContext(WorkflowModalContext);
   const [teleAppt, setTeleAppt] = useState<TeleAppt[] | null>([]);
@@ -199,8 +199,8 @@ const SideBar = () => {
             <h2 className="section-title font-bold relative">
               {
                 tab === "appointments"
-                  ? langFile[lang].SIDEBAR_TE_TITLE_TEXT // 원격협진
-                  : langFile[lang].SIDEBAR_ALARM_TITLE_TEXT // 알람
+                  ? langFile[webLang].SIDEBAR_TE_TITLE_TEXT // 원격협진
+                  : langFile[webLang].SIDEBAR_ALARM_TITLE_TEXT // 알람
               }
               {tab === "workflow" && (
                 <button
@@ -208,7 +208,7 @@ const SideBar = () => {
                   className="read-all-button"
                   onClick={onClickReadAllAlarm}
                 >
-                  {langFile[lang].SIDEBAR_ALL_READ_TEXT}
+                  {langFile[webLang].SIDEBAR_ALL_READ_TEXT}
                   {/* 모두 읽기 */}
                 </button>
               )}
@@ -241,7 +241,7 @@ const SideBar = () => {
           {tab === "appointments" && (
             <section className="h-50">
               <h2 className="section-title font-bold">
-                {langFile[lang].SIDEBAR_VII_TITLE_TEXT}
+                {langFile[webLang].SIDEBAR_VII_TITLE_TEXT}
                 {/* 내원진료 */}
               </h2>
               <div className="items-container">

@@ -33,9 +33,9 @@ type MyAppointment = Appointment & {
 
 export default function AppointmentsPage() {
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   const { openModal: openWorkflowModal } = useContext(WorkflowModalContext);
-  const tds = getTableHeadData(lang as "ko" | "en");
+  const tds = getTableHeadData(webLang);
   const [hospitals, setHospitals] = useState<Organization[]>([]);
   const [hospitalsOptions, setHospitalsOptions] = useState<SelectOptionType[]>(
     []
@@ -230,7 +230,7 @@ export default function AppointmentsPage() {
           className="primary-btn show-calendar-btn flex align-center justify-between"
           onClick={openModal}
         >
-          {langFile[lang].OPEN_CALENDAR_BUTTON_TEXT}
+          {langFile[webLang].OPEN_CALENDAR_BUTTON_TEXT}
           {/** 캘린더 열기 */} <Calendar />
         </button>
       </div>
@@ -274,9 +274,9 @@ export default function AppointmentsPage() {
                           userInfo.country,
                           true
                         ) >= 1
-                        ? langFile[lang].APPOINTMENTS_TABLE_ROW_BUTTON_TEXT3
-                        : langFile[lang].APPOINTMENTS_TABLE_ROW_BUTTON_TEXT
-                      : langFile[lang].APPOINTMENTS_TABLE_ROW_BUTTON_TEXT2
+                        ? langFile[webLang].APPOINTMENTS_TABLE_ROW_BUTTON_TEXT3
+                        : langFile[webLang].APPOINTMENTS_TABLE_ROW_BUTTON_TEXT
+                      : langFile[webLang].APPOINTMENTS_TABLE_ROW_BUTTON_TEXT2
                   }
                   onClickMenu={(type) => {}}
                   buttonActive={
@@ -294,34 +294,34 @@ export default function AppointmentsPage() {
                   <td>{w_code}</td>
                   <td>
                     {gubun === "te"
-                      ? langFile[lang].CALENDAR_TAB_TELE_TEXT
-                      : langFile[lang].CALENDAR_TAB_VISIT_TEXT}
+                      ? langFile[webLang].CALENDAR_TAB_TELE_TEXT
+                      : langFile[webLang].CALENDAR_TAB_VISIT_TEXT}
                   </td>
                   <td>{p_name_eng}</td>
                   <td>
                     {nurse1_idx
-                      ? lang === "ko"
+                      ? webLang === "ko"
                         ? nurse1_name_kor
                         : nurse1_name_eng
                       : "-"}
                   </td>
                   <td>
                     {doctor1_idx
-                      ? lang === "ko"
+                      ? webLang === "ko"
                         ? doctor1_name_kor
                         : doctor1_name_eng
                       : "-"}
                   </td>
                   <td>
                     {nurse2_idx
-                      ? lang === "ko"
+                      ? webLang === "ko"
                         ? nurse2_name_kor
                         : nurse2_name_eng
                       : "-"}
                   </td>
                   <td>
                     {doctor2_idx
-                      ? lang === "ko"
+                      ? webLang === "ko"
                         ? doctor2_name_kor
                         : doctor2_name_eng
                       : "-"}

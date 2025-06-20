@@ -28,9 +28,9 @@ type OrganizationInfoBox = OrganizationInfo & { org_number: number };
 
 export default function OrganizationsPage() {
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
-  const tds = getTableHeadData(lang as "ko" | "en");
-  const infoKeys = getInfoBoxHeadData(lang as "ko" | "en");
+  const { webLang } = useContext(LanguageContext);
+  const tds = getTableHeadData(webLang);
+  const infoKeys = getInfoBoxHeadData(webLang);
 
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [organizationsLoading, setOrganizationsLoading] = useState(false);
@@ -270,8 +270,8 @@ export default function OrganizationsPage() {
       <RemoveModalPortal>
         <ConfirmAlertBox
           iconType={modalType}
-          title={getConfirmModalText(modalType, lang as "ko" | "en").title}
-          desc={getConfirmModalText(modalType, lang as "ko" | "en").desc}
+          title={getConfirmModalText(modalType, webLang).title}
+          desc={getConfirmModalText(modalType, webLang).desc}
           handleClose={closeRemoveModal}
           handleMainClick={handleConfirm}
         />
@@ -280,8 +280,8 @@ export default function OrganizationsPage() {
       {/* 확인 모달 */}
       <AlertModalPortal>
         <CheckAlertbox
-          title={getAlertModalText(modalType, lang as "ko" | "en").title}
-          desc={getAlertModalText(modalType, lang as "ko" | "en").desc}
+          title={getAlertModalText(modalType, webLang).title}
+          desc={getAlertModalText(modalType, webLang).desc}
           handleClose={closeAlertModal}
         />
       </AlertModalPortal>
@@ -294,7 +294,7 @@ export default function OrganizationsPage() {
           <AddButton
             show={userInfo.permission === "admin"}
             onClick={() => modalOpen("new")}
-            text={langFile[lang].ADD_ORG_BUTTON_TEXT} // 기관 추가하기
+            text={langFile[webLang].ADD_ORG_BUTTON_TEXT} // 기관 추가하기
           />
         </div>
 
@@ -327,21 +327,21 @@ export default function OrganizationsPage() {
                         : ["manage", "activate"]
                       : []
                   }
-                  lang={lang as "ko" | "en"}
+                  lang={webLang}
                   key={o_idx}
                   handleClick={() => handleTableRowBtnClick(o_idx)}
-                  buttonText={langFile[lang].ORG_TABLE_ROW_BUTTON} // 사용자 목록
+                  buttonText={langFile[webLang].ORG_TABLE_ROW_BUTTON} // 사용자 목록
                   onClickMenu={(type) => handleTableMenu(type, o_idx)}
                 >
                   <td>{o_code}</td>
                   <td>
                     {country === "korea"
-                      ? langFile[lang].COUNTRY_KOREA
+                      ? langFile[webLang].COUNTRY_KOREA
                       : country === "mongolia"
-                      ? langFile[lang].COUNTRY_MONGOLIA
-                      : langFile[lang].COUNTRY_KAZAKHSTAN}
+                      ? langFile[webLang].COUNTRY_MONGOLIA
+                      : langFile[webLang].COUNTRY_KAZAKHSTAN}
                   </td>
-                  <td>{lang === "ko" ? o_name_kor : o_name_eng || "-"}</td>
+                  <td>{webLang === "ko" ? o_name_kor : o_name_eng || "-"}</td>
                   <td>{u_number ?? "-"}</td>
                   <td>{p_number ?? "-"}</td>
                   <td>{completed_tele_number ?? "-"}</td>
@@ -367,7 +367,7 @@ OrganizationsPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-function getTableHeadData(lang: "ko" | "en") {
+function getTableHeadData(lang: LangType) {
   const tds: TableHeadCol[] = [
     {
       key: langFile[lang].ORG_ORG_CODE_TEXT, // 기관번호
@@ -426,7 +426,7 @@ function getTableHeadData(lang: "ko" | "en") {
   return tds;
 }
 
-function getInfoBoxHeadData(lang: "ko" | "en") {
+function getInfoBoxHeadData(lang: LangType) {
   const INFO_KEYS: InfoBoxType[] = [
     {
       iconType: "organization",

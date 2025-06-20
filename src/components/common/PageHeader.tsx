@@ -13,7 +13,7 @@ type TabInfo = {
 };
 
 export default function PageHeader() {
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   const [headerInfoObj, setHeaderInfoObj] = useState<TabInfo>({
     title: "",
     description: "",
@@ -38,14 +38,14 @@ export default function PageHeader() {
 
     if (depth1 === "dashboard") {
       // setHeaderInfo(objs.find((item) => item.type === 'dashboard')!);
-      headerInfoObj.title = langFile[lang].PAGE_HEADER_DASHBOARD_TITLE_TEXT; // 대시보드
+      headerInfoObj.title = langFile[webLang].PAGE_HEADER_DASHBOARD_TITLE_TEXT; // 대시보드
       headerInfoObj.description =
-        langFile[lang].PAGE_HEADER_DASHBOARD_DESC_TEXT; // 대시보드를 확인하고 관리해보세요
+        langFile[webLang].PAGE_HEADER_DASHBOARD_DESC_TEXT; // 대시보드를 확인하고 관리해보세요
       headerInfoObj.depth = [
         { url: "/dashboard", text: depth1 },
         {
           url: "/dashboard",
-          text: langFile[lang].PAGE_HEADER_DASHBOARD_TITLE_TEXT, // 대시보드
+          text: langFile[webLang].PAGE_HEADER_DASHBOARD_TITLE_TEXT, // 대시보드
         },
       ];
     } //
@@ -53,32 +53,33 @@ export default function PageHeader() {
       headerInfoObj.depth.push({ url: "/organizations", text: depth1 });
       headerInfoObj.depth.push({
         url: "/organizations",
-        text: langFile[lang].PAGE_HEADER_ORG_LIST_TITLE_TEXT, // 기관목록
+        text: langFile[webLang].PAGE_HEADER_ORG_LIST_TITLE_TEXT, // 기관목록
       });
       if (!depth2) {
-        headerInfoObj.title = langFile[lang].PAGE_HEADER_ORG_LIST_TITLE_TEXT; // 기관목록
+        headerInfoObj.title = langFile[webLang].PAGE_HEADER_ORG_LIST_TITLE_TEXT; // 기관목록
         headerInfoObj.description =
-          langFile[lang].PAGE_HEADER_ORG_LIST_DESC_TEXT; // 기관목록을 확인하고 관리해보세요'
+          langFile[webLang].PAGE_HEADER_ORG_LIST_DESC_TEXT; // 기관목록을 확인하고 관리해보세요'
       } //
       else {
         if (depth2 === "users") {
-          headerInfoObj.title = langFile[lang].PAGE_HEADER_USER_LIST_TITLE_TEXT; // 사용자목록
+          headerInfoObj.title =
+            langFile[webLang].PAGE_HEADER_USER_LIST_TITLE_TEXT; // 사용자목록
           headerInfoObj.description =
-            langFile[lang].PAGE_HEADER_USER_LIST_DESC_TEXT; // 사용자목록을 확인하고 관리해보세요
+            langFile[webLang].PAGE_HEADER_USER_LIST_DESC_TEXT; // 사용자목록을 확인하고 관리해보세요
           headerInfoObj.depth.push({
             url: "/organizations/users",
-            text: langFile[lang].PAGE_HEADER_USER_LIST_TITLE_TEXT, // 사용자 목록
+            text: langFile[webLang].PAGE_HEADER_USER_LIST_TITLE_TEXT, // 사용자 목록
           });
         } else {
           if (depth3 === "users") {
             headerInfoObj.title =
-              langFile[lang].PAGE_HEADER_USER_LIST_TITLE_TEXT; // 사용자 목록
+              langFile[webLang].PAGE_HEADER_USER_LIST_TITLE_TEXT; // 사용자 목록
             headerInfoObj.description =
-              langFile[lang].PAGE_HEADER_USER_LIST_DESC_TEXT; // 사용자목록을 확인하고 관리해보세요
+              langFile[webLang].PAGE_HEADER_USER_LIST_DESC_TEXT; // 사용자목록을 확인하고 관리해보세요
             headerInfoObj.depth.push({
               // url: '/organizations/2/users',
               url: `/organizations/${router.query.id}/users`,
-              text: langFile[lang].PAGE_HEADER_USER_LIST_TITLE_TEXT, // 사용자 목록
+              text: langFile[webLang].PAGE_HEADER_USER_LIST_TITLE_TEXT, // 사용자 목록
             });
           }
         }
@@ -88,62 +89,66 @@ export default function PageHeader() {
       headerInfoObj.depth.push({ url: "/workflow", text: depth1 });
       headerInfoObj.depth.push({
         url: "/workflow",
-        text: langFile[lang].PAGE_HEADER_PATIENT_LIST_TITLE_TEXT, // 환자목록
+        text: langFile[webLang].PAGE_HEADER_PATIENT_LIST_TITLE_TEXT, // 환자목록
       });
       if (!depth2) {
         headerInfoObj.title =
-          langFile[lang].PAGE_HEADER_PATIENT_LIST_TITLE_TEXT; // 환자목록
+          langFile[webLang].PAGE_HEADER_PATIENT_LIST_TITLE_TEXT; // 환자목록
         headerInfoObj.description =
-          langFile[lang].PAGE_HEADER_PATIENT_LIST_DESC_TEXT; // 환자를 추가하고 환자별 진료들을 관리해보세요
+          langFile[webLang].PAGE_HEADER_PATIENT_LIST_DESC_TEXT; // 환자를 추가하고 환자별 진료들을 관리해보세요
       } //
       else if (depth2 === "diagnosis") {
-        headerInfoObj.title = langFile[lang].PAGE_HEADER_CHART_LIST_TITLE_TEXT; // 진료목록
+        headerInfoObj.title =
+          langFile[webLang].PAGE_HEADER_CHART_LIST_TITLE_TEXT; // 진료목록
         headerInfoObj.description =
-          langFile[lang].PAGE_HEADER_CHART_LIST_DESC_TEXT; // 진료목록을 확인하고 관리헤보세요
+          langFile[webLang].PAGE_HEADER_CHART_LIST_DESC_TEXT; // 진료목록을 확인하고 관리헤보세요
         headerInfoObj.depth.push({
           url: `/workflow/diagnosis/${router.query.id as string}`,
-          text: langFile[lang].PAGE_HEADER_CHART_LIST_TITLE_TEXT, // 진료목록
+          text: langFile[webLang].PAGE_HEADER_CHART_LIST_TITLE_TEXT, // 진료목록
         });
       }
     } //
     else if (depth1 === "appointments") {
-      headerInfoObj.title = langFile[lang].PAGE_HEADER_SCHEDULE_LIST_TITLE_TEXT; // 일정목록
+      headerInfoObj.title =
+        langFile[webLang].PAGE_HEADER_SCHEDULE_LIST_TITLE_TEXT; // 일정목록
       headerInfoObj.description =
-        langFile[lang].PAGE_HEADER_SCHEDULE_LIST_DESC_TEXT; // 일정을 확인하고 관리해보세요
+        langFile[webLang].PAGE_HEADER_SCHEDULE_LIST_DESC_TEXT; // 일정을 확인하고 관리해보세요
       headerInfoObj.depth.push(
         { url: "/appointments", text: depth1 },
         {
           url: "/appointments",
-          text: langFile[lang].PAGE_HEADER_SCHEDULE_LIST_TITLE_TEXT, // 일정목록
+          text: langFile[webLang].PAGE_HEADER_SCHEDULE_LIST_TITLE_TEXT, // 일정목록
         }
       );
     } //
     else if (depth1 === "notice") {
-      headerInfoObj.title = langFile[lang].PAGE_HEADER_NOTICE_LIST_TITLE_TEXT; // 공지사항
+      headerInfoObj.title =
+        langFile[webLang].PAGE_HEADER_NOTICE_LIST_TITLE_TEXT; // 공지사항
       headerInfoObj.description =
-        langFile[lang].PAGE_HEADER_NOTICE_LIST_DESC_TEXT; // 공지를 확인하고 관리해보세요
+        langFile[webLang].PAGE_HEADER_NOTICE_LIST_DESC_TEXT; // 공지를 확인하고 관리해보세요
       headerInfoObj.depth.push(
         { url: "/notice", text: depth1 },
         {
           url: "/notice",
-          text: langFile[lang].PAGE_HEADER_NOTICE_LIST_TITLE_TEXT, // 공지사항
+          text: langFile[webLang].PAGE_HEADER_NOTICE_LIST_TITLE_TEXT, // 공지사항
         }
       );
     } else if (depth1 === "history") {
-      headerInfoObj.title = langFile[lang].PAGE_HEADER_HISTORY_LIST_TITLE_TEXT; // 히스토리
+      headerInfoObj.title =
+        langFile[webLang].PAGE_HEADER_HISTORY_LIST_TITLE_TEXT; // 히스토리
       headerInfoObj.description =
-        langFile[lang].PAGE_HEADER_HISTORY_LIST_DESC_TEXT; // 히스토리를 확인하고 관리해보세요
+        langFile[webLang].PAGE_HEADER_HISTORY_LIST_DESC_TEXT; // 히스토리를 확인하고 관리해보세요
       headerInfoObj.depth.push(
         { url: "/history", text: depth1 },
         {
           url: "/history",
-          text: langFile[lang].PAGE_HEADER_HISTORY_LIST_TITLE_TEXT, // 히스토리
+          text: langFile[webLang].PAGE_HEADER_HISTORY_LIST_TITLE_TEXT, // 히스토리
         }
       );
     }
 
     setHeaderInfoObj(headerInfoObj);
-  }, [router.pathname, lang, router.query.id]);
+  }, [router.pathname, webLang, router.query.id]);
 
   return (
     <div className="page-header">

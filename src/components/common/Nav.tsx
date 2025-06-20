@@ -19,7 +19,7 @@ import LogoImage from "../../../public/images/wkuh.logo.png";
 
 type UserSettingOptions = "password" | "logout";
 
-function getUserSettingOptions(lang: "ko" | "en") {
+function getUserSettingOptions(lang: LangType) {
   const userSettingOptions: DropdownOption<UserSettingOptions>[] = [
     {
       text: langFile[lang].DROP_EDIT_PSW_TEXT, // 비밀번호수정
@@ -51,8 +51,8 @@ const langDropdownOptions: DropdownOption<LangType>[] = [
 export default function Nav() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const { lang, setLang } = useContext(LanguageContext);
-  const userSettingOptions = getUserSettingOptions(lang as "ko" | "en");
+  const { webLang, setLang, setWebLang } = useContext(LanguageContext);
+  const userSettingOptions = getUserSettingOptions(webLang);
   const [profileOpened, setProfileOpened] = useState(false);
   const [langOpened, setLangOpened] = useState(false);
   const { ModalPortal, closeModal, openModal } = useModal();
@@ -94,6 +94,7 @@ export default function Nav() {
   // 언어 설정
   const handleLangDropdown = (type: LangType | "en" | "ko") => {
     setLang(type);
+    setWebLang(type);
     setLangOpened(false);
   };
 
@@ -108,8 +109,8 @@ export default function Nav() {
       <AlertModalPortal>
         <CheckAlertbox
           handleClose={closeAlertModal}
-          title={langFile[lang].EDIT_PSW_ALERT_TITLE} // 비밀번호 수정 완료
-          desc={langFile[lang].EDIT_PSW_ALERT_DESC} // 비밀번호 수정이 완료되었습니다
+          title={langFile[webLang].EDIT_PSW_ALERT_TITLE} // 비밀번호 수정 완료
+          desc={langFile[webLang].EDIT_PSW_ALERT_DESC} // 비밀번호 수정이 완료되었습니다
         />
       </AlertModalPortal>
 
@@ -118,8 +119,8 @@ export default function Nav() {
           handleMainClick={signOut}
           handleClose={closeLogoutModal}
           iconType="logout"
-          title={langFile[lang].LOGOUT_ALERT_MODAL_TITLE_TEXT} // 로그아웃
-          desc={langFile[lang].LOGOUT_ALERT_MODAL_TITLE_DESC} // 로그아웃 하시겠습니까?
+          title={langFile[webLang].LOGOUT_ALERT_MODAL_TITLE_TEXT} // 로그아웃
+          desc={langFile[webLang].LOGOUT_ALERT_MODAL_TITLE_DESC} // 로그아웃 하시겠습니까?
         />
       </LogoutAlertModal>
 
@@ -163,7 +164,7 @@ export default function Nav() {
             <User roundBg={true} />
             <div className="flex align-center gap-5">
               <span>
-                {langFile[lang].NAV_PROFILE_DROP_TEXT}
+                {langFile[webLang].NAV_PROFILE_DROP_TEXT}
                 {/* 프로필 */}
               </span>
               <ArrowDown />

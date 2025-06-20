@@ -43,7 +43,7 @@ type ColoredUserChartResType = UserChartResType & { color: string };
 
 export default function DashBoardPage() {
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   const [teleChartInfo, setTeleChartInfo] = useState<DefaultChartInfo[] | null>(
     null
   );
@@ -79,15 +79,15 @@ export default function DashBoardPage() {
   const jobs = [
     {
       key: "nurse",
-      name: langFile[lang].USER_MODAL_USER_JOB1,
+      name: langFile[webLang].USER_MODAL_USER_JOB1,
     },
     {
       key: "doctor",
-      name: langFile[lang].USER_MODAL_USER_JOB2,
+      name: langFile[webLang].USER_MODAL_USER_JOB2,
     },
     {
       key: "interpreter",
-      name: langFile[lang].USER_MODAL_USER_JOB3,
+      name: langFile[webLang].USER_MODAL_USER_JOB3,
     },
   ];
 
@@ -98,7 +98,7 @@ export default function DashBoardPage() {
   const getData = (data: DefaultChartInfo[]) => {
     return data
       ? data?.map(({ o_name_kor, o_name_eng, data }) => ({
-          label: lang === "ko" ? o_name_kor : o_name_eng,
+          label: webLang === "ko" ? o_name_kor : o_name_eng,
           data: data,
         }))
       : [];
@@ -106,17 +106,17 @@ export default function DashBoardPage() {
 
   const getDataNew = () => {
     let te = teleChartInfo?.map(({ data }) => ({
-      label: langFile[lang].DASHBOARD_CURRENT_TELE_USAGE_STATUS_TITLE, // '원격 협진 사용 현황'
+      label: langFile[webLang].DASHBOARD_CURRENT_TELE_USAGE_STATUS_TITLE, // '원격 협진 사용 현황'
       data,
     }));
 
     let vir = cpVisitChartInfo?.map(({ data }) => ({
-      label: langFile[lang].DASHBOARD_CURRENT_VIR_COMPLETE_STATUS_TITLE, // '내원 완료 현황'
+      label: langFile[webLang].DASHBOARD_CURRENT_VIR_COMPLETE_STATUS_TITLE, // '내원 완료 현황'
       data,
     }));
 
     let pp = ppChartInfo?.map(({ data }) => ({
-      label: langFile[lang].DASHBOARD_CURRENT_PP_REGISTRATION_STATUS_TITLE, // '처방전 현황'
+      label: langFile[webLang].DASHBOARD_CURRENT_PP_REGISTRATION_STATUS_TITLE, // '처방전 현황'
       data,
     }));
 
@@ -156,9 +156,9 @@ export default function DashBoardPage() {
       "DEC",
     ];
     return Array.from({ length: 12 }, (_, x) => x).map(
-      (i) => langFile[lang][months[i]]
+      (i) => langFile[webLang][months[i]]
     );
-  }, [lang]);
+  }, [webLang]);
 
   const getUsersCount = useCallback(() => {
     if (selectedHospital) {
@@ -178,7 +178,7 @@ export default function DashBoardPage() {
 
   const getJobLabels = useCallback(() => {
     return jobs.map((i) => i.name);
-  }, [lang]);
+  }, [webLang]);
 
   const converTotDefaultChartType = (chartList: DefaultChartResType[]) => {
     return chartList.map((item) => ({
@@ -344,7 +344,7 @@ export default function DashBoardPage() {
           {/* 병원 선택시 test1.*/}
           <section className="chart-section">
             <h2>
-              {langFile[lang].DASHBOARD_CURRENT_USAGE_STATUS_TITLE}
+              {langFile[webLang].DASHBOARD_CURRENT_USAGE_STATUS_TITLE}
               {/* 사용 현황 */}
             </h2>
             {userInfo?.country === "korea" && (
@@ -382,7 +382,7 @@ export default function DashBoardPage() {
           <div className="row">
             <section className="chart-section pi-chart-section">
               <h2>
-                {langFile[lang].DASHBOARD_USER_STATUS_TITLE}
+                {langFile[webLang].DASHBOARD_USER_STATUS_TITLE}
                 {/* 사용자 현황 */}
               </h2>
               <MyPieChart labels={getJobLabels()} data={getUsersCount()} />
@@ -403,7 +403,7 @@ export default function DashBoardPage() {
                         style={{ backgroundColor: u.color }}
                       ></span>
                       <span className="option-name">
-                        {lang === "ko" ? u.o_name_kor : u.o_name_eng}
+                        {webLang === "ko" ? u.o_name_kor : u.o_name_eng}
                       </span>
                     </p>
                   ))}
@@ -413,7 +413,7 @@ export default function DashBoardPage() {
             <section className="chart-section upcomming-disagnosis-area">
               <h2>
                 {
-                  langFile[lang]
+                  langFile[webLang]
                     .DASHBOARD_PATIENTS_SCHEDULED_FOR_TREATMENT_TITLE
                 }
                 {/* 진료 예정 환자 */}
@@ -422,13 +422,13 @@ export default function DashBoardPage() {
                 <CardItem
                   userInfo={userInfo}
                   items={todayTeAptisList}
-                  lang={lang as "ko" | "en"}
+                  lang={webLang}
                   type="tele"
                 />
                 <CardItem
                   userInfo={userInfo}
                   items={todayViAptList}
-                  lang={lang as "ko" | "en"}
+                  lang={webLang}
                   type="visit"
                 />
               </div>
@@ -438,7 +438,7 @@ export default function DashBoardPage() {
           <section className="chart-section">
             <h2>
               {
-                langFile[lang]
+                langFile[webLang]
                   .DASHBOARD_CURRENT_PATIENT_REGISTRATION_STATUS_TITLE
               }
               {/* 환자 등록 현황 */}
@@ -477,7 +477,7 @@ DashBoardPage.getLayout = function getLayout(page: ReactElement) {
 type CardItemProps = {
   userInfo: StoredUser | null;
   items: TodayAptItem[] | null;
-  lang: "ko" | "en";
+  lang: LangType;
   type: "tele" | "visit";
 };
 

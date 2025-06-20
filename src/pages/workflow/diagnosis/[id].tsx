@@ -50,7 +50,7 @@ export default function DiagnosisPage() {
     ({ video }) => video
   );
 
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   const { openModal: openWorkflowModal } = useContext(WorkflowModalContext);
   const {
     ModalPortal: DeleteModalPortal,
@@ -83,12 +83,10 @@ export default function DiagnosisPage() {
 
   const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
   const [patientInfo, setPatientInfo] = useState<Patient | null>(null);
-  const [infoKeys, setInfoKeys] = useState(() =>
-    getInfoBoxHeadData(lang as "ko" | "en")
-  );
+  const [infoKeys, setInfoKeys] = useState(() => getInfoBoxHeadData(webLang));
 
-  const medicaltds = getTableMedicalHeadData(lang as "ko" | "en");
-  const videotds = getTableVideoHeadData(lang as "ko" | "en");
+  const medicaltds = getTableMedicalHeadData(webLang);
+  const videotds = getTableVideoHeadData(webLang);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -156,7 +154,7 @@ export default function DiagnosisPage() {
   };
 
   const addChart = async () => {
-    if (!confirm(langFile[lang].WORKFLOW_CONFIRM_ADD_CHART)) {
+    if (!confirm(langFile[webLang].WORKFLOW_CONFIRM_ADD_CHART)) {
       return;
     }
     if (!patientInfo) {
@@ -274,9 +272,9 @@ export default function DiagnosisPage() {
   }, [userInfo, router.query.id]);
 
   useEffect(() => {
-    const newInfoKeys = getInfoBoxHeadData(lang as "ko" | "en");
+    const newInfoKeys = getInfoBoxHeadData(webLang);
     setInfoKeys(newInfoKeys);
-  }, [lang]);
+  }, [webLang]);
 
   useEffect(() => {
     if (userInfo) {
@@ -312,11 +310,11 @@ export default function DiagnosisPage() {
   const tabs = [
     {
       tab: "medical",
-      text: langFile[lang].WORKFLOW_MENU_1,
+      text: langFile[webLang].WORKFLOW_MENU_1,
     },
     {
       tab: "video",
-      text: langFile[lang].WORKFLOW_MENU_2,
+      text: langFile[webLang].WORKFLOW_MENU_2,
     },
   ];
 
@@ -348,8 +346,8 @@ export default function DiagnosisPage() {
       <DeleteModalPortal>
         <ConfirmAlertBox
           handleClose={closeDeleteModal}
-          title={langFile[lang].DELETE_WORKFLOW_ALERT_TITLE}
-          desc={langFile[lang].DELETE_WORKFLOW_ALERT_DESC}
+          title={langFile[webLang].DELETE_WORKFLOW_ALERT_TITLE}
+          desc={langFile[webLang].DELETE_WORKFLOW_ALERT_DESC}
           iconType="remove"
           handleMainClick={deleteDiagnosis}
         />
@@ -368,8 +366,8 @@ export default function DiagnosisPage() {
       <AlertModalPortal>
         <CheckAlertbox
           handleClose={closeAlertModal}
-          title={langFile[lang].CP_DELETE_WORKFLOW_ALERT_TITLE}
-          desc={langFile[lang].CP_DELETE_WORKFLOW_ALERT_DESC}
+          title={langFile[webLang].CP_DELETE_WORKFLOW_ALERT_TITLE}
+          desc={langFile[webLang].CP_DELETE_WORKFLOW_ALERT_DESC}
         />
       </AlertModalPortal>
 
@@ -419,7 +417,7 @@ export default function DiagnosisPage() {
                 height: patientInfo.tall ? patientInfo.tall : "-",
                 weibht: patientInfo.weight ? patientInfo.weight : "-",
                 nurse: patientInfo.nurse_idx
-                  ? lang === "ko"
+                  ? webLang === "ko"
                     ? patientInfo.nurse_name_kor
                     : patientInfo.nurse_name_eng
                   : "-",
@@ -439,13 +437,13 @@ export default function DiagnosisPage() {
           !userInfo.p_idx &&
           searchParams.get("tab") === "medical" ? (
             <AddButton
-              text={langFile[lang].ADD_CHART_BUTTON_TEXT}
+              text={langFile[webLang].ADD_CHART_BUTTON_TEXT}
               onClick={addChart}
             />
           ) : (
             searchParams.get("tab") === "video" && (
               <AddButton
-                text={langFile[lang].ADD_VIDEO_BUTTON_TEXT}
+                text={langFile[webLang].ADD_VIDEO_BUTTON_TEXT}
                 onClick={addVideo}
               />
             )
@@ -478,38 +476,38 @@ export default function DiagnosisPage() {
                 <TableRow<TableMenuOption>
                   key={w_idx}
                   handleClick={() => openWorkflowModalHandler(w_idx)}
-                  buttonText={langFile[lang].CHART_TABLE_BUTTON_TEXT}
+                  buttonText={langFile[webLang].CHART_TABLE_BUTTON_TEXT}
                   onClickMenu={(type) => {
                     setChartIdAndOpenAlert(type, w_idx);
                   }}
                   tableRowOptionType={tableDropOptions}
-                  lang={lang}
+                  lang={webLang}
                 >
                   <td>{w_code}</td>
                   <td>
                     {nurse2_idx
-                      ? lang === "en"
+                      ? webLang === "en"
                         ? nurse2_name_eng
                         : nurse2_name_kor
                       : "-"}
                   </td>
                   <td>
                     {nurse1_idx
-                      ? lang === "en"
+                      ? webLang === "en"
                         ? nurse1_name_eng
                         : nurse1_name_kor
                       : "-"}
                   </td>
                   <td>
                     {doctor2_idx
-                      ? lang === "en"
+                      ? webLang === "en"
                         ? doctor2_name_eng
                         : doctor2_name_kor
                       : "-"}
                   </td>
                   <td>
                     {doctor1_idx
-                      ? lang === "en"
+                      ? webLang === "en"
                         ? doctor1_name_eng
                         : doctor1_name_kor
                       : "-"}
@@ -563,14 +561,14 @@ export default function DiagnosisPage() {
                         );
                       }
                     }}
-                    buttonText={langFile[lang].CHART_VIDEO_BUTTON_TEXT}
+                    buttonText={langFile[webLang].CHART_VIDEO_BUTTON_TEXT}
                     onClickMenu={(type) => {
                       if (type === "remove") {
                         setVideoIdAndOpenAlert(v_idx);
                       }
                     }}
                     tableRowOptionType={videoTableDropOptions}
-                    lang={lang}
+                    lang={webLang}
                   >
                     <td>{v_idx}</td>
                     <td>{gubun || "-"}</td>

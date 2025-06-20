@@ -1,11 +1,11 @@
-import React, { ChangeEvent, FormEvent, useContext, useState } from 'react';
-import langFile from '@/lang';
-import { LanguageContext } from '@/context/LanguageContext';
-import DateInput, { Value } from '@/components/common/inputs/DateInput';
-import { AppointmentSearchInputs } from '@/pages/appointments';
-import { getDateToStr } from '@/utils/date';
-import SearchUserSelect from '@/components/common/inputs/SearchUserSelect';
-import { useAppSelector } from '@/store';
+import React, { ChangeEvent, FormEvent, useContext, useState } from "react";
+import langFile from "@/lang";
+import { LanguageContext } from "@/context/LanguageContext";
+import DateInput, { Value } from "@/components/common/inputs/DateInput";
+import { AppointmentSearchInputs } from "@/pages/appointments";
+import { getDateToStr } from "@/utils/date";
+import SearchUserSelect from "@/components/common/inputs/SearchUserSelect";
+import { useAppSelector } from "@/store";
 
 type Props = {
   handleSearch: (searchInputs: AppointmentSearchInputs) => void;
@@ -13,14 +13,14 @@ type Props = {
 
 export default function SearchAppointmentContent({ handleSearch }: Props) {
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
 
   const [searchInputs, setSearchInput] = useState<{
     search_p_name: string;
     search_person: number;
     search_date: null | Value;
   }>({
-    search_p_name: '',
+    search_p_name: "",
     search_person: 0,
     search_date: null,
   });
@@ -41,8 +41,8 @@ export default function SearchAppointmentContent({ handleSearch }: Props) {
       search_p_name,
       search_person,
       search_date: searchInputs.search_date
-        ? getDateToStr(searchInputs.search_date, '-')
-        : '',
+        ? getDateToStr(searchInputs.search_date, "-")
+        : "",
     });
   };
 
@@ -61,7 +61,7 @@ export default function SearchAppointmentContent({ handleSearch }: Props) {
         <div className="flex gap-10 justify-between w-full">
           <div className="flex item-row align-center">
             <span className="flex flex-end">
-              {langFile[lang].APPOINTMENTS_DATE_TEXT}
+              {langFile[webLang].APPOINTMENTS_DATE_TEXT}
               {/* 진행일자 */}
             </span>
 
@@ -75,7 +75,7 @@ export default function SearchAppointmentContent({ handleSearch }: Props) {
 
           <div className="flex item-row align-center">
             <label htmlFor="search_p_name">
-              {langFile[lang].APPOINTMENTS_PT_NAME_TEXT}
+              {langFile[webLang].APPOINTMENTS_PT_NAME_TEXT}
               {/* 환자명 */}
             </label>
 
@@ -91,19 +91,19 @@ export default function SearchAppointmentContent({ handleSearch }: Props) {
 
           <div className="flex item-row h-full justify-between  align-center">
             <span className="flex gap-3 justify-end">
-              {langFile[lang].APPOINTMENTS_SEARCH_CONTENT_MEDICAL_STAFF}
+              {langFile[webLang].APPOINTMENTS_SEARCH_CONTENT_MEDICAL_STAFF}
               {/* 의료진 */}
             </span>
 
             <SearchUserSelect
-              o_idx={userInfo.country !== 'korea' && userInfo.o_idx}
+              o_idx={userInfo.country !== "korea" && userInfo.o_idx}
               setSelectedPerson={setSelectedPerson}
               value={searchInputs.search_person}
             />
           </div>
 
           <button className="primary-btn search-btn" type="submit">
-            {langFile[lang].SEARCH_BUTTON_TEXT}
+            {langFile[webLang].SEARCH_BUTTON_TEXT}
             {/* 조회 */}
           </button>
         </div>

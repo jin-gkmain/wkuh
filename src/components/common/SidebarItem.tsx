@@ -28,7 +28,7 @@ type Props = {
 export default function SidebarItem({ item, type, onClick }: Props) {
   const { userInfo } = useAppSelector(({ user }) => user);
   const [countryFlag, setCountryFlag] = useState<React.ReactNode | null>(null);
-  const { lang } = useContext(LanguageContext);
+  const { lang, webLang } = useContext(LanguageContext);
   const {
     u_name_eng,
     p_chart_no,
@@ -83,27 +83,28 @@ export default function SidebarItem({ item, type, onClick }: Props) {
     const { type, val } = getTimeElapsed(date, today, userInfo.country);
 
     let str = "";
-    if (lang === "en") str += `${langFile[lang].SIDEBAR_TIEM_ELLAPSE_TEXT1} `; // about
+    if (lang === "en")
+      str += `${langFile[webLang].SIDEBAR_TIEM_ELLAPSE_TEXT1} `; // about
     str += `${val}`;
 
     if (type === "minute") {
-      str += ` ${langFile[lang].SIDEBAR_TIEM_ELLAPSE_TEXT6}`; // 분
+      str += ` ${langFile[webLang].SIDEBAR_TIEM_ELLAPSE_TEXT6}`; // 분
     } else if (type === "hour") {
-      str += ` ${langFile[lang].SIDEBAR_TIEM_ELLAPSE_TEXT5}`; // 시간
+      str += ` ${langFile[webLang].SIDEBAR_TIEM_ELLAPSE_TEXT5}`; // 시간
     } else if (type === "day") {
-      str += ` ${langFile[lang].SIDEBAR_TIEM_ELLAPSE_TEXT4}`; // 일
+      str += ` ${langFile[webLang].SIDEBAR_TIEM_ELLAPSE_TEXT4}`; // 일
     } else if (type === "month") {
-      str += ` ${langFile[lang].SIDEBAR_TIEM_ELLAPSE_TEXT3}`; // 달
+      str += ` ${langFile[webLang].SIDEBAR_TIEM_ELLAPSE_TEXT3}`; // 달
     } else if (type === "year") {
-      str += ` ${langFile[lang].SIDEBAR_TIEM_ELLAPSE_TEXT2}`; // 년
+      str += ` ${langFile[webLang].SIDEBAR_TIEM_ELLAPSE_TEXT2}`; // 년
     }
 
     if (val > 1 && lang === "en") str += `s`;
 
-    str += ` ${langFile[lang].SIDEBAR_TIEM_ELLAPSE_TEXT7}`; // 전
+    str += ` ${langFile[webLang].SIDEBAR_TIEM_ELLAPSE_TEXT7}`; // 전
 
     return str;
-  }, [lang]);
+  }, [lang, webLang]);
 
   useEffect(() => {
     if (doctor1_idx) {
@@ -166,11 +167,11 @@ export default function SidebarItem({ item, type, onClick }: Props) {
           {/* sidebar tabType 이 workflow 인 경우 > text 영역 */}
           {type === "workflow" && (
             <div className="text-area">
-              {lang === "ko"
+              {webLang === "ko"
                 ? (item as SideWorkflowAlertType).regist_name_kor
                 : (item as SideWorkflowAlertType).regist_name_eng}
               {getSystemAlertText(
-                lang,
+                webLang,
                 item.gubun,
                 (item as SideWorkflowAlertType).status
               )}
@@ -189,7 +190,7 @@ export default function SidebarItem({ item, type, onClick }: Props) {
               <Cross />
             </span>
             <span className="truncate">
-              {lang === "ko" ? nurse1_name_kor : nurse1_name_eng}
+              {webLang === "ko" ? nurse1_name_kor : nurse1_name_eng}
             </span>
           </p>
         )}
@@ -200,7 +201,7 @@ export default function SidebarItem({ item, type, onClick }: Props) {
               <Stethoscope />
             </span>
             <span className="truncate">
-              {lang === "ko" ? doctor1_name_kor : doctor1_name_eng}
+              {webLang === "ko" ? doctor1_name_kor : doctor1_name_eng}
             </span>
           </p>
         )}
@@ -211,7 +212,7 @@ export default function SidebarItem({ item, type, onClick }: Props) {
               <Cross />
             </span>
             <span className="truncate">
-              {lang === "ko" ? nurse2_name_kor : nurse2_name_eng}
+              {webLang === "ko" ? nurse2_name_kor : nurse2_name_eng}
             </span>
           </p>
         )}
@@ -222,7 +223,7 @@ export default function SidebarItem({ item, type, onClick }: Props) {
               <Stethoscope />
             </span>
             <span className="truncate">
-              {lang === "ko" ? doctor2_name_kor : doctor2_name_eng}
+              {webLang === "ko" ? doctor2_name_kor : doctor2_name_eng}
             </span>
           </p>
         )}

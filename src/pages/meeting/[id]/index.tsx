@@ -18,7 +18,7 @@ export type MeetingInfo = {
 };
 
 export default function MeetingPage() {
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   const { userInfo, loading } = useMe();
   const [userName, setUserName] = useState("");
   const [meetingDate, setMeetingDate] = useState({
@@ -56,7 +56,7 @@ export default function MeetingPage() {
       setUserName(name.value);
     } else {
       alert(
-        langFile[lang].MEETING_ALERT_FAIL_FETCH_MEETING_INFO
+        langFile[webLang].MEETING_ALERT_FAIL_FETCH_MEETING_INFO
         // '회의 정보를 찾을 수 없습니다.\n이 창을 닫고 나중에 다시 접속해 주시기 바랍니다.'
       );
     }
@@ -107,7 +107,7 @@ export default function MeetingPage() {
           // 환자정보 가져오기 실패인 경우
           else {
             return alert(
-              langFile[lang].MEETING_ALERT_FAIL_FETCH_PATIENT_INFO
+              langFile[webLang].MEETING_ALERT_FAIL_FETCH_PATIENT_INFO
               // '환자 정보를 찾을 수 없습니다.\n이 창을 닫고 다시 접속해 주시기 바랍니다.'
             );
           }
@@ -126,14 +126,14 @@ export default function MeetingPage() {
           // 진료정보 가져오기 실패인 경우
           else {
             return alert(
-              langFile[lang].MEETING_ALERT_FAIL_FETCH_WORKFLOW_INFO
+              langFile[webLang].MEETING_ALERT_FAIL_FETCH_WORKFLOW_INFO
               // '진료 정보를 찾을 수 없습니다.\n이 창을 닫고 나중에 다시 접속해 주시기 바랍니다.'
             );
           }
 
           if (!pass) {
             return alert(
-              langFile[lang].MEETING_ALERT_FAIL_FETCH_MEETING_INFO
+              langFile[webLang].MEETING_ALERT_FAIL_FETCH_MEETING_INFO
               // '회의 정보를 찾을 수 없습니다.\n이 창을 닫고 나중에 다시 접속해 주시기 바랍니다.'
             );
           }
@@ -152,13 +152,13 @@ export default function MeetingPage() {
           <div className="name-form-bg">
             <form onSubmit={handleForm} className="name-form">
               <h3>
-                {langFile[lang].MEETING_NAME_FORM_TITLE_TEXT}
+                {langFile[webLang].MEETING_NAME_FORM_TITLE_TEXT}
                 {/* To join the meeting, please enter your name. */}
               </h3>
               <div className="name-content">
                 <input autoComplete="off" type="text" id="name" />
                 <button type="submit">
-                  {langFile[lang].MEETING_NAME_FORM_JOIN_BTN_TEXT}
+                  {langFile[webLang].MEETING_NAME_FORM_JOIN_BTN_TEXT}
                   {/* join */}
                 </button>
               </div>

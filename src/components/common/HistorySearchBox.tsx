@@ -40,7 +40,7 @@ export default function HistorySearchBox({
   hospitals,
   onSearch,
 }: HistorySearchBoxProps) {
-  const { lang } = useContext(LanguageContext);
+  const { lang, webLang } = useContext(LanguageContext);
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const [selectedHospitals, setSelectedHospitals] = useState<string[]>([]);
@@ -196,42 +196,42 @@ export default function HistorySearchBox({
       <Grid container spacing={1} sx={{ alignItems: "center", width: "100%" }}>
         <Grid size={1} sx={{ alignItems: "center" }}>
           <Typography variant="body1">
-            {langFile[lang].HISTORY_SEARCH_BOX_SELECT_PERIOD}
+            {langFile[webLang].HISTORY_SEARCH_BOX_SELECT_PERIOD}
           </Typography>
         </Grid>
         <Grid size={6}>
           <SegmentedPillButtonsGroup
             options={[
               {
-                label: langFile[lang].HISTORY_SEARCH_PERIOD_TOTAL,
+                label: langFile[webLang].HISTORY_SEARCH_PERIOD_TOTAL,
                 value: "1",
               },
               {
-                label: langFile[lang].HISTORY_SEARCH_PERIOD_TODAY,
+                label: langFile[webLang].HISTORY_SEARCH_PERIOD_TODAY,
                 value: "2",
               },
               {
-                label: langFile[lang].HISTORY_SEARCH_PERIOD_3DAYS,
+                label: langFile[webLang].HISTORY_SEARCH_PERIOD_3DAYS,
                 value: "3",
               },
               {
-                label: langFile[lang].HISTORY_SEARCH_PERIOD_1WEEK,
+                label: langFile[webLang].HISTORY_SEARCH_PERIOD_1WEEK,
                 value: "4",
               },
               {
-                label: langFile[lang].HISTORY_SEARCH_PERIOD_1MONTH,
+                label: langFile[webLang].HISTORY_SEARCH_PERIOD_1MONTH,
                 value: "5",
               },
               {
-                label: langFile[lang].HISTORY_SEARCH_PERIOD_3MONTHS,
+                label: langFile[webLang].HISTORY_SEARCH_PERIOD_3MONTHS,
                 value: "6",
               },
               {
-                label: langFile[lang].HISTORY_SEARCH_PERIOD_6MONTHS,
+                label: langFile[webLang].HISTORY_SEARCH_PERIOD_6MONTHS,
                 value: "7",
               },
               {
-                label: langFile[lang].HISTORY_SEARCH_PERIOD_1YEAR,
+                label: langFile[webLang].HISTORY_SEARCH_PERIOD_1YEAR,
                 value: "8",
               },
             ]}
@@ -250,7 +250,7 @@ export default function HistorySearchBox({
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              label={langFile[lang].HISTORY_SEARCH_START_DATE}
+              label={langFile[webLang].HISTORY_SEARCH_START_DATE}
               value={startDate}
               onChange={handleStartDateChange}
               onAccept={handleStartDateAccept}
@@ -272,7 +272,7 @@ export default function HistorySearchBox({
             />
             <Typography variant="body2">~</Typography>
             <DatePicker
-              label={langFile[lang].HISTORY_SEARCH_END_DATE}
+              label={langFile[webLang].HISTORY_SEARCH_END_DATE}
               value={endDate}
               onChange={handleEndDateChange}
               onAccept={handleEndDateAccept}
@@ -298,7 +298,7 @@ export default function HistorySearchBox({
         </Grid>
         <Grid size={1}>
           <Typography variant="body1">
-            {langFile[lang].HISTORY_SEARCH_HOSPITAL_NAME}
+            {langFile[webLang].HISTORY_SEARCH_HOSPITAL_NAME}
           </Typography>
         </Grid>
         <Grid size={11} sx={{ pl: 1 }}>
@@ -325,7 +325,7 @@ export default function HistorySearchBox({
 
         <Grid size={1}>
           <Typography variant="body1">
-            {langFile[lang].HISTORY_SEARCH_STATUS}
+            {langFile[webLang].HISTORY_SEARCH_STATUS}
           </Typography>
         </Grid>
         <Grid size={6} sx={{ pl: 1 }}>
@@ -339,7 +339,7 @@ export default function HistorySearchBox({
                     onChange={(e) => handleStatusChange("0", e.target.checked)}
                   />
                 }
-                label={langFile[lang].HISTORY_SEARCH_STATUS_WAITING}
+                label={langFile[webLang].HISTORY_SEARCH_STATUS_WAITING}
               />
               <FormControlLabel
                 value="1"
@@ -349,7 +349,7 @@ export default function HistorySearchBox({
                     onChange={(e) => handleStatusChange("1", e.target.checked)}
                   />
                 }
-                label={langFile[lang].HISTORY_SEARCH_STATUS_COMPLETED}
+                label={langFile[webLang].HISTORY_SEARCH_STATUS_COMPLETED}
               />
               <FormControlLabel
                 value="2"
@@ -359,7 +359,7 @@ export default function HistorySearchBox({
                     onChange={(e) => handleStatusChange("2", e.target.checked)}
                   />
                 }
-                label={langFile[lang].HISTORY_SEARCH_STATUS_PRESCRIBED}
+                label={langFile[webLang].HISTORY_SEARCH_STATUS_PRESCRIBED}
               />
             </FormGroup>
           </FormControl>
@@ -379,15 +379,15 @@ export default function HistorySearchBox({
             onChange={(e) => setSearchParam(e.target.value)}
           >
             <MenuItem value="doctor">
-              {langFile[lang].HISTORY_SEARCH_DOCTOR}
+              {langFile[webLang].HISTORY_SEARCH_DOCTOR}
             </MenuItem>
             <MenuItem value="specialty">
-              {langFile[lang].HISTORY_SEARCH_SPECIALTY}
+              {langFile[webLang].HISTORY_SEARCH_SPECIALTY}
             </MenuItem>
           </Select>
           <TextField
             variant="outlined"
-            placeholder={langFile[lang].HISTORY_SEARCH_SEARCH_PLACEHOLDER}
+            placeholder={langFile[webLang].HISTORY_SEARCH_SEARCH_PLACEHOLDER}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             size="small"
@@ -401,7 +401,7 @@ export default function HistorySearchBox({
               "&:hover": { backgroundColor: "rgba(4, 158, 184, 0.8)" },
             }}
           >
-            {langFile[lang].HISTORY_SEARCH_SEARCH}
+            {langFile[webLang].HISTORY_SEARCH_SEARCH}
           </Button>
           <Button
             variant="contained"
@@ -414,7 +414,7 @@ export default function HistorySearchBox({
               },
             }}
           >
-            {langFile[lang].HISTORY_SEARCH_RESET}
+            {langFile[webLang].HISTORY_SEARCH_RESET}
           </Button>
         </Grid>
       </Grid>

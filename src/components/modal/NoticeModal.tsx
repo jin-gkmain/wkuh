@@ -4,12 +4,12 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from 'react';
-import ModalFrame from './ModalFrame';
-import Select, { SelectOptionType } from '../common/inputs/Select';
-import langFile from '@/lang';
-import { LanguageContext } from '@/context/LanguageContext';
-import { editNotice, getNotice, registNotice } from '@/data/notice';
+} from "react";
+import ModalFrame from "./ModalFrame";
+import Select, { SelectOptionType } from "../common/inputs/Select";
+import langFile from "@/lang";
+import { LanguageContext } from "@/context/LanguageContext";
+import { editNotice, getNotice, registNotice } from "@/data/notice";
 
 type Props = {
   onComplete: (notice: NoticeModal | number) => void;
@@ -20,7 +20,7 @@ type Props = {
   notice?: Notice;
 };
 
-type SelectType = 'organization';
+type SelectType = "organization";
 
 export default function NoticeModal({
   onComplete,
@@ -30,7 +30,7 @@ export default function NoticeModal({
   organization,
   notice,
 }: Props) {
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   // const [noticeObj, setNoticeObj] = useState({
   //   organization: 'default',
   //   title: '',
@@ -39,8 +39,8 @@ export default function NoticeModal({
 
   const [noticeObj, setNoticeObj] = useState<NoticeModal>({
     n_idx: 0,
-    title: '',
-    content: '',
+    title: "",
+    content: "",
   });
 
   // 전달받은 id 에 해당하는 공지사항 내용 받아오기
@@ -104,24 +104,24 @@ export default function NoticeModal({
     ev.preventDefault();
     let { title, content } = noticeObj;
 
-    if (modalType === 'new') {
+    if (modalType === "new") {
       const res = await registNotice({
         o_idx: organization.o_idx,
         title,
         content,
       });
 
-      if (res.message === 'SUCCESS') {
+      if (res.message === "SUCCESS") {
         onComplete(res.n_idx);
       }
-    } else if (modalType === 'manage') {
+    } else if (modalType === "manage") {
       const res = await editNotice(noticeObj.n_idx, {
         o_idx: organization.o_idx,
         title,
         content,
       });
 
-      if (res === 'SUCCESS') {
+      if (res === "SUCCESS") {
         onComplete(noticeObj);
       }
     }
@@ -157,7 +157,7 @@ export default function NoticeModal({
   };
 
   useEffect(() => {
-    if (modalType !== 'new') {
+    if (modalType !== "new") {
       if (notice) {
         setNoticeObj(notice);
       }
@@ -167,24 +167,24 @@ export default function NoticeModal({
   return (
     <div className="notice-modal">
       <ModalFrame
-        view={modalType === 'view'}
+        view={modalType === "view"}
         onClose={closeModal}
         onComplete={handleSumbmit}
         title={
-          modalType === 'new'
-            ? langFile[lang].NOTICE_MODAL_NEW_TITLE_TEXT // 공지사항 등록
-            : modalType === 'manage'
-            ? langFile[lang].NOTICE_MODAL_MANAGE_TITLE_TEXT // 공지사항 수정
-            : langFile[lang].NOTICE_MODAL_VIEW_TITLE_TEXT // 공지사항 확인
+          modalType === "new"
+            ? langFile[webLang].NOTICE_MODAL_NEW_TITLE_TEXT // 공지사항 등록
+            : modalType === "manage"
+            ? langFile[webLang].NOTICE_MODAL_MANAGE_TITLE_TEXT // 공지사항 수정
+            : langFile[webLang].NOTICE_MODAL_VIEW_TITLE_TEXT // 공지사항 확인
         }
         completeBtnText={
-          lang === 'en'
-            ? modalType === 'new'
-              ? langFile[lang].NOTICE_MODAL_NEW_TITLE_TEXT // Add Notice
-              : langFile[lang].MODAL_MANAGE_COMPLETE_BUTTON_TEXT // Save
-            : ''
+          webLang === "en"
+            ? modalType === "new"
+              ? langFile[webLang].NOTICE_MODAL_NEW_TITLE_TEXT // Add Notice
+              : langFile[webLang].MODAL_MANAGE_COMPLETE_BUTTON_TEXT // Save
+            : ""
         }
-        hideBtns={modalType === 'view'}
+        hideBtns={modalType === "view"}
         onCancel={closeModal}
       >
         {
@@ -192,28 +192,28 @@ export default function NoticeModal({
             <div className="flex gap-10">
               <div className="flex flex-1 flex-col gap-10">
                 <label htmlFor="title" className="label">
-                  {langFile[lang].NOTICE_TITLE_TEXT}
+                  {langFile[webLang].NOTICE_TITLE_TEXT}
                   {/* 제목 */}
                 </label>
                 <input
                   autoComplete="off"
-                  disabled={modalType === 'view'}
+                  disabled={modalType === "view"}
                   className="input"
                   type="text"
                   name="title"
                   id="title"
-                  value={noticeObj.title || ''}
+                  value={noticeObj.title || ""}
                   onChange={handleInputChange}
                 />
               </div>
 
               <div className="flex-1 flex flex-col gap-10">
                 <span className="label">
-                  {langFile[lang].NOTICE_TARGE_ORG_TEXT}
+                  {langFile[webLang].NOTICE_TARGE_ORG_TEXT}
                   {/* 대상기관 */}
                 </span>
                 <div className="input input-disabled">
-                  {lang === 'ko'
+                  {webLang === "ko"
                     ? organization.o_name_kor
                     : organization.o_name_eng}
                 </div>
@@ -222,16 +222,16 @@ export default function NoticeModal({
 
             <div className="flex flex-col gap-10">
               <label htmlFor="content" className="label">
-                {langFile[lang].NOTICE_CONTENTS_TEXT}
+                {langFile[webLang].NOTICE_CONTENTS_TEXT}
                 {/* 내용 */}
               </label>
               <textarea
                 autoComplete="off"
-                disabled={modalType === 'view'}
+                disabled={modalType === "view"}
                 className="input body"
                 name="content"
                 id="content"
-                value={noticeObj.content || ''}
+                value={noticeObj.content || ""}
                 onChange={handleInputChange}
               />
             </div>

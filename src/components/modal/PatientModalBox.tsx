@@ -44,7 +44,7 @@ export default function PatientModalBox({
   patient,
   org,
 }: Props) {
-  const { lang } = useContext(LanguageContext);
+  const { webLang } = useContext(LanguageContext);
   const sexOptions = getSexOptions();
   const [chartIdCheck, setChartIdCheck] = useState<ChartIdDuplicated>("ready");
   const [pIdCheck, setPIdCheck] = useState<ChartIdDuplicated>("ready");
@@ -295,11 +295,13 @@ export default function PatientModalBox({
       <ModalFrame
         title={
           type === "new"
-            ? langFile[lang].PATIENT_MODAL_NEW_TITLE_TEXT // 환자 등록
-            : langFile[lang].PATIENT_MODAL_MANAGE_TITLE_TEXT // 환자 정보 수정
+            ? langFile[webLang].PATIENT_MODAL_NEW_TITLE_TEXT // 환자 등록
+            : langFile[webLang].PATIENT_MODAL_MANAGE_TITLE_TEXT // 환자 정보 수정
         }
         completeBtnText={
-          lang !== "ko" ? langFile[lang].PATIENT_MODAL_COMPLETE_BUTTON_TEXT : ""
+          webLang !== "ko"
+            ? langFile[webLang].PATIENT_MODAL_COMPLETE_BUTTON_TEXT
+            : ""
         }
         onClose={closeModal}
         onComplete={handleSubmit}
@@ -309,7 +311,7 @@ export default function PatientModalBox({
             <section className="flex-1 flex flex-col gap-10">
               <div className="flex flex-col gap-5">
                 <label htmlFor="u_name_eng" className="label">
-                  *{langFile[lang].PATIENT_MODAL_PATIENT_NAME_EN}
+                  *{langFile[webLang].PATIENT_MODAL_PATIENT_NAME_EN}
                   {/* 환자명(영문) */}
                 </label>
                 <input
@@ -326,7 +328,7 @@ export default function PatientModalBox({
               </div>
               <div className="flex flex-col gap-5">
                 <span className="label">
-                  {langFile[lang].PATIENT_MODAL_SEX_TEXT}
+                  {langFile[webLang].PATIENT_MODAL_SEX_TEXT}
                 </span>
                 <Select
                   selected={patientInfo.sex}
@@ -337,7 +339,7 @@ export default function PatientModalBox({
               </div>
               <div className="flex flex-col gap-5">
                 <label htmlFor="weight" className="label">
-                  {langFile[lang].PATIENT_MODAL_WEIGHT_TEXT}
+                  {langFile[webLang].PATIENT_MODAL_WEIGHT_TEXT}
                   {/* 몸무게(kg) */}
                 </label>
                 <input
@@ -352,7 +354,7 @@ export default function PatientModalBox({
               </div>
               <div className="flex flex-col gap-5">
                 <label htmlFor="tel" className="label">
-                  {langFile[lang].PATIENT_TEL_TEXT}
+                  {langFile[webLang].PATIENT_TEL_TEXT}
                   {/* 연락처 */}
                 </label>
                 <input
@@ -370,7 +372,7 @@ export default function PatientModalBox({
             <section className="flex-1 flex flex-col gap-10">
               <div className="flex flex-col gap-5">
                 <span className="label">
-                  {langFile[lang].PATIENT_MODAL_BIRTH_TEXT}
+                  {langFile[webLang].PATIENT_MODAL_BIRTH_TEXT}
                   {/* 생년월일 */}
                 </span>
                 <DateInput
@@ -388,7 +390,7 @@ export default function PatientModalBox({
 
               <div className="flex flex-col gap-5">
                 <label htmlFor="tall" className="label">
-                  {langFile[lang].PATIENT_MODAL_TALL_TEXT}
+                  {langFile[webLang].PATIENT_MODAL_TALL_TEXT}
                   {/* 신장(cm) */}
                 </label>
                 <input
@@ -404,7 +406,7 @@ export default function PatientModalBox({
 
               <div className="flex flex-col gap-5">
                 <label htmlFor="visit_paths" className="label">
-                  {langFile[lang].PATIENT_MODAL_VISIT_PATHS_TEXT}
+                  {langFile[webLang].PATIENT_MODAL_VISIT_PATHS_TEXT}
                   {/* 내원경로 */}
                 </label>
                 <input
@@ -420,7 +422,7 @@ export default function PatientModalBox({
 
               <div className="flex flex-col gap-5">
                 <label htmlFor="p_email" className="label">
-                  {langFile[lang].PATIENT_MODAL_P_EMAIL_TEXT}
+                  {langFile[webLang].PATIENT_MODAL_P_EMAIL_TEXT}
                   {/* 이메일 */}
                 </label>
                 <input
@@ -438,7 +440,7 @@ export default function PatientModalBox({
 
           <div className="flex flex-col gap-10">
             <label htmlFor="address" className="label">
-              {langFile[lang].PATIENT_ADDRESS_TEXT}
+              {langFile[webLang].PATIENT_ADDRESS_TEXT}
               {/* 집주소 */}
             </label>
             <input
@@ -455,7 +457,7 @@ export default function PatientModalBox({
           <div className="input-row-wrap">
             <div className="input-col-wrap flex-1">
               <span className="label">
-                {langFile[lang].PATIENT_MODAL_NURSE_IN_CHARGE_TEXT}
+                {langFile[webLang].PATIENT_MODAL_NURSE_IN_CHARGE_TEXT}
                 {/* 담당 간호사(기관소속) */}
               </span>
               <SelectInput
@@ -465,7 +467,7 @@ export default function PatientModalBox({
                 label
                 selected={
                   patientInfo.nurse_idx
-                    ? lang === "ko"
+                    ? webLang === "ko"
                       ? patientInfo.nurse_name_kor
                       : patientInfo.nurse_name_eng
                     : ""
@@ -475,10 +477,10 @@ export default function PatientModalBox({
             </div>
             <div className="input-col-wrap flex-1">
               <label htmlFor="p_serial_no" className="label">
-                *{langFile[lang].PATIENT_MODAL_SERIAL_NUMBER_TEXT1}
+                *{langFile[webLang].PATIENT_MODAL_SERIAL_NUMBER_TEXT1}
                 {/* 환자 일련번호 */}
                 <span className="meta-info">
-                  {langFile[lang].PATIENT_MODAL_SERIAL_NUMBER_TEXT2}
+                  {langFile[webLang].PATIENT_MODAL_SERIAL_NUMBER_TEXT2}
                   {/* *일련번호 수정시 환자 계정도 함께 수정됩니다. */}
                 </span>
               </label>
@@ -492,9 +494,9 @@ export default function PatientModalBox({
                 checkDuplicate={checkSerialNumber}
                 alertText={
                   chartIdCheck === "success"
-                    ? langFile[lang].PATIENT_SERIAL_NUMBER_AVAILABLE_TEXT
+                    ? langFile[webLang].PATIENT_SERIAL_NUMBER_AVAILABLE_TEXT
                     : chartIdCheck === "fail"
-                    ? langFile[lang].PATIENT_SERIAL_NUMBER_DUPLICATED_TEXT
+                    ? langFile[webLang].PATIENT_SERIAL_NUMBER_DUPLICATED_TEXT
                     : ""
                 }
               />
@@ -503,7 +505,7 @@ export default function PatientModalBox({
 
           <div className="flex flex-col gap-10">
             <label htmlFor="note" className="label">
-              {langFile[lang].ORG_MODAL_MEMO_TEXT}
+              {langFile[webLang].ORG_MODAL_MEMO_TEXT}
               {/* 메모 */}
             </label>
             <input
@@ -519,10 +521,10 @@ export default function PatientModalBox({
 
           <div className="input-col-wrap create-account">
             <span className="label">
-              {langFile[lang].PATIENT_MODAL_GENERATE_ACCOUNT_TEXT1}
+              {langFile[webLang].PATIENT_MODAL_GENERATE_ACCOUNT_TEXT1}
               {/* 계정생성 */}
               <span className="meta-info">
-                {langFile[lang].PATIENT_MODAL_GENERATE_ACCOUNT_TEXT2}
+                {langFile[webLang].PATIENT_MODAL_GENERATE_ACCOUNT_TEXT2}
                 {/* *환자 일련번호 등록시에만 생성 가능하며, 초기 ID와 PW는 모두
                 환자 일련번호로 설정됩니다. (일련번호 수정시에도 적용) */}
               </span>
@@ -543,9 +545,9 @@ export default function PatientModalBox({
 
               <span className="alert-text-absolute">
                 {pIdCheck === "fail"
-                  ? langFile[lang].PATIENT_SERIAL_NUMBER_FIRST_TEXT // 환자 일련번호를 먼저 등록해주세요
+                  ? langFile[webLang].PATIENT_SERIAL_NUMBER_FIRST_TEXT // 환자 일련번호를 먼저 등록해주세요
                   : pIdCheck === "success" && type === "manage"
-                  ? langFile[lang].EDIT_PATIENT_ACCOUNT_TEXT // 일련번호에 따라 계정이 수정되었습니다. 환자에게도 알려주세요
+                  ? langFile[webLang].EDIT_PATIENT_ACCOUNT_TEXT // 일련번호에 따라 계정이 수정되었습니다. 환자에게도 알려주세요
                   : ""}
               </span>
 
@@ -555,7 +557,7 @@ export default function PatientModalBox({
                 onClick={createAccount}
                 className="h-full shrink-0"
               >
-                {langFile[lang].PATIENT_CREATE_PATIENT_ACCOUNT_BUTTON}
+                {langFile[webLang].PATIENT_CREATE_PATIENT_ACCOUNT_BUTTON}
                 {/* 중복검사 */}
               </button>
             </div>

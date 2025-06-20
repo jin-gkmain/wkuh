@@ -22,12 +22,12 @@ import QRCodeModal from "@/components/modal/QRCodeModal";
 
 export default function UsersPage() {
   const { userInfo } = useAppSelector(({ user }) => user);
-  const { lang } = useContext(LanguageContext);
-  const tds = getTableHeadData(lang as "ko" | "en");
+  const { webLang } = useContext(LanguageContext);
+  const tds = getTableHeadData(webLang);
   const [users, setUsers] = useState<User[]>([]);
   const [modalTypeVal, setModalTypeVal] = useState<ModalType>("new");
   const [organization, setOrganization] = useState<Organization | null>(null);
-  const infoKeys = getInfoBoxHeadData(lang as "ko" | "en");
+  const infoKeys = getInfoBoxHeadData(webLang);
   const { ModalPortal, openModal, closeModal } = useModal();
   const { AlertModalPortal, openAlertModal, closeAlertModal } = useAlertModal();
   const router = useRouter();
@@ -235,18 +235,16 @@ export default function UsersPage() {
               handleClose={closeModal}
               handleMainClick={handleConfirm}
               iconType={modalTypeVal}
-              title={
-                getConfirmModalText(modalTypeVal, lang as "ko" | "en").title
-              }
-              desc={getConfirmModalText(modalTypeVal, lang as "ko" | "en").desc}
+              title={getConfirmModalText(modalTypeVal, webLang).title}
+              desc={getConfirmModalText(modalTypeVal, webLang).desc}
             />
           )}
         </ModalPortal>
 
         <AlertModalPortal>
           <CheckAlertbox
-            title={getAlertModalText(modalTypeVal, lang as "ko" | "en").title}
-            desc={getAlertModalText(modalTypeVal, lang as "ko" | "en").desc}
+            title={getAlertModalText(modalTypeVal, webLang).title}
+            desc={getAlertModalText(modalTypeVal, webLang).desc}
             handleClose={closeAlertModal}
           />
         </AlertModalPortal>
@@ -262,7 +260,7 @@ export default function UsersPage() {
             organization
               ? {
                   o_name:
-                    lang === "en"
+                    webLang === "en"
                       ? organization.o_name_eng
                       : organization.o_name_kor,
                   u_number: organization.u_number,
@@ -290,7 +288,7 @@ export default function UsersPage() {
             <AddButton
               show={userInfo && userInfo.permission === "admin"}
               onClick={() => modalOpen("new")}
-              text={langFile[lang].ADD_USER_BUTTON_TEXT} // 사용자 추가하기
+              text={langFile[webLang].ADD_USER_BUTTON_TEXT} // 사용자 추가하기
             />
           </div>
 
@@ -313,7 +311,7 @@ export default function UsersPage() {
                   }) => (
                     <TableRow
                       rowDisabled={use_ch === "n"}
-                      lang={lang}
+                      lang={webLang}
                       tableRowOptionType={
                         userInfo?.permission === "admin"
                           ? use_ch === "y"
@@ -324,7 +322,7 @@ export default function UsersPage() {
                       buttonActive={userInfo && userInfo.permission === "admin"}
                       key={u_idx}
                       handleClick={() => handleTableClick(u_idx)}
-                      buttonText={langFile[lang].USER_TABLE_ROW_BUTTON_TEXT} // 사용자 관리
+                      buttonText={langFile[webLang].USER_TABLE_ROW_BUTTON_TEXT} // 사용자 관리
                       onClickMenu={(type) => {
                         handleTableMenu(type, u_idx);
                       }}
@@ -333,43 +331,43 @@ export default function UsersPage() {
                       <td>
                         {" "}
                         {job !== "patient"
-                          ? lang === "en"
+                          ? webLang === "en"
                             ? u_name_eng
                             : u_name_kor
                           : u_name_eng}
                       </td>
                       <td>
                         {permission === "admin"
-                          ? langFile[lang].USER_MODAL_USER_PERMISSION1
-                          : langFile[lang].USER_MODAL_USER_PERMISSION2}
+                          ? langFile[webLang].USER_MODAL_USER_PERMISSION1
+                          : langFile[webLang].USER_MODAL_USER_PERMISSION2}
                       </td>
                       <td>
                         {job &&
                           job === "doctor" &&
-                          langFile[lang].USER_MODAL_USER_JOB2}
+                          langFile[webLang].USER_MODAL_USER_JOB2}
                         {/** 의사 */}
                         {job &&
                           job === "nurse" &&
-                          langFile[lang].USER_MODAL_USER_JOB1}
+                          langFile[webLang].USER_MODAL_USER_JOB1}
                         {/** 간호사 */}
                         {job &&
                           job === "interpreter" &&
-                          langFile[lang].USER_MODAL_USER_JOB3}
+                          langFile[webLang].USER_MODAL_USER_JOB3}
                         {/** 통역사 */}
 
                         {job &&
                           job === "ect" &&
-                          langFile[lang].USER_MODAL_USER_JOB4}
+                          langFile[webLang].USER_MODAL_USER_JOB4}
                         {/** 기타 */}
 
                         {job &&
                           job === "patient" &&
-                          langFile[lang].USER_MODAL_USER_JOB5}
+                          langFile[webLang].USER_MODAL_USER_JOB5}
                         {/** 환자 */}
 
                         {job &&
                           job === "admin" &&
-                          langFile[lang].USER_MODAL_USER_JOB6}
+                          langFile[webLang].USER_MODAL_USER_JOB6}
                         {/** 관리자 */}
                       </td>
                       <td>{u_id}</td>
@@ -398,7 +396,7 @@ export default function UsersPage() {
 //   return <Layout>{page}</Layout>;
 // };
 
-function getTableHeadData(lang: "ko" | "en") {
+function getTableHeadData(lang: LangType) {
   const tds: TableHeadCol[] = [
     {
       key: langFile[lang].USER_CODE_TEXT, // 사용자번호
@@ -447,7 +445,7 @@ function getTableHeadData(lang: "ko" | "en") {
   return tds;
 }
 
-function getInfoBoxHeadData(lang: "ko" | "en") {
+function getInfoBoxHeadData(lang: LangType) {
   const INFO_KEYS: InfoBoxType[] = [
     {
       iconType: "organization",

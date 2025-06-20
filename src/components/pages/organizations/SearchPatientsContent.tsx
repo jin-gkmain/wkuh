@@ -11,7 +11,7 @@ function SearchPatientsContent({
   onComplete,
   o_idx,
 }: {
-  lang: "ko" | "en";
+  lang: LangType;
   onComplete: (searchOpsiont: searchOptions) => void;
   o_idx: string;
 }) {
