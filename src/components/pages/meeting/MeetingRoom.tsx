@@ -113,7 +113,7 @@ export default function MeetingRoom({
                 org={null}
                 chartInfo={chartInfo}
                 patientInfo={patientInfo}
-                lang={webLang as LangType}
+                lang={webLang}
                 userInfo={userInfo}
                 patient={!!(userInfo && userInfo.p_idx)}
                 handleInputChange={() => {}}
