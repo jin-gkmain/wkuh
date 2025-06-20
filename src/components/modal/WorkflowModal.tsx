@@ -1346,7 +1346,7 @@ export default function WorkflowModal({ closeModal }: Props) {
       >
         {/* tab */}
         <ul className="tabs flex gap-10 relative" onClick={handleTab}>
-          {preliminaryTabs.map(({ key, value }, idx) => (
+          {tabs.map(({ key, value }, idx) => (
             <li
               key={value + idx}
               data-tab={value}
@@ -1376,7 +1376,7 @@ export default function WorkflowModal({ closeModal }: Props) {
         )}
         {tabType === "preliminary" && isPreliminary.current && (
           <>
-            <ul className="tabs flex gap-10 relative">
+            {/* <ul className="tabs flex gap-10 relative">
               {tabs.map(({ key }, idx) => (
                 <li
                   key={idx}
@@ -1387,7 +1387,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                   {key}
                 </li>
               ))}
-            </ul>
+            </ul> */}
             <PreliminaryView
               preliminaryInfo={preliminaryInfo}
               patientInfo={patientInfo}
