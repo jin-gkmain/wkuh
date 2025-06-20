@@ -979,7 +979,8 @@ export default function HistoryPage() {
                   },
                 }}
               >
-                엑셀 다운로드 ({selectedWorkflows.length})
+                {langFile[webLang].HISTORY_TABLE_DOWNLOAD_BUTTON_TEXT} (
+                {selectedWorkflows.length})
               </Button>
             </Box>
           )}

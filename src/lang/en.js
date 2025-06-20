@@ -1001,7 +1001,7 @@ const lang = {
   HISTORY_TABLE_NO_DATA: "No data found.",
   HISTORY_TABLE_TELE_DATE_NOT_SURE: "Not sure",
   HISTORY_TABLE_DONT_KNOW: "Don't know",
-  
+  HISTORY_TABLE_DOWNLOAD_BUTTON_TEXT: "Download Excel",
   MOBILE_PRELIMINARY_SUMMARY_DESC: "Submission completed",
 };
 

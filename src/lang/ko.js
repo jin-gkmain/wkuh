@@ -976,6 +976,7 @@ const lang = {
   HISTORY_TABLE_NO_DATA: "조건에 맞는 진료내역이 없습니다.",
   HISTORY_TABLE_TELE_DATE_NOT_SURE: "미정",
   HISTORY_TABLE_DONT_KNOW: "알 수 없음",
+  HISTORY_TABLE_DOWNLOAD_BUTTON_TEXT: "엑셀 다운로드",
 };
 
 export default lang;
