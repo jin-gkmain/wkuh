@@ -25,7 +25,7 @@ import { LangType, LanguageContext } from "@/context/LanguageContext";
 import { useAppSelector, useAppDispatch } from "@/store";
 import { workflowModalActions } from "@/store/modules/workflowModalSlice";
 import { getPatient } from "@/data/patient";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import { getIsPassed } from "@/utils/date";
 
 // dayjs 플러그인 추가
@@ -511,7 +511,7 @@ export default function HistoryPage() {
   };
 
   // 엑셀 다운로드 처리
-  const handleExcelDownload = () => {
+  const handleExcelDownload = async () => {
     if (selectedWorkflows.length === 0) {
       alert("다운로드할 진료내역을 선택해주세요.");
       return;
@@ -629,31 +629,60 @@ export default function HistoryPage() {
       ]),
     ];
 
-    // 워크시트 생성
-    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    // 워크북 및 워크시트 생성
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("진료내역");
 
-    // 컬럼 너비 설정 (선택사항)
-    const colWidths = [
-      { wch: 5 }, // No
-      { wch: 15 }, // Doctor
-      { wch: 15 }, // Department
-      { wch: 15 }, // Co-doctor
-      { wch: 15 }, // Co-department
-      { wch: 20 }, // Hospital
-      { wch: 10 }, // Country
-      { wch: 15 }, // Patient ID
-      { wch: 12 }, // Status
-      { wch: 12 }, // Tele Date
+    // 헤더와 데이터 추가
+    worksheetData.forEach((row, index) => {
+      const addedRow = worksheet.addRow(row);
+
+      // 헤더 행 스타일 설정
+      if (index === 0) {
+        addedRow.font = { bold: true };
+        addedRow.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "FFE0E0E0" },
+        };
+      }
+    });
+
+    // 컬럼 너비 설정
+    worksheet.columns = [
+      { width: 5 }, // No
+      { width: 15 }, // Doctor
+      { width: 15 }, // Department
+      { width: 15 }, // Co-doctor
+      { width: 15 }, // Co-department
+      { width: 20 }, // Hospital
+      { width: 10 }, // Country
+      { width: 15 }, // Patient ID
+      { width: 12 }, // Status
+      { width: 12 }, // Tele Date
     ];
-    worksheet["!cols"] = colWidths;
-
-    // 워크북 생성
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "진료내역");
 
     // Excel 파일 다운로드
     const fileName = `history_${dayjs().format("YYYY-MM-DD")}.xlsx`;
-    XLSX.writeFile(workbook, fileName);
+
+    try {
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Excel 파일 생성 중 오류 발생:", error);
+      alert("Excel 파일 생성 중 오류가 발생했습니다.");
+    }
 
     console.log(
       `${selectedData.length} ${langFile[webLang].HISTORY_TABLE_DOWNLOAD_MESSAGE}`

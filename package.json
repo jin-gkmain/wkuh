@@ -28,6 +28,7 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.11",
     "dompurify": "^3.2.5",
+    "exceljs": "^4.4.0",
     "html2pdf.js": "^0.10.3",
     "jspdf": "^3.0.1",
     "mui": "^0.0.1",
@@ -49,8 +50,7 @@
     "slick-carousel": "^1.8.1",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
-    "swr": "^2.2.5",
-    "xlsx": "^0.18.5"
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@types/node": "^20",
