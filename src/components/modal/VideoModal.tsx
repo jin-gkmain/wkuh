@@ -79,7 +79,9 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   const [videos, setVideos] = useState<(File | VideoFile)[]>([]);
 
   const isSavedFile = (file: File | VideoFile): file is VideoFile => {
-    return (file as VideoFile).vf_idx !== undefined;
+    return (
+      (file as any).vf_idx !== undefined || (file as any).f_idx !== undefined
+    );
   };
 
   const handleRemove = async (id: string) => {
@@ -91,7 +93,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
             if ("f_idx" in file) {
               return file.f_idx.toString() !== id;
             } else {
-              return (file as VideoFile).file_name !== id;
+              return ((file as any).file_name || (file as any).f_name) !== id;
             }
           })
         );
@@ -102,7 +104,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
           if ("f_idx" in file) {
             return file.f_idx.toString() !== id;
           } else {
-            return (file as VideoFile).file_name !== id;
+            return ((file as any).file_name || (file as any).f_name) !== id;
           }
         })
       );

@@ -16,6 +16,15 @@ import { LanguageContext } from "@/context/LanguageContext";
 import { downloadFile } from "@/data/file";
 import { downloadVideoFile } from "@/data/video_file";
 
+// 타입 가드 함수들
+const isVideoFile = (file: File | VideoFile): file is VideoFile => {
+  return "vf_idx" in file;
+};
+
+const isBrowserFile = (file: File | VideoFile): file is File => {
+  return !("vf_idx" in file);
+};
+
 type Props = {
   labelText?: boolean;
   short?: boolean;
@@ -124,12 +133,9 @@ export default function DropVideoFileInput({
         <div className="files-container">
           {files.length &&
             files.map((file: File | VideoFile, index: number) => {
-              const uniqueKey =
-                "f_idx" in file
-                  ? `saved-${file.f_idx}-${index}`
-                  : `new-${(file as VideoFile).file_name}-${index}-${
-                      (file as VideoFile).f_size
-                    }`;
+              const uniqueKey = isVideoFile(file)
+                ? `saved-${file.f_registdate}-${index}`
+                : `new-${file.name}-${index}-${file.size}`;
 
               return (
                 <FileItem
@@ -159,20 +165,24 @@ function FileItem({ file, length, onRemove, disabled }: ItemProps) {
   console.log("file:", file);
   const handleRemove = (ev?: MouseEvent<HTMLDivElement>) => {
     ev?.stopPropagation();
-    if ("vf_idx" in file) {
+    if (isVideoFile(file)) {
       // 파일을 삭제하시겠습니까?
       if (confirm(langFile[webLang].DELETE_FILE_CONFIRM_TEXT)) {
-        onRemove((file as VideoFile).vf_idx.toString());
+        onRemove(
+          (file as any).vf_idx?.toString() || (file as any).f_idx?.toString()
+        );
       }
     } else {
-      onRemove((file as File).name);
+      onRemove(file.name);
     }
   };
 
   const handleDownload = async () => {
     console.log("file:", file);
-    if ("vf_idx" in file) {
-      const res = await downloadVideoFile((file as VideoFile).vf_idx);
+    if (isVideoFile(file)) {
+      const res = await downloadVideoFile(
+        (file as any).vf_idx || (file as any).f_idx
+      );
       console.log("res:", res);
       if (res.message === "SUCCESS") {
         const response = await fetch(`/api/downloadFile`, {
@@ -214,7 +224,9 @@ function FileItem({ file, length, onRemove, disabled }: ItemProps) {
       <File />
       {/* {'f_idx' in file ? file.file_ori || '' : file?.name || ''} */}
       <span className="file-name">
-        {"vf_idx" in file ? (file as VideoFile).file_name : (file as File).name}
+        {isVideoFile(file)
+          ? (file as any).file_name || (file as any).f_name
+          : file.name}
       </span>
     </div>
   );
