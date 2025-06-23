@@ -2,7 +2,7 @@ type Video = {
   v_idx: number; // 비디오 일련번호
   p_idx: number; // 환자 일련번호
 
-  gubun: "MRI" | "CT" | "X-RAY" | "ETC" | ""; // 비디오 구분
+  v_sep: "MRI" | "CT" | "X-RAY" | "ETC" | ""; // 비디오 구분
 
   di_hospital: string; // 진단 병원명
   di_doctor: string; // 진단 의사명

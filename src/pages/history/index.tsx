@@ -1,6 +1,7 @@
 import HistorySearchBox from "@/components/common/HistorySearchBox";
 import Layout from "@/components/common/Layout";
 import MyHead from "@/components/common/MyHead";
+import { WorkflowModalContext } from "@/context/WorkflowModalContext";
 import { ReactElement, useEffect, useState, useContext } from "react";
 import getWorkflows from "@/data/workflow";
 import { getUserByUIdx } from "@/data/users";
@@ -21,8 +22,11 @@ import TableHead from "@/components/common/table/TableHead";
 import TableRow from "@/components/common/table/TableRow";
 import langFile from "@/lang";
 import { LangType, LanguageContext } from "@/context/LanguageContext";
-import { useAppSelector } from "@/store";
+import { useAppSelector, useAppDispatch } from "@/store";
+import { workflowModalActions } from "@/store/modules/workflowModalSlice";
 import { getPatient } from "@/data/patient";
+import * as XLSX from "xlsx";
+import { getIsPassed } from "@/utils/date";
 
 // dayjs 플러그인 추가
 dayjs.extend(isBetween);
@@ -34,6 +38,11 @@ const ITEMS_PER_PAGE = 10;
 export default function HistoryPage() {
   const { webLang } = useContext(LanguageContext);
   const { userInfo } = useAppSelector(({ user }) => user);
+  const workflowModalState = useAppSelector(
+    ({ workflowModal }) => workflowModal
+  );
+  const { openModal: openWorkflowModal } = useContext(WorkflowModalContext);
+  const dispatch = useAppDispatch();
   const [allWorkflows, setAllWorkflows] = useState<Diagnosis[]>([]);
   const [filteredWorkflows, setFilteredWorkflows] = useState<Diagnosis[]>([]);
   const [displayWorkflows, setDisplayWorkflows] = useState<Diagnosis[]>([]);
@@ -42,6 +51,9 @@ export default function HistoryPage() {
   const [selectedWorkflows, setSelectedWorkflows] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [workflowStatus, setWorkflowStatus] = useState<Map<number, number>>(
+    new Map()
+  );
 
   // 사용자 정보와 Organization 정보 캐시
   const [userCache, setUserCache] = useState<Map<number, User>>(new Map());
@@ -56,17 +68,12 @@ export default function HistoryPage() {
 
   // 진료과 변환 헬퍼 함수
   const getMedicalDeptName = (medicalDept: string | null | number): string => {
-    console.log("medical_dept 값:", medicalDept, "타입:", typeof medicalDept);
-
     if (!medicalDept) return langFile[webLang].HISTORY_TABLE_DONT_KNOW;
 
     const medicalDeptOptions = getMedicalDeptOptions(webLang, "doctor");
     const deptOption = medicalDeptOptions.find(
       (option) => option.value === String(medicalDept)
     );
-
-    console.log("medicalDeptOptions:", medicalDeptOptions);
-    console.log("찾은 deptOption:", deptOption);
 
     return deptOption
       ? deptOption.key
@@ -150,14 +157,17 @@ export default function HistoryPage() {
 
         // 모든 진료내역을 가져온 후 클라이언트에서 필터링
         const workflows = await getWorkflows(0);
-        console.log("workflows > ", workflows);
         if (Array.isArray(workflows)) {
-          // 필터링 조건: workflow의 o_idx가 유저와 동일하거나 doctor2_idx가 로그인 유저와 동일한 경우
-          const filteredByUser = workflows.filter(
-            (workflow) =>
-              workflow.o_idx === userInfo.o_idx ||
-              workflow.doctor2_idx === userInfo.u_idx
-          );
+          let filteredByUser: Diagnosis[] = [];
+          if (userInfo.job == "admin" && userInfo.o_idx == 1) {
+            filteredByUser = workflows;
+          } else {
+            filteredByUser = workflows.filter(
+              (workflow) =>
+                workflow.o_idx === userInfo.o_idx ||
+                workflow.doctor2_idx === userInfo.u_idx
+            );
+          }
 
           // 최신순으로 정렬
           const sortedWorkflows = filteredByUser.sort(
@@ -175,6 +185,8 @@ export default function HistoryPage() {
           const patientIds = new Set<number>();
 
           sortedWorkflows.forEach(async (workflow) => {
+            const status = getStatus(workflow);
+            workflowStatus.set(workflow.w_idx, status);
             // 사용자 ID 수집
             if (workflow.doctor1_idx) userIds.add(workflow.doctor1_idx);
             if (workflow.doctor2_idx) userIds.add(workflow.doctor2_idx);
@@ -196,12 +208,6 @@ export default function HistoryPage() {
           // 사용자 정보 미리 로드
           const userPromises = Array.from(userIds).map(async (u_idx) => {
             const user = await getUser(u_idx);
-            if (user) {
-              console.log(`사용자 ${u_idx} (${user.u_name_kor}):`, {
-                medical_dept: user.medical_dept,
-                job: user.job,
-              });
-            }
             return { u_idx, user };
           });
 
@@ -246,7 +252,6 @@ export default function HistoryPage() {
 
           // 병원 리스트 추출 (로컬 orgCache 사용)
           const hospitalSet = new Set<string>();
-          console.log("localOrgCache >", localOrgCache);
           sortedWorkflows.forEach((workflow) => {
             const org = localOrgCache.get(workflow.o_idx);
             if (org) {
@@ -307,6 +312,10 @@ export default function HistoryPage() {
       searchParam,
       searchValue,
     });
+
+    // 검색 시 선택된 체크박스 초기화
+    setSelectedWorkflows([]);
+    setCurrentPage(1); // 페이지도 첫 페이지로 초기화
 
     let filtered = [...allWorkflows];
 
@@ -382,13 +391,39 @@ export default function HistoryPage() {
   };
 
   // 상태 텍스트 변환
-  const getStatusText = (workflow: Diagnosis) => {
-    if (workflow.vii_vi_yn === "Y") {
+  const getStatusText = (status: number) => {
+    if (status === 2) {
+      return langFile[webLang].HISTORY_SEARCH_STATUS_PRESCRIBED;
+    } else if (status === 1) {
       return langFile[webLang].HISTORY_SEARCH_STATUS_COMPLETED;
-    } else if (workflow.vii_vi_yn === "N") {
-      return langFile[webLang].HISTORY_SEARCH_STATUS_CANCELLED;
     } else {
       return langFile[webLang].HISTORY_SEARCH_STATUS_WAITING;
+    }
+  };
+
+  const getStatus = (workflow: Diagnosis) => {
+    if (
+      workflow.te_date &&
+      getIsPassed(
+        new Date(workflow.te_date),
+        new Date(),
+        userInfo?.country || "korea"
+      )
+    ) {
+      if (
+        workflow.vii_tad &&
+        getIsPassed(
+          new Date(workflow.vii_tad),
+          new Date(),
+          userInfo?.country || "korea"
+        )
+      ) {
+        return 2;
+      } else {
+        return 1;
+      }
+    } else {
+      return 0;
     }
   };
 
@@ -436,7 +471,23 @@ export default function HistoryPage() {
   // 행 클릭 처리
   const handleRowClick = (workflowId: number) => {
     console.log("진료내역 상세보기:", workflowId);
-    // TODO: 진료내역 상세 모달 또는 페이지로 이동
+    console.log("allWorkflows:", allWorkflows);
+    const workflow = allWorkflows.find((w) => w.w_idx === workflowId);
+    console.log("찾은 workflow:", workflow);
+    if (workflow) {
+      console.log("워크플로우 모달 열기 시작");
+      dispatch(
+        workflowModalActions.manageChart({
+          w_idx: workflowId,
+          p_idx: workflow.p_idx,
+        })
+      );
+      console.log("Redux 액션 디스패치 완료");
+      openWorkflowModal();
+      console.log("WorkflowModalContext openModal 호출");
+    } else {
+      console.log("워크플로우를 찾을 수 없습니다:", workflowId);
+    }
   };
 
   // 메뉴 처리
@@ -471,145 +522,138 @@ export default function HistoryPage() {
       selectedWorkflows.includes(workflow.w_idx)
     );
 
-    // CSV 형태로 데이터 생성
-    const headers = [
-      langFile[webLang].HISTORY_TABLE_NO,
-      langFile[webLang].HISTORY_TABLE_DOCTOR,
-      langFile[webLang].HISTORY_TABLE_DEPARTMENT,
-      langFile[webLang].HISTORY_TABLE_CO_DOCTOR,
-      langFile[webLang].HISTORY_TABLE_CO_DEPARTMENT,
-      langFile[webLang].HISTORY_TABLE_HOSPITAL,
-      langFile[webLang].HISTORY_TABLE_COUNTRY,
-      langFile[webLang].HISTORY_TABLE_PATIENT_ID,
-      langFile[webLang].HISTORY_TABLE_STATUS,
-      langFile[webLang].HISTORY_TABLE_TELE_DATE,
+    // Excel 워크시트 데이터 준비
+    const worksheetData = [
+      // 헤더 행
+      [
+        langFile[webLang].HISTORY_TABLE_NO,
+        langFile[webLang].HISTORY_TABLE_DOCTOR,
+        langFile[webLang].HISTORY_TABLE_DEPARTMENT,
+        langFile[webLang].HISTORY_TABLE_CO_DOCTOR,
+        langFile[webLang].HISTORY_TABLE_CO_DEPARTMENT,
+        langFile[webLang].HISTORY_TABLE_HOSPITAL,
+        langFile[webLang].HISTORY_TABLE_COUNTRY,
+        langFile[webLang].HISTORY_TABLE_PATIENT_ID,
+        langFile[webLang].HISTORY_TABLE_STATUS,
+        langFile[webLang].HISTORY_TABLE_TELE_DATE,
+      ],
+      // 데이터 행들
+      ...selectedData.map((workflow, index) => [
+        index + 1,
+        // Doctor name
+        workflow.o_idx === userInfo.o_idx
+          ? // o_idx가 동일한 경우: doctor1을 doctor로 표시
+            webLang === "ko"
+            ? workflow.doctor1_name_kor ||
+              langFile[webLang].HISTORY_TABLE_DONT_KNOW
+            : workflow.doctor1_name_eng ||
+              langFile[webLang].HISTORY_TABLE_DONT_KNOW
+          : // doctor2_idx가 동일한 경우: doctor2를 doctor로 표시
+          webLang === "ko"
+          ? workflow.doctor2_name_kor ||
+            langFile[webLang].HISTORY_TABLE_DONT_KNOW
+          : workflow.doctor2_name_eng ||
+            langFile[webLang].HISTORY_TABLE_DONT_KNOW,
+        // Department
+        workflow.o_idx === userInfo.o_idx
+          ? // o_idx가 동일한 경우: doctor1의 진료과 (medical_dept)
+            (() => {
+              const doctor1 = workflow.doctor1_idx
+                ? userCache.get(workflow.doctor1_idx)
+                : null;
+              return getMedicalDeptName(doctor1?.medical_dept);
+            })()
+          : // doctor2_idx가 동일한 경우: doctor2의 진료과 (medical_dept)
+            (() => {
+              const doctor2 = workflow.doctor2_idx
+                ? userCache.get(workflow.doctor2_idx)
+                : null;
+              return getMedicalDeptName(doctor2?.medical_dept);
+            })(),
+        // Co-doctor name
+        workflow.o_idx === userInfo.o_idx
+          ? // o_idx가 동일한 경우: doctor2를 co-doctor로 표시
+            webLang === "ko"
+            ? workflow.doctor2_name_kor ||
+              langFile[webLang].HISTORY_TABLE_DONT_KNOW
+            : workflow.doctor2_name_eng ||
+              langFile[webLang].HISTORY_TABLE_DONT_KNOW
+          : // doctor2_idx가 동일한 경우: doctor1을 co-doctor로 표시
+          webLang === "ko"
+          ? workflow.doctor1_name_kor ||
+            langFile[webLang].HISTORY_TABLE_DONT_KNOW
+          : workflow.doctor1_name_eng ||
+            langFile[webLang].HISTORY_TABLE_DONT_KNOW,
+        // Co-department
+        workflow.o_idx === userInfo.o_idx
+          ? // o_idx가 동일한 경우: doctor2의 진료과 (medical_dept)
+            (() => {
+              const doctor2 = workflow.doctor2_idx
+                ? userCache.get(workflow.doctor2_idx)
+                : null;
+              return getMedicalDeptName(doctor2?.medical_dept);
+            })()
+          : // doctor2_idx가 동일한 경우: doctor1의 진료과 (medical_dept)
+            (() => {
+              const doctor1 = workflow.doctor1_idx
+                ? userCache.get(workflow.doctor1_idx)
+                : null;
+              return getMedicalDeptName(doctor1?.medical_dept);
+            })(),
+        // Hospital name
+        (() => {
+          // 무조건 workflow의 o_idx 기준으로 병원명 표시
+          const org = orgCache.get(workflow.o_idx);
+          if (org) {
+            return webLang === "ko"
+              ? org.o_name_kor ||
+                  org.o_name_eng ||
+                  langFile[webLang].HISTORY_TABLE_DONT_KNOW
+              : org.o_name_eng ||
+                  org.o_name_kor ||
+                  langFile[webLang].HISTORY_TABLE_DONT_KNOW;
+          }
+          return langFile[webLang].HISTORY_TABLE_DONT_KNOW;
+        })(),
+        // Country
+        (() => {
+          // 무조건 workflow의 o_idx 기준으로 국가 표시
+          const org = orgCache.get(workflow.o_idx);
+          return org?.country || langFile[webLang].HISTORY_TABLE_DONT_KNOW;
+        })(),
+        workflow.w_code,
+        getStatusText(workflowStatus.get(workflow.w_idx) || 0),
+        workflow.te_date
+          ? dayjs(workflow.te_date).format("YYYY-MM-DD")
+          : langFile[webLang].HISTORY_TABLE_TELE_DATE_NOT_SURE_TEXT,
+      ]),
     ];
 
-    const csvContent = [
-      headers.join(","),
-      ...selectedData.map((workflow, index) =>
-        [
-          index + 1,
-          // Doctor name
-          `"${
-            workflow.o_idx === userInfo.o_idx
-              ? // o_idx가 동일한 경우: doctor1을 doctor로 표시
-                webLang === "ko"
-                ? workflow.doctor1_name_kor ||
-                  langFile[webLang].HISTORY_TABLE_DONT_KNOW
-                : workflow.doctor1_name_eng ||
-                  langFile[webLang].HISTORY_TABLE_DONT_KNOW
-              : // doctor2_idx가 동일한 경우: doctor2를 doctor로 표시
-              webLang === "ko"
-              ? workflow.doctor2_name_kor ||
-                langFile[webLang].HISTORY_TABLE_DONT_KNOW
-              : workflow.doctor2_name_eng ||
-                langFile[webLang].HISTORY_TABLE_DONT_KNOW
-          }"`,
-          // Department
-          `"${
-            workflow.o_idx === userInfo.o_idx
-              ? // o_idx가 동일한 경우: doctor1의 진료과 (medical_dept)
-                (() => {
-                  const doctor1 = workflow.doctor1_idx
-                    ? userCache.get(workflow.doctor1_idx)
-                    : null;
-                  return getMedicalDeptName(doctor1?.medical_dept);
-                })()
-              : // doctor2_idx가 동일한 경우: doctor2의 진료과 (medical_dept)
-                (() => {
-                  const doctor2 = workflow.doctor2_idx
-                    ? userCache.get(workflow.doctor2_idx)
-                    : null;
-                  return getMedicalDeptName(doctor2?.medical_dept);
-                })()
-          }"`,
-          // Co-doctor name
-          `"${
-            workflow.o_idx === userInfo.o_idx
-              ? // o_idx가 동일한 경우: doctor2를 co-doctor로 표시
-                webLang === "ko"
-                ? workflow.doctor2_name_kor ||
-                  langFile[webLang].HISTORY_TABLE_DONT_KNOW
-                : workflow.doctor2_name_eng ||
-                  langFile[webLang].HISTORY_TABLE_DONT_KNOW
-              : // doctor2_idx가 동일한 경우: doctor1을 co-doctor로 표시
-              webLang === "ko"
-              ? workflow.doctor1_name_kor ||
-                langFile[webLang].HISTORY_TABLE_DONT_KNOW
-              : workflow.doctor1_name_eng ||
-                langFile[webLang].HISTORY_TABLE_DONT_KNOW
-          }"`,
-          // Co-department
-          `"${
-            workflow.o_idx === userInfo.o_idx
-              ? // o_idx가 동일한 경우: doctor2의 진료과 (medical_dept)
-                (() => {
-                  const doctor2 = workflow.doctor2_idx
-                    ? userCache.get(workflow.doctor2_idx)
-                    : null;
-                  return getMedicalDeptName(doctor2?.medical_dept);
-                })()
-              : // doctor2_idx가 동일한 경우: doctor1의 진료과 (medical_dept)
-                (() => {
-                  const doctor1 = workflow.doctor1_idx
-                    ? userCache.get(workflow.doctor1_idx)
-                    : null;
-                  return getMedicalDeptName(doctor1?.medical_dept);
-                })()
-          }"`,
-          // Hospital name
-          `"${(() => {
-            // 무조건 workflow의 o_idx 기준으로 병원명 표시
-            const org = orgCache.get(workflow.o_idx);
-            if (org) {
-              return webLang === "ko"
-                ? org.o_name_kor ||
-                    org.o_name_eng ||
-                    langFile[webLang].HISTORY_TABLE_DONT_KNOW
-                : org.o_name_eng ||
-                    org.o_name_kor ||
-                    langFile[webLang].HISTORY_TABLE_DONT_KNOW;
-            }
-            return langFile[webLang].HISTORY_TABLE_DONT_KNOW;
-          })()}"`,
-          // Country
-          `"${(() => {
-            // 무조건 workflow의 o_idx 기준으로 국가 표시
-            const org = orgCache.get(workflow.o_idx);
-            return org?.country || langFile[webLang].HISTORY_TABLE_DONT_KNOW;
-          })()}"`,
-          workflow.w_code,
-          `"${getStatusText(workflow)}"`,
-          `"${
-            workflow.te_date
-              ? dayjs(workflow.te_date).format("YYYY-MM-DD")
-              : langFile[webLang].HISTORY_TABLE_TELE_DATE_NOT_SURE_TEXT
-          }"`,
-        ].join(",")
-      ),
-    ].join("\n");
+    // 워크시트 생성
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
 
-    // BOM 추가 (한글 깨짐 방지)
-    const BOM = "\uFEFF";
-    const blob = new Blob([BOM + csvContent], {
-      type: "text/csv;charset=utf-8;",
-    });
+    // 컬럼 너비 설정 (선택사항)
+    const colWidths = [
+      { wch: 5 }, // No
+      { wch: 15 }, // Doctor
+      { wch: 15 }, // Department
+      { wch: 15 }, // Co-doctor
+      { wch: 15 }, // Co-department
+      { wch: 20 }, // Hospital
+      { wch: 10 }, // Country
+      { wch: 15 }, // Patient ID
+      { wch: 12 }, // Status
+      { wch: 12 }, // Tele Date
+    ];
+    worksheet["!cols"] = colWidths;
 
-    // 파일 다운로드
-    const link = document.createElement("a");
-    if (link.download !== undefined) {
-      const url = URL.createObjectURL(blob);
-      link.setAttribute("href", url);
-      link.setAttribute(
-        "download",
-        `history_${dayjs().format("YYYY-MM-DD")}.csv`
-      );
-      link.style.visibility = "hidden";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    // 워크북 생성
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "진료내역");
+
+    // Excel 파일 다운로드
+    const fileName = `history_${dayjs().format("YYYY-MM-DD")}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
 
     console.log(
       `${selectedData.length} ${langFile[webLang].HISTORY_TABLE_DOWNLOAD_MESSAGE}`
@@ -814,7 +858,9 @@ export default function HistoryPage() {
                         ? "rgba(25, 118, 210, 0.08)"
                         : "transparent",
                       transition: "background-color 0.2s ease-in-out",
+                      cursor: "pointer",
                     }}
+                    onClick={() => handleRowClick(workflow.w_idx)}
                   >
                     <td style={{ textAlign: "center", padding: "12px 8px" }}>
                       <Checkbox
@@ -822,6 +868,7 @@ export default function HistoryPage() {
                         onChange={(e) =>
                           handleWorkflowSelect(workflow.w_idx, e.target.checked)
                         }
+                        onClick={(e) => e.stopPropagation()}
                         size="small"
                       />
                     </td>
@@ -923,7 +970,7 @@ export default function HistoryPage() {
                       })()}
                     </td>
                     <td style={{ padding: "12px 8px", textAlign: "center" }}>
-                      {getStatusText(workflow)}
+                      {getStatusText(workflowStatus.get(workflow.w_idx) || 0)}
                     </td>
                     <td style={{ padding: "12px 8px", textAlign: "center" }}>
                       {workflow.te_date

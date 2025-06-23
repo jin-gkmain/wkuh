@@ -23,7 +23,16 @@ type Patient = {
   p_id: stirng | null;
 };
 
+type MobilePatient = {
+  p_birthday: string;
+  p_idx: number;
+  p_name_eng: string;
+  p_sex: string;
+  p_tall: string;
+  p_weight: string;
+};
+
 type PatientModal = Omit<
   Patient,
-  'o_idx' | 'registdate_locale' | 'registdate_utc'
+  "o_idx" | "registdate_locale" | "registdate_utc"
 >;

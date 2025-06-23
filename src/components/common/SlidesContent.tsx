@@ -316,6 +316,7 @@ const MyButtonGroup = ({
           display: "grid",
           gridTemplateColumns: isOneLine ? "1fr" : "1fr 1fr",
           gap: "10px",
+          alignItems: "stretch", // 같은 행의 아이템들이 같은 높이를 가지도록 함
         }}
       >
         {options.map((option) => {
@@ -360,10 +361,13 @@ const MyButtonGroup = ({
                   textAlign: "center",
                   fontWeight: "bold",
                   minHeight: "60px",
+                  height: "100%", // 컨테이너 높이에 맞춤
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   width: "100%", // 버튼 너비 강제
+                  whiteSpace: "normal", // 텍스트 줄바꿈 허용
+                  wordBreak: "keep-all", // 한글 단어 단위로 줄바꿈
                 }}
               >
                 {option.label[lang]}
@@ -434,6 +438,7 @@ const MySelectButtonGroup = ({
           display: "grid",
           gridTemplateColumns: isOneLine ? "1fr" : "1fr 1fr",
           gap: "10px",
+          alignItems: "stretch", // 같은 행의 아이템들이 같은 높이를 가지도록 함
         }}
       >
         {options.map((option) => (
@@ -456,9 +461,12 @@ const MySelectButtonGroup = ({
               textAlign: "center",
               fontWeight: "bold",
               minHeight: "60px",
+              height: "100%", // 컨테이너 높이에 맞춤
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              whiteSpace: "normal", // 텍스트 줄바꿈 허용
+              wordBreak: "keep-all", // 한글 단어 단위로 줄바꿈
             }}
           >
             {option.label[lang]}
@@ -555,7 +563,7 @@ const symptomsOptions = [
     id: "sym11",
     label: getAllValuesForConstantKeyAsDict(
       langFile,
-      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE11"
+      "MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE"
     ),
     type: "etc" as const,
   },
@@ -853,14 +861,14 @@ export const testSlides: SlideContent[][] = [
             langFile,
             "MOBILE_PRELIMINARY_BIRTHDAY_INPUT_PLACEHOLDER"
           )}
-          validate={(value) => value.trim().length === 6}
+          validate={(value) => value.trim().length === 8}
           helperText={getAllValuesForConstantKeyAsDict(
             langFile,
             "MOBILE_PRELIMINARY_PATIENTBIRTH_INPUT_ERROR"
           )}
         />
       ),
-      validate: (value) => value.trim().length === 6,
+      validate: (value) => value.trim().length === 8,
     },
   ],
   [

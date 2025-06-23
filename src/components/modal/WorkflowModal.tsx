@@ -67,6 +67,7 @@ import { PreliminaryView } from "./WorkflowModalTabs/PreliminaryView";
 import {
   editPreliminary,
   getPreliminariesByPIdx,
+  getPreliminaryByPIdx,
   getPreliminaryByWIdx,
 } from "@/data/preliminary";
 import lang from "@/lang";
@@ -93,16 +94,14 @@ export default function WorkflowModal({ closeModal }: Props) {
     getTableRowMenuOptions("remove", webLang)
   );
   const [preliminaryTab, setPreliminaryTab] = useState<number>(0);
-  const preliminaryTabs = [];
+  const [preliminaryTabs, setPreliminaryTabs] = useState<number[]>([]);
   const tabs = getTabs(webLang);
   const selectedId = useRef<string>();
   const [loading, setLoading] = useState(false);
   const { openModal: openTeleModal, closeModal: closeTeleModal } = useContext(
     TeleconsultingModalContext
   );
-  const [preliminaryInfo, setPreliminaryInfo] = useState<Preliminary | null>(
-    null
-  );
+  const [preliminaryInfo, setPreliminaryInfo] = useState<Preliminary[]>([]);
   const isPreliminary = useRef(false);
   const {
     ModalPortal,
@@ -119,6 +118,24 @@ export default function WorkflowModal({ closeModal }: Props) {
     }),
     shallowEqual
   );
+
+  // 디버깅 로그 추가
+  console.log("WorkflowModal 렌더링 - Redux 상태:", {
+    tabType,
+    chartId,
+    type,
+    patientId,
+  });
+
+  // preliminary 디버깅 로그
+  console.log("Preliminary 상태:", {
+    isPreliminary: isPreliminary.current,
+    preliminaryInfo: preliminaryInfo,
+    preliminaryTabs: preliminaryTabs,
+    preliminaryTab: preliminaryTab,
+    tabType: tabType,
+  });
+
   const dispatch = useAppDispatch();
 
   const [patientInfo, setPatientInfo] = useState<Patient>();
@@ -1136,33 +1153,26 @@ export default function WorkflowModal({ closeModal }: Props) {
 
         // patientInfo가 설정된 후에 관련 작업들 수행
         const patientOrg = await getOrg(p.o_idx || 0);
+        console.log("patientOrg >", patientOrg);
         if (patientOrg !== "ServerError") {
           setPatientOrg(patientOrg);
         } else {
           console.log("환자 기관정보 불러오기 실패");
         }
-        const preliminary = await getPreliminaryByWIdx(chartId);
-        console.log("🔍 디버깅 - preliminary:", preliminary);
+        const preliminary = await getPreliminariesByPIdx(patientId);
+        console.log("getPreliminaryByPIdx >", preliminary);
         if (preliminary !== "ServerError" && preliminary) {
           setPreliminaryInfo(preliminary);
+          const tabIds = preliminary.map((item) => {
+            console.log("preliminaryItem >", item);
+            return item.pl_idx;
+          });
+          setPreliminaryTabs(tabIds);
+          console.log("preliminary 탭 설정됨:", tabIds);
           isPreliminary.current = true;
         } else {
-          const pidx = p.p_idx;
-          const preliminary = await getPreliminariesByPIdx(pidx || 0);
-          if (preliminary !== "ServerError" && preliminary) {
-            for (const preliminaryItem of preliminary) {
-              if (!preliminaryItem.w_idx) {
-                setPreliminaryInfo(preliminaryItem);
-                editPreliminary(preliminaryItem.pl_idx, {
-                  w_idx: chartId,
-                });
-                isPreliminary.current = true;
-              }
-            }
-          } else {
-            isPreliminary.current = false;
-            console.log("사전정보 불러오기 실패");
-          }
+          console.log("preliminary 데이터 없음");
+          isPreliminary.current = false;
         }
       } else {
         console.log("환자정보 불러오기 실패 / 500");
@@ -1375,29 +1385,172 @@ export default function WorkflowModal({ closeModal }: Props) {
           />
         )}
         {tabType === "preliminary" && isPreliminary.current && (
-          <>
-            {/* <ul className="tabs flex gap-10 relative">
-              {tabs.map(({ key }, idx) => (
-                <li
-                  key={idx}
-                  data-tab={idx}
-                  onClick={handlePreliminaryTab}
-                  className={preliminaryTab === idx ? "selected" : ""}
-                >
-                  {key}
-                </li>
-              ))}
-            </ul> */}
-            <PreliminaryView
-              preliminaryInfo={preliminaryInfo}
-              patientInfo={patientInfo}
-              lang={webLang}
-              userInfo={userInfo}
-              handleTopBtnClick={handleTopBtnClick}
-              handleInputChange={handleInputChange}
-              chartInfo={undefined}
-            />
-          </>
+          <div className="preliminary-tab relative">
+            {/* 환자 기본정보 - 고정 */}
+            <div className="patient-info-container">
+              <div className="content-header">
+                <h3>
+                  {langFile[webLang].WORKFLOW_MODAL_PT_INFO}
+                  {/*환자 기본정보*/}
+                </h3>
+              </div>
+
+              <div className="flex flex-col gap-10">
+                <div className="input-row-wrap">
+                  <div className="input-col-wrap">
+                    <label className="label" htmlFor="u_name_eng">
+                      {langFile[webLang].WORKFLOW_MODAL_PT_NAME}
+                      {/* 이름 */}
+                    </label>
+                    <input
+                      readOnly
+                      autoComplete="off"
+                      value={patientInfo?.u_name_eng || ""}
+                      disabled={true}
+                      type="text"
+                      className="input input-disabled"
+                      name="u_name_eng"
+                      id="u_name_eng"
+                    />
+                  </div>
+
+                  <div className="input-col-wrap">
+                    <label className="label" htmlFor="p_age">
+                      {langFile[webLang].WORKFLOW_MODAL_PT_AGE}
+                      {/* 나이 */}
+                    </label>
+                    <input
+                      readOnly
+                      value={
+                        patientInfo?.birthday
+                          ? dayjs()
+                              .subtract(
+                                dayjs(patientInfo?.birthday).year(),
+                                "year"
+                              )
+                              .year()
+                              .toString()
+                          : "-"
+                      }
+                      disabled
+                      type="text"
+                      className="input input-disabled"
+                      name="p_age"
+                      id="p_age"
+                    />
+                  </div>
+
+                  <div className="input-col-wrap">
+                    <label className="label" htmlFor="p_sex">
+                      {langFile[webLang].WORKFLOW_MODAL_PT_GENDER}
+                      {/* 성별 */}
+                    </label>
+                    <input
+                      readOnly
+                      value={patientInfo?.sex || ""}
+                      disabled
+                      type="text"
+                      className="input input-disabled"
+                      name="p_sex"
+                      id="p_sex"
+                    />
+                  </div>
+                </div>
+
+                <div className="input-row-wrap">
+                  <div className="input-col-wrap">
+                    <label className="label" htmlFor="p_birthday">
+                      {langFile[webLang].WORKFLOW_MODAL_PT_BIRTH}
+                      {/* 생년월일 */}
+                    </label>
+                    <input
+                      readOnly
+                      value={
+                        patientInfo?.birthday
+                          ? dayjs(patientInfo?.birthday).format("YYYY/MM/DD")
+                          : ""
+                      }
+                      disabled
+                      type="text"
+                      className="input input-disabled"
+                      name="p_birthday"
+                      id="p_birthday"
+                    />
+                  </div>
+
+                  <div className="input-col-wrap">
+                    <label className="label" htmlFor="p_tall">
+                      {langFile[webLang].WORKFLOW_MODAL_PT_HEIGHT}
+                      {/* 키 */}
+                    </label>
+                    <input
+                      readOnly
+                      value={patientInfo?.tall || ""}
+                      disabled
+                      type="text"
+                      className="input input-disabled"
+                      name="p_tall"
+                      id="p_tall"
+                    />
+                  </div>
+
+                  <div className="input-col-wrap">
+                    <label className="label" htmlFor="p_weight">
+                      {langFile[webLang].PATIENT_MODAL_WEIGHT_TEXT}
+                      {/* 몸무게(kg) */}
+                    </label>
+                    <input
+                      readOnly
+                      value={patientInfo?.weight || ""}
+                      disabled
+                      type="text"
+                      className="input input-disabled"
+                      name="p_weight"
+                      id="p_weight"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style={{ height: "20px" }}></div>
+            {/* 사전문진 탭 */}
+            <div className="preliminary-tabs-container">
+              <div className="content-header">
+                <h3>
+                  {langFile[webLang].WORKFLOW_MODAL_PR_TITLE}
+                  {/*사전 문진표*/}
+                </h3>
+              </div>
+
+              <ul className="tabs flex gap-10 relative">
+                {preliminaryInfo.map((item, idx) => (
+                  <li
+                    key={idx}
+                    data-tab={idx}
+                    onClick={handlePreliminaryTab}
+                    className={preliminaryTab === idx ? "selected" : ""}
+                  >
+                    {langFile[webLang].WORKFLOW_MODAL_PR_TAB_TITLE} {idx + 1}
+                    {/* 문진 */}
+                  </li>
+                ))}
+              </ul>
+
+              {/* 선택된 사전문진 내용 */}
+              <div className="preliminary-content">
+                <PreliminaryView
+                  preliminaryInfo={preliminaryInfo[preliminaryTab]}
+                  patientInfo={patientInfo}
+                  lang={webLang}
+                  userInfo={userInfo}
+                  handleTopBtnClick={handleTopBtnClick}
+                  handleInputChange={handleInputChange}
+                  chartInfo={undefined}
+                  view={true}
+                />
+              </div>
+            </div>
+          </div>
         )}
         {tabType === "preliminary" && !isPreliminary.current && (
           <div>불러올 수 있는 사전문진 정보가 없습니다.</div>

@@ -122,20 +122,9 @@ export function PreliminaryView({
   view,
 }: PreliminaryViewProps) {
   const preliminaryRaw = preliminaryInfo?.pl_data;
-  console.log("🔍 디버깅 - preliminaryInfo:", preliminaryInfo);
-  console.log("🔍 디버깅 - preliminaryRaw:", preliminaryRaw);
-  console.log("🔍 디버깅 - preliminaryRaw type:", typeof preliminaryRaw);
 
   // pl_data 자체가 JSON 문자열이므로 파싱해야 함
   const preliminary = parseJsonString(preliminaryRaw);
-  console.log("🔍 디버깅 - parsed preliminary:", preliminary);
-
-  // 개별 속성 확인
-  console.log("🔍 개별 속성:");
-  console.log("preliminary?.symptoms:", preliminary?.symptoms);
-  console.log("preliminary?.symptoms type:", typeof preliminary?.symptoms);
-  console.log("preliminary?.pain_degree:", preliminary?.pain_degree);
-  console.log("preliminary?.specific:", preliminary?.specific);
 
   // 데이터 파싱
   const symptoms = getSelectedOptions(preliminary?.symptoms);
@@ -147,33 +136,10 @@ export function PreliminaryView({
     ? preliminary.past_surgeries
     : [];
 
-  // 디버깅 로그
-  console.log("🔍 파싱된 데이터:");
-  console.log("symptoms:", symptoms);
-  console.log("pastHistory:", pastHistory);
-  console.log("familyHistory:", familyHistory);
-  console.log("allergies:", allergies);
-  console.log("diagnosis:", diagnosis);
-
   return (
-    <div
-      className={`main-tab-section relative flex flex-col ${
-        view ? "paperweight-view" : ""
-      }`}
-    >
+    <div className={`preliminary-content ${view ? "paperweight-view" : ""}`}>
       {!view && (
         <div className="flex gap-5 header-buttons">
-          {/* <button
-            className="primary-btn"
-            type="button"
-            onClick={() => {
-              handleTopBtnClick('download');
-            }}
-          >
-            {langFile[lang].WORKFLOW_MODAL_DOWNLOAD_PT_INFO} <Download />
-            // 환자정보 다운로드
-          </button> */}
-
           {userInfo && userInfo.country !== "korea" && (
             <button
               className="primary-btn"
@@ -189,137 +155,8 @@ export function PreliminaryView({
         </div>
       )}
 
-      {/* 환자 기본정보 */}
-      <div className="patient-info-container">
-        <div className="content-header">
-          <h3>
-            {langFile[lang].WORKFLOW_MODAL_PT_INFO}
-            {/*환자 기본정보*/}
-          </h3>
-        </div>
-
-        <div className="flex flex-col gap-10">
-          <div className="input-row-wrap">
-            <div className="input-col-wrap">
-              <label className="label" htmlFor="u_name_eng">
-                {langFile[lang].WORKFLOW_MODAL_PT_NAME}
-                {/* 이름 */}
-              </label>
-              <input
-                readOnly
-                autoComplete="off"
-                value={patientInfo?.u_name_eng || ""}
-                disabled={true}
-                type="text"
-                className="input input-disabled"
-                name="u_name_eng"
-                id="u_name_eng"
-              />
-            </div>
-
-            <div className="input-col-wrap">
-              <label className="label" htmlFor="p_age">
-                {langFile[lang].WORKFLOW_MODAL_PT_AGE}
-                {/* 나이 */}
-              </label>
-              <input
-                readOnly
-                value={
-                  patientInfo?.birthday
-                    ? dayjs()
-                        .subtract(dayjs(patientInfo?.birthday).year(), "year")
-                        .year()
-                        .toString()
-                    : "-"
-                }
-                disabled
-                type="text"
-                className="input input-disabled"
-                name="p_age"
-                id="p_age"
-              />
-            </div>
-
-            <div className="input-col-wrap">
-              <label className="label" htmlFor="p_sex">
-                {langFile[lang].WORKFLOW_MODAL_PT_GENDER}
-                {/* 성별 */}
-              </label>
-              <input
-                readOnly
-                value={patientInfo?.sex || ""}
-                disabled
-                type="text"
-                className="input input-disabled"
-                name="p_sex"
-                id="p_sex"
-              />
-            </div>
-          </div>
-
-          <div className="input-row-wrap">
-            <div className="input-col-wrap">
-              <label className="label" htmlFor="p_birthday">
-                {langFile[lang].WORKFLOW_MODAL_PT_BIRTH}
-                {/* 생년월일 */}
-              </label>
-              <input
-                readOnly
-                value={
-                  patientInfo?.birthday
-                    ? dayjs(patientInfo?.birthday).format("YYYY/MM/DD")
-                    : ""
-                }
-                disabled
-                type="text"
-                className="input input-disabled"
-                name="p_birthday"
-                id="p_birthday"
-              />
-            </div>
-
-            <div className="input-col-wrap">
-              <label className="label" htmlFor="p_tall">
-                {langFile[lang].WORKFLOW_MODAL_PT_HEIGHT}
-                {/* 키 */}
-              </label>
-              <input
-                readOnly
-                value={patientInfo?.tall || ""}
-                disabled
-                type="text"
-                className="input input-disabled"
-                name="p_tall"
-                id="p_tall"
-              />
-            </div>
-
-            <div className="input-col-wrap">
-              <label className="label" htmlFor="p_weight">
-                {langFile[lang].PATIENT_MODAL_WEIGHT_TEXT}
-                {/* 몸무게(kg) */}
-              </label>
-              <input
-                readOnly
-                value={patientInfo?.weight || ""}
-                disabled
-                type="text"
-                className="input input-disabled"
-                name="p_weight"
-                id="p_weight"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* 사전 문진표 */}
       <div>
-        <Typography sx={{ fontSize: "1.4em", fontWeight: "bold", mt: 2 }}>
-          {langFile[lang].WORKFLOW_MODAL_PR_TITLE}
-          {/*사전 문진표*/}
-        </Typography>
-
         <Stack sx={{ mt: 2 }} direction="column" spacing={2}>
           {/* 증상 */}
           <Box>
@@ -337,9 +174,14 @@ export function PreliminaryView({
                   />
                 ))
               ) : (
-                <Typography variant="body2" color="text.secondary">
-                  {langFile[lang].MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE}
-                </Typography>
+                <input
+                  readOnly
+                  autoComplete="off"
+                  value={langFile[lang].MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE}
+                  disabled={true}
+                  type="text"
+                  className="input input-disabled"
+                />
               )}
             </Box>
           </Box>
@@ -423,9 +265,14 @@ export function PreliminaryView({
                   />
                 ))
               ) : (
-                <Typography variant="body2" color="text.secondary">
-                  -
-                </Typography>
+                <input
+                  readOnly
+                  autoComplete="off"
+                  value="-"
+                  disabled={true}
+                  type="text"
+                  className="input input-disabled"
+                />
               )}
             </Box>
           </Box>
@@ -447,9 +294,14 @@ export function PreliminaryView({
                   />
                 ))
               ) : (
-                <Typography variant="body2" color="text.secondary">
-                  -
-                </Typography>
+                <input
+                  readOnly
+                  autoComplete="off"
+                  value="-"
+                  disabled={true}
+                  type="text"
+                  className="input input-disabled"
+                />
               )}
             </Box>
           </Box>
@@ -510,9 +362,14 @@ export function PreliminaryView({
                 ))}
               </Box>
             ) : (
-              <Typography variant="body2" color="text.secondary">
-                -
-              </Typography>
+              <input
+                readOnly
+                autoComplete="off"
+                value="-"
+                disabled={true}
+                type="text"
+                className="input input-disabled"
+              />
             )}
           </Box>
 
@@ -548,9 +405,14 @@ export function PreliminaryView({
                   />
                 ))
               ) : (
-                <Typography variant="body2" color="text.secondary">
-                  -
-                </Typography>
+                <input
+                  readOnly
+                  autoComplete="off"
+                  value="-"
+                  disabled={true}
+                  type="text"
+                  className="input input-disabled"
+                />
               )}
             </Box>
           </Box>

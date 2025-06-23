@@ -162,10 +162,36 @@ function getTimeElapsed(
   }
 }
 
+function getIsPassed(
+  base: Date,
+  target: Date,
+  target_country: string
+): boolean {
+  let local;
+
+  if (target_country === "korea") {
+    local = "Asia/Seoul";
+  } else if (target_country === "KZ" || target_country === "kazakhstan") {
+    local = "Asia/Almaty";
+  } else {
+    local = "Asia/Ulaanbaatar";
+  }
+
+  const b_date = dayjs(base);
+  const t_date = dayjs(target).tz(local);
+
+  if (t_date.isAfter(b_date)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export {
   getDayDiff,
   convertChatTime,
   convertTimeToStr,
   getDateToStr,
   getTimeElapsed,
+  getIsPassed,
 };

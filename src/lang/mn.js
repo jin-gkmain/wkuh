@@ -158,6 +158,10 @@ const lang = {
   MOBILE_PRELIMINARY_TODOCTOR_NOT_SURE: "Байхгүй",
 
   MOBILE_PRELIMINARY_SUMMARY_DESC: "Жіберу аяқталды",
+
+  // Workflow modal
+  WORKFLOW_MODAL_PR_TITLE: "Урьдчилсан асуулга",
+  WORKFLOW_MODAL_PR_TAB_TITLE: "Асуулга",
 };
 
 export default lang;

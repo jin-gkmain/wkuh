@@ -77,7 +77,7 @@ const QRCodeModal: React.FC<Props> = ({
 
   return (
     <ModalFrame
-      title={langFile[webLang].QR_CODE_MODAL_TITLE || "QR 코드"}
+      title={langFile[webLang].QR_CODE_MODAL_TITLE}
       onClose={closeModal}
       hideBtns={true}
       width="small"
@@ -104,7 +104,7 @@ const QRCodeModal: React.FC<Props> = ({
 
           <div className="qr-download-buttons flex justify-center gap-4 mt-4">
             <button onClick={downloadQR_PNG} className="primary-btn">
-              {langFile[webLang].DOWNLOAD_PNG_BUTTON_TEXT || "PNG 다운로드"}
+              {langFile[webLang].DOWNLOAD_PNG_BUTTON_TEXT}
             </button>
           </div>
         </div>

@@ -156,6 +156,10 @@ const lang = {
   MOBILE_PRELIMINARY_TODOCTOR_NOT_SURE: "Жоқ",
 
   MOBILE_PRELIMINARY_SUMMARY_DESC: "Илгээж дууссан",
+
+  // Workflow modal
+  WORKFLOW_MODAL_PR_TITLE: "Алдын ала сауалнама",
+  WORKFLOW_MODAL_PR_TAB_TITLE: "Сауалнама",
 };
 
 export default lang;

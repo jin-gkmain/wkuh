@@ -65,6 +65,7 @@ const ChatInterface: React.FC = () => {
         );
         charIndex++;
         typingTimeoutRef.current = setTimeout(typeChar, 25);
+        scrollToBottom();
       } else {
         setMessages((prev) =>
           prev.map((msg) =>
@@ -205,7 +206,7 @@ const ChatInterface: React.FC = () => {
           ))}
         </Box>
       </Stack>
-      <Stack sx={{ height: "20%" }}>
+      <Stack sx={{ height: "15%" }}>
         <ChatInput
           onSendMessage={handleSendMessage}
           disabled={loading}

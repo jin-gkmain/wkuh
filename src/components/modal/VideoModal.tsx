@@ -44,7 +44,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
       di_doctor: "",
       di_date: "",
       di_memo: "",
-      gubun: "",
+      v_sep: "",
       videos: [],
     },
     patient: {
@@ -76,22 +76,36 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
     videos: false,
     gubun: false,
   });
-  const [videos, setVideos] = useState<File[] | VideoFile[]>([]);
+  const [videos, setVideos] = useState<(File | VideoFile)[]>([]);
 
   const isSavedFile = (file: File | VideoFile): file is VideoFile => {
-    return (file as VideoFile).f_idx !== undefined;
+    return (file as VideoFile).vf_idx !== undefined;
   };
 
   const handleRemove = async (id: string) => {
-    if (isSavedFile(videos[0])) {
+    if (videos.length > 0 && isSavedFile(videos[0])) {
       const res = await deleteFile(parseInt(id));
       if (res === "SUCCESS") {
         setVideos((prev) =>
-          (prev as VideoFile[]).filter((file) => file.f_idx.toString() !== id)
+          prev.filter((file) => {
+            if ("f_idx" in file) {
+              return file.f_idx.toString() !== id;
+            } else {
+              return (file as VideoFile).file_name !== id;
+            }
+          })
         );
       }
     } else {
-      setVideos((prev) => (prev as File[]).filter((file) => file.name !== id));
+      setVideos((prev) =>
+        prev.filter((file) => {
+          if ("f_idx" in file) {
+            return file.f_idx.toString() !== id;
+          } else {
+            return (file as VideoFile).file_name !== id;
+          }
+        })
+      );
     }
   };
 
@@ -112,7 +126,10 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
       }
     } else {
       if (!videos.length || !isSavedFile(videos[0])) {
-        setVideos((prev) => [...(prev as File[]), ...acceptedFiles]);
+        setVideos((prev) => [
+          ...(prev as VideoFile[]),
+          ...(acceptedFiles as unknown as VideoFile[]),
+        ]);
       }
     }
   };
@@ -131,7 +148,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   // 모달 필수항목 확인 - 영상 1개 이상 및 영상유형 체크
   const checkRequirements = () => {
     console.log("checkRequirements 시작, videos length:", videos.length);
-    console.log("gubun:", modalInfo.video.gubun);
+    console.log("v_sep:", modalInfo.video.v_sep);
     let submitable = true;
 
     if (videos.length === 0) {
@@ -142,7 +159,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
       setInputAlert((prev) => ({ ...prev, videos: false }));
     }
 
-    if (!modalInfo.video.gubun || modalInfo.video.gubun.trim() === "") {
+    if (!modalInfo.video.v_sep || modalInfo.video.v_sep.trim() === "") {
       console.log("영상유형이 선택되지 않음");
       setInputAlert((prev) => ({ ...prev, gubun: true }));
       submitable = false;
@@ -159,7 +176,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
     const formData = new FormData();
     acceptedFiles.forEach((file) => {
       if (!("f_idx" in file)) {
-        formData.append("files", file);
+        formData.append("files", file as File);
       }
     });
 
@@ -171,7 +188,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
     console.log("handleSubmit 시작");
     ev.preventDefault();
     const {
-      video: { v_idx, p_idx, di_hospital, di_doctor, di_date, di_memo, gubun },
+      video: { v_idx, p_idx, di_hospital, di_doctor, di_date, di_memo, v_sep },
     } = modalInfo;
 
     console.log("modalInfo.video:", modalInfo.video);
@@ -193,7 +210,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
         di_doctor,
         di_date: di_date,
         di_memo,
-        v_sep: gubun,
+        v_sep: v_sep,
         regist_u_idx: userInfo.u_idx,
       };
       if (body.di_doctor === "" || body.di_doctor === null) {
@@ -246,7 +263,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
         di_doctor,
         di_date: di_date,
         di_memo,
-        v_sep: gubun,
+        v_sep: v_sep,
       };
 
       const editResult = await editVideo(v_idx, body);
@@ -293,6 +310,12 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   // item이 변경될 때 modalInfo 업데이트
   useEffect(() => {
     if (item?.p_idx) {
+      getVideoFiles(item.v_idx).then((files) => {
+        if (files !== "ServerError" && files) {
+          console.log("가져온 files:", files);
+          setVideos(files);
+        }
+      });
       getPatient(item.p_idx).then((patient) => {
         if (patient !== "ServerError" && patient) {
           setModalInfo({
@@ -307,10 +330,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   return (
     <div className="org-modal-box">
       <ModalFrame
-        title={`${langFile[webLang].VIDEO_MODAL_TITLE_TEXT} (${
-          modalInfo.patient.u_name_eng ||
-          langFile[webLang].VIDEO_MODAL_PATIENT_NAME
-        }_${langFile[webLang].VIDEO_MODAL_ENG_NAME})`}
+        title={langFile[webLang].VIDEO_MODAL_TITLE_TEXT}
         completeBtnText={langFile[webLang].VIDEO_MODAL_COMPLETE_BUTTON_TEXT}
         onClose={closeModal}
         onComplete={handleSubmit}
@@ -518,13 +538,13 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
                     },
                     { key: langFile[webLang].VIDEO_MODAL_ETC, value: "ETC" },
                   ]}
-                  selected={modalInfo.video.gubun || ""}
+                  selected={modalInfo.video.v_sep || ""}
                   setSelected={(selected: string) =>
                     setModalInfo((prev) => ({
                       ...prev,
                       video: {
                         ...prev.video,
-                        gubun: selected as Video["gubun"],
+                        v_sep: selected as Video["v_sep"],
                       },
                     }))
                   }
@@ -543,7 +563,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
 
           <DropVideoFileInput
             labelText={true}
-            files={new Array<File>().concat(videos as File[])}
+            files={videos}
             setFiles={setSelectedFiles}
             onRemove={handleRemove}
             type="dicom"

@@ -296,32 +296,36 @@ export default function HistorySearchBox({
             />
           </LocalizationProvider>
         </Grid>
-        <Grid size={1}>
-          <Typography variant="body1">
-            {langFile[webLang].HISTORY_SEARCH_HOSPITAL_NAME}
-          </Typography>
-        </Grid>
-        <Grid size={11} sx={{ pl: 1 }}>
-          <FormControl>
-            <FormGroup aria-label="hospital" row={true}>
-              {hospitals.map((hospital, i) => (
-                <FormControlLabel
-                  key={i}
-                  value={hospital}
-                  control={
-                    <Checkbox
-                      checked={selectedHospitals.includes(hospital)}
-                      onChange={(e) =>
-                        handleHospitalChange(hospital, e.target.checked)
+        {hospitals.length > 1 && (
+          <>
+            <Grid size={1}>
+              <Typography variant="body1">
+                {langFile[webLang].HISTORY_SEARCH_HOSPITAL_NAME}
+              </Typography>
+            </Grid>
+            <Grid size={11} sx={{ pl: 1 }}>
+              <FormControl>
+                <FormGroup aria-label="hospital" row={true}>
+                  {hospitals.map((hospital, i) => (
+                    <FormControlLabel
+                      key={i}
+                      value={hospital}
+                      control={
+                        <Checkbox
+                          checked={selectedHospitals.includes(hospital)}
+                          onChange={(e) =>
+                            handleHospitalChange(hospital, e.target.checked)
+                          }
+                        />
                       }
+                      label={hospital}
                     />
-                  }
-                  label={hospital}
-                />
-              ))}
-            </FormGroup>
-          </FormControl>
-        </Grid>
+                  ))}
+                </FormGroup>
+              </FormControl>
+            </Grid>
+          </>
+        )}
 
         <Grid size={1}>
           <Typography variant="body1">

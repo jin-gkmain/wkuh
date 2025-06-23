@@ -33,9 +33,9 @@ async function getPreliminaryByWIdx(w_idx: number) {
 async function getPreliminaryByPIdx(pl_idx: number) {
   try {
     const res = await instance.post("/preliminary_list", { pl_idx: pl_idx });
-    const data: { result: string; data: Preliminary[] } = res.data;
+    const data: { result: string; data: Preliminary } = res.data;
     if (data.result === "OK") {
-      return data.data[0];
+      return data.data;
     } else {
       return null;
     }

@@ -331,6 +331,9 @@ const lang = {
   WORKFLOW_MODAL_OPINION_DOMESTIC_HOSPITAL_OPINION: "Second Opinion",
   WORKFLOW_MODAL_OPINION_CONTENTS: "Contents",
 
+  WORKFLOW_MODAL_PR_TITLE: "Preliminary Questionnaire",
+  WORKFLOW_MODAL_PR_TAB_TITLE: "Questionnaire",
+
   WORKFLOW_MODAL_REQUEST_SCHEDULING_BUTTON_TEXT: "Request scheduling",
   WORKFLOW_MODAL_TELE_INFO: "Teleconsultation info",
   WORKFLOW_MODAL_TELE_DATE: "Reservation date",
@@ -1003,6 +1006,10 @@ const lang = {
   HISTORY_TABLE_DONT_KNOW: "Don't know",
   HISTORY_TABLE_DOWNLOAD_BUTTON_TEXT: "Download Excel",
   MOBILE_PRELIMINARY_SUMMARY_DESC: "Submission completed",
+
+  DOWNLOAD_PNG_BUTTON_TEXT: "Download PNG",
+  QR_CODE_MODAL_TITLE: "QR Code",
+  PATIENT_SERIAL_NO_TEXT: "Patient Serial No",
 };
 
 export default lang;

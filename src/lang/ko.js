@@ -233,6 +233,7 @@ const lang = {
   CHART_INFO_BOX_PT_HEIGHT: "신장",
   CHART_INFO_BOX_PT_WEIGHT: "몸무게",
   CHART_INFO_BOX_PT_NURSE_IN_CHARGE: "담당 간호사",
+  PATIENT_SERIAL_NO_TEXT: "환자 일련번호",
   CHART_NUMBER_TEXT: "진료번호",
   CHART_NURSE_TEXT: "간호사",
   CHART_DOCTOR_TEXT: "의사",
@@ -337,6 +338,7 @@ const lang = {
   WORKFLOW_MODAL_OPINION_CONTENTS: "소견내용",
 
   WORKFLOW_MODAL_PR_TITLE: "사전 문진표",
+  WORKFLOW_MODAL_PR_TAB_TITLE: "문진",
   WORKFLOW_MODAL_FIRST_QUESTION: "1. 입원 또는 수술을 진행 한 적이 있습니까?",
   WORKFLOW_MODAL_SECOND_QUESTION:
     "2. 아래 질환 중 과거의 진단받은 적이 있다면 표시 해주세요.",
@@ -823,7 +825,7 @@ const lang = {
   MOBILE_PRELIMINARY_PATIENNUM_INPUT_ERROR: "존재하지 않은 환자번호 입니다.",
   MOBILE_PRELIMINARY_BIRTHDAY_DESC: "본인의 생년월일\n 입력해주세요.",
   MOBILE_PRELIMINARY_BIRTHDAY_INPUT_PLACEHOLDER:
-    "생년월일 6자리를 입력해주세요.",
+    "생년월일 8자리를 입력해주세요.",
   MOBILE_PRELIMINARY_BIRTHDAY_INPUT_ERROR: "형식을 확인해주세요",
 
   MOBILE_PRELIMINARY_PATIENTINFO_DESC: "환자의 정보를 확인해주세요.",
@@ -977,6 +979,9 @@ const lang = {
   HISTORY_TABLE_TELE_DATE_NOT_SURE: "미정",
   HISTORY_TABLE_DONT_KNOW: "알 수 없음",
   HISTORY_TABLE_DOWNLOAD_BUTTON_TEXT: "엑셀 다운로드",
+
+  DOWNLOAD_PNG_BUTTON_TEXT: "PNG 다운로드",
+  QR_CODE_MODAL_TITLE: "QR 코드",
 };
 
 export default lang;

@@ -14,6 +14,7 @@ import Close from "../icons/Close";
 import langFile from "@/lang";
 import { LanguageContext } from "@/context/LanguageContext";
 import { downloadFile } from "@/data/file";
+import { downloadVideoFile } from "@/data/video_file";
 
 type Props = {
   labelText?: boolean;
@@ -22,12 +23,12 @@ type Props = {
   docType?: "pdf" | "all";
   dropFile?: (files: File[]) => void;
   disabled?: boolean;
-  files: File[] | SavedFile[];
-  setFiles: (files: File[], inputName: string) => void;
-  onRemove: (name: string, inputName: string) => void;
+  files: (File | VideoFile)[];
+  setFiles: (files: File[]) => void;
+  onRemove: (name: string) => void;
 };
 
-export default function DropFileInput({
+export default function DropVideoFileInput({
   labelText = false,
   type,
   docType,
@@ -40,7 +41,7 @@ export default function DropFileInput({
 }: Props) {
   const { lang } = useContext(LanguageContext);
   const fileIdRef = useRef(0);
-
+  console.log("files:", files);
   const inputEle = useRef(null);
 
   const checkExt = (fileName: string) => {
@@ -73,9 +74,9 @@ export default function DropFileInput({
         }
       });
 
-      setFiles(addedFiles, type || "");
+      setFiles(addedFiles);
     },
-    [setFiles, type]
+    [setFiles, files.length]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     multiple: true,
@@ -114,12 +115,7 @@ export default function DropFileInput({
           className="w-full"
           onClick={onClickLabel}
         >
-          {
-            labelText &&
-              (short
-                ? langFile[lang].ATTACHED_VIDEO_FILE_PLACEHOLDER2
-                : langFile[lang].ATTACHED_VIDEO_FILE_PLACEHOLDER) // 파일 추가 혹은 여기로 드래그 (20MB 이하, 최대 10개)
-          }
+          {labelText && langFile[lang].ATTACHED_VIDEO_FILE_PLACEHOLDER2}
           <Clip className="clip" />
         </label>
       </div>
@@ -127,22 +123,21 @@ export default function DropFileInput({
       {files && files.length > 0 && (
         <div className="files-container">
           {files.length &&
-            files.map((file: File | SavedFile) => {
-              return "f_idx" in file ? (
+            files.map((file: File | VideoFile, index: number) => {
+              const uniqueKey =
+                "f_idx" in file
+                  ? `saved-${file.f_idx}-${index}`
+                  : `new-${(file as VideoFile).file_name}-${index}-${
+                      (file as VideoFile).f_size
+                    }`;
+
+              return (
                 <FileItem
                   disabled={disabled}
-                  key={file.f_idx}
+                  key={uniqueKey}
                   file={file}
                   length={files.length}
-                  onRemove={(name) => onRemove(name, type || "")}
-                />
-              ) : (
-                <FileItem
-                  disabled={disabled}
-                  key={file.name}
-                  file={file}
-                  length={files.length}
-                  onRemove={(name) => onRemove(name, type || "")}
+                  onRemove={(name) => onRemove(name)}
                 />
               );
             })}
@@ -154,29 +149,31 @@ export default function DropFileInput({
 
 type ItemProps = React.HtmlHTMLAttributes<HTMLDivElement> & {
   disabled?: boolean;
-  file?: File | SavedFile;
+  file?: File | VideoFile;
   length: number;
   onRemove: (name: string) => void;
 };
 
 function FileItem({ file, length, onRemove, disabled }: ItemProps) {
-  const { lang } = useContext(LanguageContext);
-
+  const { webLang } = useContext(LanguageContext);
+  console.log("file:", file);
   const handleRemove = (ev?: MouseEvent<HTMLDivElement>) => {
     ev?.stopPropagation();
-    if ("f_idx" in file) {
+    if ("vf_idx" in file) {
       // 파일을 삭제하시겠습니까?
-      if (confirm(langFile[lang].DELETE_FILE_CONFIRM_TEXT)) {
-        onRemove(file.f_idx.toString());
+      if (confirm(langFile[webLang].DELETE_FILE_CONFIRM_TEXT)) {
+        onRemove((file as VideoFile).vf_idx.toString());
       }
     } else {
-      onRemove(file.name);
+      onRemove((file as File).name);
     }
   };
 
   const handleDownload = async () => {
-    if ("f_idx" in file) {
-      const res = await downloadFile(file.f_idx);
+    console.log("file:", file);
+    if ("vf_idx" in file) {
+      const res = await downloadVideoFile((file as VideoFile).vf_idx);
+      console.log("res:", res);
       if (res.message === "SUCCESS") {
         const response = await fetch(`/api/downloadFile`, {
           body: JSON.stringify({
@@ -203,7 +200,9 @@ function FileItem({ file, length, onRemove, disabled }: ItemProps) {
       }
     }
   };
-
+  useEffect(() => {
+    console.log("file:", file);
+  }, [file]);
   return (
     <div
       onClick={handleDownload}
@@ -215,7 +214,7 @@ function FileItem({ file, length, onRemove, disabled }: ItemProps) {
       <File />
       {/* {'f_idx' in file ? file.file_ori || '' : file?.name || ''} */}
       <span className="file-name">
-        {"f_idx" in file ? file.file_ori || "" : file?.name || ""}
+        {"vf_idx" in file ? (file as VideoFile).file_name : (file as File).name}
       </span>
     </div>
   );

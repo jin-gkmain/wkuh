@@ -39,6 +39,24 @@ async function getPatient(p_idx: number) {
   }
 }
 
+async function getPatientBySerialNo(p_serial_no: number, p_birthday: string) {
+  try {
+    const res = await instance.post("/patient_detail2", {
+      p_serial_no,
+      p_birthday,
+    });
+
+    const data: MyResponse<MobilePatient[]> = res.data;
+    if (data.result) {
+      return data.result[0];
+    } else {
+      return null;
+    }
+  } catch (err) {
+    return "ServerError";
+  }
+}
+
 async function deletePatient(p_idx: number) {
   try {
     const res = await instance.post("/patient_delete", {
@@ -90,4 +108,11 @@ async function editPatient(p_idx: number, body: { [key: string]: any }) {
   }
 }
 
-export { getPatient, getPatients, deletePatient, registPatient, editPatient };
+export {
+  getPatient,
+  getPatients,
+  getPatientBySerialNo,
+  deletePatient,
+  registPatient,
+  editPatient,
+};

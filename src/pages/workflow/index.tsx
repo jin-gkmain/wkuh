@@ -330,7 +330,7 @@ export default function WorkflowPage() {
               nurse_name_eng,
               nurse_name_kor,
               u_name_eng,
-              p_chart_no,
+              p_serial_no,
               tel,
               registdate_utc,
             }) => (
@@ -343,7 +343,7 @@ export default function WorkflowPage() {
                 tableRowOptionType={tableDropOptions}
                 lang={webLang}
               >
-                <td>{p_chart_no ? p_chart_no : "-"}</td>
+                <td>{p_serial_no ? p_serial_no : "-"}</td>
                 <td>{u_name_eng}</td>
                 <td>{tel ? tel : "-"}</td>
                 <td>{address ? address : "-"}</td>
@@ -356,7 +356,7 @@ export default function WorkflowPage() {
                 </td>
                 <td>
                   {convertTimeToStr(
-                    userInfo?.country,
+                    userInfo?.country || "korea",
                     registdate_utc.toString(),
                     "."
                   )}

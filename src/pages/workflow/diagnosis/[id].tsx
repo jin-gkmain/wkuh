@@ -197,7 +197,7 @@ export default function DiagnosisPage() {
     const newVideoTemplate: Video = {
       v_idx: 0, // 새로 생성할 때는 0
       p_idx: patientInfo.p_idx,
-      gubun: "",
+      v_sep: "",
       di_hospital: "",
       di_doctor: "",
       di_date: dayjs().format("YYYY-MM-DD"),
@@ -410,6 +410,7 @@ export default function DiagnosisPage() {
           patientInfo
             ? {
                 p_name: patientInfo.u_name_eng,
+                p_serial_no: patientInfo.p_serial_no,
                 p_birthday: patientInfo.birthday
                   ? dayjs(patientInfo.birthday).format("YYYY-MM-DD")
                   : "-",
@@ -455,26 +456,29 @@ export default function DiagnosisPage() {
           <TableHead tds={medicaltds} />
           <tbody>
             {diagnosis.map(
-              ({
-                w_idx,
-                w_code,
-                nurse1_idx,
-                nurse1_name_eng,
-                nurse1_name_kor,
-                nurse2_idx,
-                nurse2_name_eng,
-                nurse2_name_kor,
-                doctor1_idx,
-                doctor1_name_eng,
-                doctor1_name_kor,
-                doctor2_idx,
-                doctor2_name_kor,
-                doctor2_name_eng,
-                registdate_utc,
-                update_registdate_utc,
-              }) => (
+              (
+                {
+                  w_idx,
+                  w_code,
+                  nurse1_idx,
+                  nurse1_name_eng,
+                  nurse1_name_kor,
+                  nurse2_idx,
+                  nurse2_name_eng,
+                  nurse2_name_kor,
+                  doctor1_idx,
+                  doctor1_name_eng,
+                  doctor1_name_kor,
+                  doctor2_idx,
+                  doctor2_name_kor,
+                  doctor2_name_eng,
+                  registdate_utc,
+                  update_registdate_utc,
+                },
+                index
+              ) => (
                 <TableRow<TableMenuOption>
-                  key={w_idx}
+                  key={`diagnosis-${w_idx}-${index}`}
                   handleClick={() => openWorkflowModalHandler(w_idx)}
                   buttonText={langFile[webLang].CHART_TABLE_BUTTON_TEXT}
                   onClickMenu={(type) => {
@@ -540,14 +544,17 @@ export default function DiagnosisPage() {
           <TableHead tds={videotds} />
           <tbody>
             {videos.map(
-              ({ v_idx, gubun, di_hospital, di_doctor, di_memo, di_date }) => {
+              (
+                { v_idx, v_sep, di_hospital, di_doctor, di_memo, di_date },
+                index
+              ) => {
                 console.log(
                   "비디오 테이블 렌더링 - videoTableDropOptions:",
                   videoTableDropOptions
                 );
                 return (
                   <TableRow<TableMenuOption>
-                    key={v_idx}
+                    key={`video-${v_idx}-${index}`}
                     handleClick={() => {
                       const currentVideo = videos.find(
                         (v) => v.v_idx === v_idx
@@ -571,7 +578,7 @@ export default function DiagnosisPage() {
                     lang={webLang}
                   >
                     <td>{v_idx}</td>
-                    <td>{gubun || "-"}</td>
+                    <td>{v_sep || "-"}</td>
                     <td>{di_hospital || "-"}</td>
                     <td>{di_doctor || "-"}</td>
                     <td>{di_memo || "-"}</td>
@@ -704,6 +711,10 @@ function getInfoBoxHeadData(lang: LangType) {
     {
       iconType: "patient",
       title: langFile[lang].PATIENT_SEARCH_PT_NAME_TEXT,
+    },
+    {
+      iconType: "serial_no",
+      title: langFile[lang].PATIENT_SERIAL_NO_TEXT,
     },
     {
       iconType: "calendar",

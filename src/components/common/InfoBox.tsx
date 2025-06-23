@@ -13,6 +13,8 @@ import Email from "./icons/Email";
 import User from "./icons/User";
 import Qr from "./icons/Qr";
 import Download from "./icons/Download";
+import { GoNumber } from "react-icons/go";
+import { MdNumbers } from "react-icons/md";
 
 export type InfoBoxIconType =
   | "patient"
@@ -27,7 +29,8 @@ export type InfoBoxIconType =
   | "user"
   | "chart"
   | "mail"
-  | "qr";
+  | "qr"
+  | "serial_no";
 
 export type InfoBoxType = {
   defaultIcon?: ReactNode;
@@ -46,6 +49,8 @@ export default function InfoBox<T>({ keys, data }: Props<T>) {
     switch (keyObj.iconType) {
       case "patient":
         return { ...keyObj, icon: <Patient /> };
+      case "serial_no":
+        return { ...keyObj, icon: <MdNumbers /> };
       case "calendar":
         return { ...keyObj, icon: <Calendar /> };
       case "gender":
@@ -90,7 +95,7 @@ export default function InfoBox<T>({ keys, data }: Props<T>) {
                   onClick={() => onDownload(value)}
                   className="primary-btn flex align-center font-semi-bold"
                   style={{
-                    padding: "5px 10px",
+                    padding: "5px 25px",
                     fontSize: "12px",
                   }}
                 >

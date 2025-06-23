@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { getPatients } from "@/data/patient";
+import { getPatientBySerialNo, getPatients } from "@/data/patient";
 import { log } from "console";
 import { LangType, LanguageContext } from "@/context/LanguageContext";
 import langFile from "@/lang";
@@ -64,7 +64,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
   const [currentPageIndex, setCurrentPageIndex] = useState(0); // 이름 변경
   const [answers, setAnswers] = useState<Record<string, any>>({});
   const [isPatientInfo, setIsPatientInfo] = useState(false);
-  const [patientInfo, setPatientInfo] = useState<Patient | null>(null);
+  const [patientInfo, setPatientInfo] = useState<MobilePatient | null>(null);
   const [toast, setToast] = useState<ToastState>({
     message: "",
     visible: false,
@@ -73,7 +73,6 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
   const { lang, setLang } = useContext(LanguageContext);
 
   const toastTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const { hos } = router.query;
 
   const showToast = (message: string) => {
     if (toastTimerRef.current) {
@@ -86,14 +85,17 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
   };
 
   const checkPatientNumber = async () => {
-    const patients = (await getPatients(Number(hos), {})) as Patient[];
-    for (const patient of patients) {
-      console.log(answers["patientNum"], patient.p_serial_no);
-      if (answers["patientNum"] === patient.p_serial_no) {
-        openPatientInfo(patient);
-        return;
-      }
+    console.log("answers >", answers);
+    const patient = (await getPatientBySerialNo(
+      answers["patientNum"],
+      answers["patientBirth"]
+    )) as MobilePatient;
+    if (patient) {
+      console.log("patient >", patient);
+      openPatientInfo(patient);
+      return;
     }
+
     showToast(langFile[lang].MOBILE_PRELIMINARY_PATIENT_NUMBER_ERROR);
   };
   // isQuestionAnswered 로직 수정: pageIndex를 받고, 해당 페이지의 모든 항목을 검사
@@ -121,7 +123,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
     return true; // 모든 항목 통과 시 페이지 유효
   };
 
-  const openPatientInfo = (patient: Patient) => {
+  const openPatientInfo = (patient: MobilePatient) => {
     setIsPatientInfo(true);
     setPatientInfo(patient);
   };
@@ -138,20 +140,6 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
       [questionKey]: value,
     }));
     // 입력 시 토스트 메시지 자동 해제 로직은 showToast의 자동 숨김으로 대체
-  };
-
-  // handleKeyDown 수정: pageIndex, itemIndex 대신 현재 페이지 유효성 검사 후 next()
-  const handleItemKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      // 현재 페이지의 모든 항목에 대해 Enter키 누를 시 next() 호출 시도
-      // (단, focus된 input이 속한 페이지가 currentPageIndex와 일치할 때만)
-      // 이 부분은 복잡해질 수 있어, 개별 input의 onKeyDown에서 직접 next()를 부르는게 더 직관적일 수 있음.
-      // 여기서는 일단 현재 페이지가 유효하면 next() 호출하도록 단순화.
-      if (isPageValid(currentPageIndex)) {
-        // next(); // Enter로 다음 넘어가는 기능은 유지하되, 어느 입력에서든 마지막 입력처럼 동작할 위험. 개별 컴포넌트가 next를 직접 호출하게 할 수도.
-      } // UX를 고려하여 Enter키 동작은 좀 더 세밀한 조정이 필요할 수 있습니다.
-    }
   };
 
   // next 함수: isPageValid(currentPageIndex) 사용
@@ -180,8 +168,8 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
     console.log(answers);
     const preliminary: Preliminary = {
       p_idx: patientInfo?.p_idx || 0,
-      p_serial_no: patientInfo?.p_serial_no || "",
-      p_birthday: patientInfo?.birthday || "",
+      p_serial_no: answers["patientNum"] || "",
+      p_birthday: answers["patientBirth"] || "",
       pl_data: {
         symptoms: answers["userSymptoms"] || [],
         pain_degree: answers["userPain"] || "",
@@ -357,12 +345,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                         value: answers[item.questionKey] || "",
                         onChange: (value) =>
                           handleItemInputChange(item.questionKey, value),
-                        onKeyDown: (e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            next();
-                          }
-                        },
+                        onKeyDown: () => {},
                         lang: lang,
                       })}
                     <div style={{ height: "40px" }}></div>
