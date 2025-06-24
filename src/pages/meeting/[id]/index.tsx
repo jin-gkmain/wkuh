@@ -68,11 +68,12 @@ export default function MeetingPage() {
       const meetingId = router.query.id as string;
       const p_idx = router.query.p as string;
       const w_idx = router.query.w as string;
-      const lang = router.query.lang as LangType;
+      const lang = router.query.lang as string;
 
+      console.log("lang", lang);
       if (lang) {
-        setLang(lang);
-        setWebLang(lang);
+        setLang(lang as LangType);
+        setWebLang(lang as LangType);
       }
 
       if (p_idx && w_idx) {
