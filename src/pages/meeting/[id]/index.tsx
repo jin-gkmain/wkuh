@@ -68,19 +68,14 @@ export default function MeetingPage() {
       const meetingId = router.query.id as string;
       const p_idx = router.query.p as string;
       const w_idx = router.query.w as string;
-      const lang = router.query.lang as string;
-
-      console.log("lang", lang);
-      if (lang) {
-        setLang(lang as LangType);
-        setWebLang(lang as LangType);
-      }
 
       if (p_idx && w_idx) {
         const fetchData = async () => {
           let pass = true;
           if (userInfo.country === "korea") {
             console.log("로그인ok > korea");
+            setLang("ko");
+            setWebLang("ko");
             const data = await getPatient(parseInt(p_idx));
             if (data !== "ServerError" && data) {
               setPatientInfo(data);
@@ -90,7 +85,9 @@ export default function MeetingPage() {
             }
           } //
           else {
-            console.log("로그인ok > mongol");
+            console.log("로그인ok > else");
+            setLang("en");
+            setWebLang("en");
 
             const data = await getPatient(parseInt(p_idx));
             console.log("data", data);
