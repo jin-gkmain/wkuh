@@ -841,7 +841,7 @@ const lang = {
     "The patient number does not exist. Please check and enter again.",
   MOBILE_PRELIMINARY_BIRTHDAY_DESC: "Please enter your date of birth.",
   MOBILE_PRELIMINARY_BIRTHDAY_INPUT_PLACEHOLDER:
-    "Enter your date of birth (6 digits)",
+    "Enter your date of birth (8 digits)",
   MOBILE_PRELIMINARY_BIRTHDAY_INPUT_ERROR:
     "Please check the format and enter again.",
 
@@ -867,12 +867,13 @@ const lang = {
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE3: "Abdominal pain",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE4: "Cough",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE5: "Fever",
-  MOBILE_PRELIMINARY_SYMPTOMS_TITLE6: "Nausea/Vomiting",
-  MOBILE_PRELIMINARY_SYMPTOMS_TITLE7: "Diarrhea/Constipation",
+  MOBILE_PRELIMINARY_SYMPTOMS_TITLE6: "Nausea / Vomiting",
+  MOBILE_PRELIMINARY_SYMPTOMS_TITLE7: "Diarrhea / Constipation",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE8: "Skin rash",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE9: "Menstrual irregularity",
-  MOBILE_PRELIMINARY_SYMPTOMS_TITLE10: "Depression/Anxiety",
-  MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE: "I don't know",
+  MOBILE_PRELIMINARY_SYMPTOMS_TITLE10: "Depression / Anxiety",
+  MOBILE_PRELIMINARY_SYMPTOMS_TITLE11: "Other",
+  MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE: "None",
 
   MOBILE_PRELIMINARY_PAIN_DESC: "How much pain are you experiencing?",
   MOBILE_PRELIMINARY_PAIN_DEGREE1: "No pain",

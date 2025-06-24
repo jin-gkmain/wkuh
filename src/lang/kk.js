@@ -31,7 +31,7 @@ const lang = {
     "Пациент нөмірі жоқ. Тексеріп, қайта енгізіңіз.",
   MOBILE_PRELIMINARY_BIRTHDAY_DESC: "Туған күніңізді енгізіңіз.",
   MOBILE_PRELIMINARY_BIRTHDAY_INPUT_PLACEHOLDER:
-    "Туған күніңізді енгізіңіз (6 сан)",
+    "Туған күніңізді енгізіңіз (8 сан)",
   MOBILE_PRELIMINARY_BIRTHDAY_INPUT_ERROR: "Пішімді тексеріп, қайта енгізіңіз.",
 
   MOBILE_PRELIMINARY_PATIENTINFO_DESC: "Пациент туралы ақпаратты тексеріңіз.",
@@ -56,11 +56,12 @@ const lang = {
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE3: "Іш ауруы",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE4: "Жөтел",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE5: "Қызба",
-  MOBILE_PRELIMINARY_SYMPTOMS_TITLE6: "Жүрек айнуы/Құсу",
-  MOBILE_PRELIMINARY_SYMPTOMS_TITLE7: "Диарея/Іш қату",
+  MOBILE_PRELIMINARY_SYMPTOMS_TITLE6: "Жүрек айнуы / Құсу",
+  MOBILE_PRELIMINARY_SYMPTOMS_TITLE7: "Диарея / Іш қату",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE8: "Тері бөртпесі",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE9: "Етеккірдің тұрақсыздығы",
-  MOBILE_PRELIMINARY_SYMPTOMS_TITLE10: "Депрессия/Мазасыздық",
+  MOBILE_PRELIMINARY_SYMPTOMS_TITLE10: "Депрессия / Мазасыздық",
+  MOBILE_PRELIMINARY_SYMPTOMS_TITLE11: "Басқа",
   MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE: "Білмеймін",
 
   MOBILE_PRELIMINARY_PAIN_DESC: "Ауырсыну деңгейі қандай?",

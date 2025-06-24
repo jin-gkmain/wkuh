@@ -346,7 +346,7 @@ const MyButtonGroup = ({
                 onKeyDown={onKeyDown}
                 sx={{
                   padding: "15px 10px",
-                  fontSize: "1.3rem",
+                  fontSize: lang === "ko" ? "1.3rem" : "1rem",
                   borderRadius: "25px",
                   border:
                     selectedOptionsMap[option.id] === true ||
@@ -569,7 +569,7 @@ const symptomsOptions = [
     id: "sym11",
     label: getAllValuesForConstantKeyAsDict(
       langFile,
-      "MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE"
+      "MOBILE_PRELIMINARY_SYMPTOMS_TITLE11"
     ),
     type: "etc" as const,
   },

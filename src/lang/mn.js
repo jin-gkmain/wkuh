@@ -32,7 +32,7 @@ const lang = {
     "Ийм өвчтөний дугаар байхгүй байна. Дахин шалгаж оруулна уу.",
   MOBILE_PRELIMINARY_BIRTHDAY_DESC: "Төрсөн он сар өдрөө оруулна уу.",
   MOBILE_PRELIMINARY_BIRTHDAY_INPUT_PLACEHOLDER:
-    "Төрсөн огноог оруулна уу.(6 digits)",
+    "Төрсөн огноог оруулна уу.(8 оронтой)",
   MOBILE_PRELIMINARY_BIRTHDAY_INPUT_ERROR:
     "Ийм төрсөн огноо байхгүй байна. Дахин шалгана уу.",
 
@@ -63,7 +63,8 @@ const lang = {
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE8: "Арьсны тууралт",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE9: "Сарын тэмдэг алдагдах",
   MOBILE_PRELIMINARY_SYMPTOMS_TITLE10: "Сэтгэл гутрал/Түгшүүр",
-  MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE: "Білмеймін",
+  MOBILE_PRELIMINARY_SYMPTOMS_TITLE11: "Бусад",
+  MOBILE_PRELIMINARY_SYMPTOMS_NOT_SURE: "Хэрэглээгүй",
 
   MOBILE_PRELIMINARY_PAIN_DESC: "Та хэр их өвдөлт мэдэрч байна вэ?",
   MOBILE_PRELIMINARY_PAIN_DEGREE1: "Өвдөлтгүй",

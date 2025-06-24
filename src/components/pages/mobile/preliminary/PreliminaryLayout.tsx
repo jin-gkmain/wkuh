@@ -102,7 +102,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
   const isPageValid = (pageIndex: number): boolean => {
     const pageItems = slidesContent[pageIndex];
     if (!pageItems) return false; // 페이지 자체가 없는 경우
-    if (!pageItems[0]?.isPass) return true;
+
     for (const item of pageItems) {
       if (item.isSummary || !item.inputComponent) {
         // 요약 항목이거나 입력 컴포넌트가 없으면 해당 항목은 통과
@@ -111,13 +111,16 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
 
       const answer = answers[item.questionKey]; // questionKey로 답변 접근
 
-      if (item.validate) {
-        if (!item.validate(answer)) return false; // validate 함수 실패 시 페이지 전체 실패
-      } else {
-        // validate 함수 없고 inputComponent만 있다면, 기본 "값이 있는지" 여부로 판단
-        if (answer === undefined) return false; // undefined는 항상 실패
-        if (typeof answer === "string" && answer.trim() === "") return false; // 문자열인데 비었으면 실패
-        if (Array.isArray(answer) && answer.length === 0) return false; // 배열인데 비었으면 실패
+      // isValidate가 true인 경우에만 검증 수행
+      if (item.isValidate) {
+        if (item.validate) {
+          if (!item.validate(answer)) return false; // validate 함수 실패 시 페이지 전체 실패
+        } else {
+          // validate 함수 없고 inputComponent만 있다면, 기본 "값이 있는지" 여부로 판단
+          if (answer === undefined) return false; // undefined는 항상 실패
+          if (typeof answer === "string" && answer.trim() === "") return false; // 문자열인데 비었으면 실패
+          if (Array.isArray(answer) && answer.length === 0) return false; // 배열인데 비었으면 실패
+        }
       }
     }
     return true; // 모든 항목 통과 시 페이지 유효
@@ -269,21 +272,21 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
           }
           
           /* 스크롤바 스타일링 */
-          .slider-main-area::-webkit-scrollbar {
-            width: 4px;
+          .slide-content-wrapper::-webkit-scrollbar {
+            width: 6px;
           }
           
-          .slider-main-area::-webkit-scrollbar-track {
+          .slide-content-wrapper::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 10px;
           }
           
-          .slider-main-area::-webkit-scrollbar-thumb {
+          .slide-content-wrapper::-webkit-scrollbar-thumb {
             background: #c1c1c1;
             border-radius: 10px;
           }
           
-          .slider-main-area::-webkit-scrollbar-thumb:hover {
+          .slide-content-wrapper::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
           }
           
@@ -323,16 +326,13 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
           className="slider-main-area"
           style={{
             flex: "1 1 auto", // flexGrow: 1, flexShrink: 1, flexBasis: auto
-            overflowY: "auto",
+            overflowY: "hidden", // 상위 컨테이너는 스크롤 비활성화
             overflowX: "hidden", // 가로 스크롤 완전 차단
-            padding: "10px 10px 10px 10px", // 패딩 줄임
+            padding: "10px 10px 0px 10px", // 하단 패딩 제거
             display: "flex",
             flexDirection: "column",
             position: "relative", // 오버레이 기준점
             minHeight: 0, // flex 아이템이 최소 컨텐츠 크기로 줄어들 수 있도록
-            height: "calc(100dvh - 140px)", // 하단 버튼 영역 계산 조정
-            scrollbarWidth: "thin", // Firefox 스크롤바 보이게
-            msOverflowStyle: "auto", // IE/Edge 스크롤바 보이게
           }}
         >
           {/* Slider는 항상 렌더링 */}
@@ -341,7 +341,6 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
             {...settings}
             style={{
               height: "100%",
-              minHeight: "400px", // 최소 높이 줄임
               flex: "1 1 auto",
             }}
           >
@@ -351,10 +350,14 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                 className="slide-content-wrapper"
                 style={{
                   outline: "none", // Slider 내부 div 포커스 아웃라인 제거
-                  height: "auto", // 자동 높이
-                  minHeight: "400px", // 슬라이드 최소 높이 줄임
-                  overflowY: "visible", // 스크롤을 상위로 위임
+                  height: "calc(100dvh - 160px)", // 정확한 높이 설정
+                  overflowY: "auto", // 각 슬라이드에서 스크롤 활성화
                   overflowX: "hidden",
+                  scrollbarWidth: "thin", // Firefox 스크롤바
+                  msOverflowStyle: "auto", // IE/Edge 스크롤바
+                  WebkitOverflowScrolling: "touch", // iOS 부드러운 스크롤
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
                 {pageItems.map((item) => (
@@ -362,17 +365,17 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                     key={item.id} // 항목의 id를 키로 사용 (id가 고유해야 함)
                     className="slide-item-content"
                     style={{
-                      minHeight: "auto", // 자동 높이
+                      minHeight: "100%", // 부모 높이에 맞춤
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center", // 내부 요소들 수평 중앙 정렬
-                      justifyContent: "flex-start", // 상단부터 정렬
+                      justifyContent: "center", // 중앙 정렬로 변경
                       width: "100%",
                       maxWidth: "100%",
                       overflow: "visible", // 내용이 보이도록
                       boxSizing: "border-box",
-                      paddingTop: "20px", // 상단 패딩 추가
-                      paddingBottom: "40px", // 하단 여백 줄임
+                      paddingTop: "40px", // 상단 패딩 증가
+                      paddingBottom: "40px", // 하단 여백 증가
                     }}
                   >
                     {item.title && (
@@ -442,7 +445,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
         <div
           className="bottom-button-container"
           style={{
-            padding: "20px 20px 35px 20px", // 하단 패딩 더 증가
+            padding: "15px 20px 20px 20px", // 패딩 조정
             textAlign: "center",
             display: "flex",
             flexDirection: "column",
@@ -451,8 +454,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
             backgroundColor: "white", // 배경색 추가하여 내용과 구분
             boxSizing: "border-box",
             flexShrink: 0, // 상단 컨텐츠가 늘어나도 이 영역은 줄어들지 않음
-            minHeight: "140px", // 최소 높이 조정
-            maxHeight: "180px", // 최대 높이 제한
+            minHeight: "160px", // 최소 높이 증가
             position: "relative",
             zIndex: 10, // 다른 요소들 위에 표시
           }}
