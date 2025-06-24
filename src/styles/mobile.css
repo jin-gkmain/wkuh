@@ -23,6 +23,7 @@ body::-webkit-scrollbar {
   position: relative;
   overflow: hidden;
   background: white;
+  padding-bottom: env(safe-area-inset-bottom); /* iOS Safe Area 지원 */
 }
 
 /* 물방울 효과는 일단 제거 (필요시 복원) */
@@ -62,4 +63,27 @@ body::-webkit-scrollbar {
 
 .mobile-layout-content::-webkit-scrollbar {
   display: none;
+}
+
+/* 모바일 input 컴포넌트 스타일 개선 */
+.mobile-layout .MuiTextField-root {
+  width: 100% !important;
+  max-width: 400px !important;
+  box-sizing: border-box !important;
+}
+
+.mobile-layout .MuiButton-root {
+  word-break: keep-all !important;
+  white-space: normal !important;
+}
+
+/* 하단 버튼 컨테이너 스타일 */
+.bottom-button-container {
+  padding: 20px 20px 35px 20px !important;
+  min-height: 150px !important;
+}
+
+.bottom-button-container .MuiStack-root {
+  width: 100% !important;
+  max-width: 400px !important;
 }

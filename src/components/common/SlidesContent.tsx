@@ -8,9 +8,10 @@ import langFile, { getAllValuesForConstantKeyAsDict } from "@/lang";
 import { LanguageContext } from "@/context/LanguageContext";
 
 const commonInputStyles: React.CSSProperties = {
-  marginTop: "40px",
+  marginTop: "20px", // 마진 줄임
   boxSizing: "border-box",
-  width: "80%",
+  width: "90%", // 화면에 맞게 어느정도 늘어나도록
+  maxWidth: "400px", // 최대 너비 증가
 };
 
 const commonInputPropsSx = {
@@ -191,7 +192,12 @@ const MySliderInput = ({
   return (
     <Stack
       direction="row"
-      sx={{ height: "300px", marginTop: "40px", width: "40%" }}
+      sx={{
+        height: "300px",
+        marginTop: "20px", // 마진 줄임
+        width: "60%",
+        maxWidth: "250px",
+      }}
       spacing={2}
     >
       <Slider
@@ -310,7 +316,7 @@ const MyButtonGroup = ({
   };
 
   return (
-    <div style={{ marginTop: "60px", width: "100%" }}>
+    <div style={{ marginTop: "30px", width: "90%", maxWidth: "400px" }}>
       <div
         style={{
           display: "grid",
@@ -432,7 +438,7 @@ const MySelectButtonGroup = ({
   };
 
   return (
-    <div style={{ marginTop: "60px", width: "100%" }}>
+    <div style={{ marginTop: "30px", width: "90%", maxWidth: "400px" }}>
       <div
         style={{
           display: "grid",

@@ -267,6 +267,43 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
             from { opacity: 1; transform: translate(-50%, 0); }
             to { opacity: 0; transform: translate(-50%, 10px); }
           }
+          
+          /* 스크롤바 스타일링 */
+          .slider-main-area::-webkit-scrollbar {
+            width: 4px;
+          }
+          
+          .slider-main-area::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+          }
+          
+          .slider-main-area::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+          }
+          
+          .slider-main-area::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+          }
+          
+          /* paperweight 컨테이너 내부 스크롤 설정 */
+          .paperweight-layout-container {
+            -webkit-overflow-scrolling: touch; /* iOS 스크롤 부드럽게 */
+          }
+          
+          .paperweight-layout-container .slider-main-area {
+            -webkit-overflow-scrolling: touch;
+          }
+          
+          .paperweight-layout-container .slide-content-wrapper {
+            -webkit-overflow-scrolling: touch;
+          }
+          
+          /* iOS Safe Area 지원 */
+          .paperweight-layout-container .bottom-button-container {
+            padding-bottom: max(35px, env(safe-area-inset-bottom)) !important;
+          }
         `}
       </style>
 
@@ -279,27 +316,45 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
           maxHeight: "100dvh", // vh -> dvh
           overflow: "hidden",
           fontFamily: "Arial, sans-serif",
+          position: "relative", // 전체 컨테이너 기준점
         }}
       >
         <div
           className="slider-main-area"
           style={{
-            flexGrow: 1,
+            flex: "1 1 auto", // flexGrow: 1, flexShrink: 1, flexBasis: auto
             overflowY: "auto",
-            padding: "20px",
+            overflowX: "hidden", // 가로 스크롤 완전 차단
+            padding: "10px 10px 10px 10px", // 패딩 줄임
             display: "flex",
             flexDirection: "column",
             position: "relative", // 오버레이 기준점
+            minHeight: 0, // flex 아이템이 최소 컨텐츠 크기로 줄어들 수 있도록
+            height: "calc(100dvh - 140px)", // 하단 버튼 영역 계산 조정
+            scrollbarWidth: "thin", // Firefox 스크롤바 보이게
+            msOverflowStyle: "auto", // IE/Edge 스크롤바 보이게
           }}
         >
           {/* Slider는 항상 렌더링 */}
-          <Slider ref={sliderRef} {...settings} style={{ height: "100%" }}>
+          <Slider
+            ref={sliderRef}
+            {...settings}
+            style={{
+              height: "100%",
+              minHeight: "400px", // 최소 높이 줄임
+              flex: "1 1 auto",
+            }}
+          >
             {slidesContent.map((pageItems, pageIndex) => (
               <div
                 key={`page-${pageIndex}`} // 페이지 키
                 className="slide-content-wrapper"
                 style={{
                   outline: "none", // Slider 내부 div 포커스 아웃라인 제거
+                  height: "auto", // 자동 높이
+                  minHeight: "400px", // 슬라이드 최소 높이 줄임
+                  overflowY: "visible", // 스크롤을 상위로 위임
+                  overflowX: "hidden",
                 }}
               >
                 {pageItems.map((item) => (
@@ -307,18 +362,29 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                     key={item.id} // 항목의 id를 키로 사용 (id가 고유해야 함)
                     className="slide-item-content"
                     style={{
-                      height: "100%",
+                      minHeight: "auto", // 자동 높이
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center", // 내부 요소들 수평 중앙 정렬
-                      overflowX: "scroll",
+                      justifyContent: "flex-start", // 상단부터 정렬
+                      width: "100%",
+                      maxWidth: "100%",
+                      overflow: "visible", // 내용이 보이도록
+                      boxSizing: "border-box",
+                      paddingTop: "20px", // 상단 패딩 추가
+                      paddingBottom: "40px", // 하단 여백 줄임
                     }}
                   >
-                    <div style={{ height: "40px" }}></div>
                     {item.title && (
                       <Typography
                         align="center"
-                        sx={{ fontWeight: "bold", fontSize: "1.8rem" }}
+                        sx={{
+                          fontWeight: "bold",
+                          fontSize: "1.8rem",
+                          marginBottom: "15px", // 마진 줄임
+                          flexShrink: 0,
+                          paddingX: "20px", // 좌우 패딩 추가
+                        }}
                       >
                         {item.title[lang]}
                       </Typography>
@@ -333,6 +399,9 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                           lineHeight: "1.5",
                           fontWeight: "bold",
                           color: "red",
+                          marginBottom: "15px", // 마진 줄임
+                          flexShrink: 0,
+                          paddingX: "20px", // 좌우 패딩 추가
                         }}
                       >
                         {item.content[lang]}
@@ -340,15 +409,24 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                     ) : (
                       ""
                     )}
-                    {item.inputComponent &&
-                      item.inputComponent({
-                        value: answers[item.questionKey] || "",
-                        onChange: (value) =>
-                          handleItemInputChange(item.questionKey, value),
-                        onKeyDown: () => {},
-                        lang: lang,
-                      })}
-                    <div style={{ height: "40px" }}></div>
+                    <div
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        minHeight: "auto", // 자동 높이
+                      }}
+                    >
+                      {item.inputComponent &&
+                        item.inputComponent({
+                          value: answers[item.questionKey] || "",
+                          onChange: (value) =>
+                            handleItemInputChange(item.questionKey, value),
+                          onKeyDown: () => {},
+                          lang: lang,
+                        })}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -364,19 +442,19 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
         <div
           className="bottom-button-container"
           style={{
-            padding: "20px",
+            padding: "20px 20px 35px 20px", // 하단 패딩 더 증가
             textAlign: "center",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             borderTop: "1px solid #eee",
             backgroundColor: "white", // 배경색 추가하여 내용과 구분
-            // position: "fixed", // 이 방법 대신 flex-shrink:0 와 전체 flex 구조 활용
-            // bottom: 0,
-            // left: 0,
-            // width: "100%",
             boxSizing: "border-box",
             flexShrink: 0, // 상단 컨텐츠가 늘어나도 이 영역은 줄어들지 않음
+            minHeight: "140px", // 최소 높이 조정
+            maxHeight: "180px", // 최대 높이 제한
+            position: "relative",
+            zIndex: 10, // 다른 요소들 위에 표시
           }}
         >
           <Button
@@ -396,7 +474,8 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
               }
             }}
             style={{
-              width: "85%",
+              width: "calc(100% - 40px)", // 좌우 여백 20px씩 확보
+              maxWidth: "400px",
               height: "60px",
               cursor: "pointer",
               background: "#043E68",
@@ -423,7 +502,8 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                 onClick={previous}
                 disabled={currentPageIndex === 0}
                 style={{
-                  width: "85%",
+                  width: "calc(100% - 40px)", // 좌우 여백 20px씩 확보
+                  maxWidth: "400px",
                   height: "60px",
                   marginTop: "10px",
                   cursor: "pointer",
@@ -437,13 +517,18 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                 {langFile[lang].MOBILE_PRELIMINARY_BACK}
               </Button>
             ) : (
-              <Stack direction="row" spacing={2} width="85%">
+              <Stack
+                direction="row"
+                spacing={2}
+                width="calc(100% - 40px)"
+                maxWidth="400px"
+              >
                 <Button
                   className="button"
                   onClick={previous}
                   disabled={currentPageIndex === 0}
                   style={{
-                    width: "50%",
+                    flex: 1, // 동일한 비율로 공간 분할
                     height: "60px",
                     marginTop: "10px",
                     cursor: "pointer",
@@ -451,7 +536,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                     background: "white",
                     border: "1px solid #043E68",
                     borderRadius: "30px",
-                    fontSize: "1.3rem",
+                    fontSize: "1.2rem", // 폰트 크기 약간 줄임
                   }}
                 >
                   {langFile[lang].MOBILE_PRELIMINARY_BACK}
@@ -461,7 +546,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                   onClick={pass}
                   disabled={currentPageIndex === 0}
                   style={{
-                    width: "50%",
+                    flex: 1, // 동일한 비율로 공간 분할
                     height: "60px",
                     marginTop: "10px",
                     cursor: "pointer",
@@ -469,7 +554,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
                     background: "white",
                     border: "1px solid #043E68",
                     borderRadius: "30px",
-                    fontSize: "1.3rem",
+                    fontSize: "1.2rem", // 폰트 크기 약간 줄임
                   }}
                 >
                   {slidesContent[currentPageIndex]?.[0]?.passText[lang] || ""}
@@ -477,7 +562,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
               </Stack>
             )
           ) : (
-            <div style={{ height: "70px" }}></div>
+            <div style={{ height: "90px" }}></div>
           )}
         </div>
       </div>
