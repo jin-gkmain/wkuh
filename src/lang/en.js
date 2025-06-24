@@ -279,11 +279,10 @@ const lang = {
   VIDEO_MODAL_DELETE_VIDEO_ALERT_TITLE: "Delete video",
   VIDEO_MODAL_DELETE_VIDEO_ALERT_DESC:
     "Are you sure you want to delete the video?",
-  VIDEO_MODAL_ADD_VIDEO_ALERT_TITLE: "Add video",
+  VIDEO_MODAL_CP_DELETE_VIDEO_ALERT_TITLE: "Delete video",
+  VIDEO_MODAL_CP_DELETE_VIDEO_ALERT_DESC: "Video information has been deleted.",
+  VIDEO_MODAL_ADD_VIDEO_ALERT_TITLE: "Add video information",
   VIDEO_MODAL_ADD_VIDEO_ALERT_DESC: "Video information has been added.",
-  VIDEO_MODAL_EDIT_VIDEO_ALERT_TITLE: "Edit video",
-  VIDEO_MODAL_EDIT_VIDEO_ALERT_DESC: "Video information has been edited.",
-  VIDEO_MODAL_DELETE_VIDEO_ALERT_TITLE: "Delete video",
 
   // 진료 워크플로우 모달
   WORKFLOW_MODAL_TITLE: "Chart Workflow",

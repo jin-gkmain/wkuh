@@ -282,6 +282,12 @@ const lang = {
   VIDEO_MODAL_SELECT: "선택",
   VIDEO_MODAL_VIDEO_TYPE_ALERT: "영상유형을 선택해주세요.",
   VIDEO_MODAL_VIDEO_ALERT: "영상을 1개 이상 업로드해주세요.",
+  VIDEO_MODAL_DELETE_VIDEO_ALERT_TITLE: "영상 삭제",
+  VIDEO_MODAL_DELETE_VIDEO_ALERT_DESC: "영상을 삭제하시겠습니까?",
+  VIDEO_MODAL_CP_DELETE_VIDEO_ALERT_TITLE: "삭제완료",
+  VIDEO_MODAL_CP_DELETE_VIDEO_ALERT_DESC: "영상정보가 삭제되었습니다.",
+  VIDEO_MODAL_ADD_VIDEO_ALERT_TITLE: "영상 정보 등록",
+  VIDEO_MODAL_ADD_VIDEO_ALERT_DESC: "영상 정보가 등록되었습니다.",
 
   // 진료 워크플로우 모달
   WORKFLOW_MODAL_TITLE: "진료 워크플로우 진행",
