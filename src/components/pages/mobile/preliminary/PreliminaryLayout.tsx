@@ -309,7 +309,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
             padding-bottom: max(35px, env(safe-area-inset-bottom)) !important;
           }
           .slick-list {
-            overflow-y: hidden !important;
+            overflow-y: auto;
           }
           
           .slick-track {
