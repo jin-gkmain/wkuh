@@ -50,6 +50,8 @@ export default function AppointmentsPage() {
     search_date: null,
     search_p_name: "",
   });
+  const [selectedHostpitalCountry, setSelectedHostpitalCountry] =
+    useState<string>("korea");
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -98,6 +100,10 @@ export default function AppointmentsPage() {
 
     if (options.length) {
       setSelectedHospital(options[0].value);
+      setSelectedHostpitalCountry(
+        hospitals.find((o) => o.o_idx === parseInt(options[0].value))
+          ?.country || "korea"
+      );
     } else {
       setSelectedHospital("");
     }
@@ -107,6 +113,10 @@ export default function AppointmentsPage() {
     const matched = hospitalsOptions.find((item) => item.value === selected);
     if (matched) {
       setSelectedHospital(matched.value);
+      setSelectedHostpitalCountry(
+        hospitals.find((o) => o.o_idx === parseInt(selected))?.country ||
+          "korea"
+      );
     }
   };
 
@@ -331,7 +341,7 @@ export default function AppointmentsPage() {
                   </td>
                   <td>
                     {convertTimeToStr(
-                      "mongolia",
+                      selectedHostpitalCountry,
                       date,
                       null,
                       "YYYY-MM-DD a h:mm"

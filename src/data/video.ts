@@ -89,13 +89,11 @@ export async function getVideosByPatient(
   p_idx: number
 ): Promise<Video[] | "ServerError"> {
   try {
-    const res = await instance.post("/video_list", {
-      search: "p_idx",
-      search_key: p_idx.toString(),
-    });
+    const res = await instance.post("/video_list");
     const resData: MyResponse<ListRes<Video>> = res.data;
 
     if (resData.result) {
+      console.log("resData.result:", resData.result);
       return resData.result;
     }
     return [];

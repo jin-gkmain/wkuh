@@ -71,6 +71,7 @@ import {
   getPreliminaryByWIdx,
 } from "@/data/preliminary";
 import lang from "@/lang";
+import { getMedicalDeptOptions } from "./UserModalBox";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -315,7 +316,7 @@ export default function WorkflowModal({ closeModal }: Props) {
 
   // 간호사, 의사 등 selectInput 값 설정
   const handleSelect = (data: User, key: string) => {
-    let { u_idx, u_name_eng, u_name_kor } = data;
+    let { u_idx, u_name_eng, u_name_kor, medical_dept } = data;
     let copy = { ...chartInfo };
 
     switch (key) {
@@ -361,6 +362,7 @@ export default function WorkflowModal({ closeModal }: Props) {
           ca_doctor_idx: u_idx,
           ca_doctor_name_kor: u_name_kor,
           ca_doctor_name_eng: u_name_eng,
+          ca_department: medical_dept,
         };
         break;
       }
@@ -368,7 +370,18 @@ export default function WorkflowModal({ closeModal }: Props) {
 
     setChartInfo(copy);
   };
+  const getMedicalDeptName = (medicalDept: string | null | number): string => {
+    if (!medicalDept) return langFile[webLang].HISTORY_TABLE_DONT_KNOW;
 
+    const medicalDeptOptions = getMedicalDeptOptions(webLang, "doctor");
+    const deptOption = medicalDeptOptions.find(
+      (option) => option.value === String(medicalDept)
+    );
+
+    return deptOption
+      ? deptOption.key
+      : langFile[webLang].HISTORY_TABLE_DONT_KNOW;
+  };
   // tabType 에 따른 파일 요청 구분 key 반환
   const getFileGubun = (tabType: WorkflowTabType) => {
     let gubun1: Gubun1;
@@ -1539,8 +1552,12 @@ export default function WorkflowModal({ closeModal }: Props) {
                         className={
                           preliminaryTab === originalIdx ? "selected" : ""
                         }
+                        style={
+                          webLang === "en" ? { whiteSpace: "pre-line" } : {}
+                        }
                       >
-                        {langFile[webLang].WORKFLOW_MODAL_PR_TAB_TITLE} (
+                        {langFile[webLang].WORKFLOW_MODAL_PR_TAB_TITLE}
+                        {webLang === "en" ? "\n" : ""}(
                         {dayjs(item.registdate_utc).format("MM-DD")})
                         {/* 문진 */}
                       </li>
@@ -1839,14 +1856,16 @@ export default function WorkflowModal({ closeModal }: Props) {
                         {/* 진료과 */}
                       </label>
                       <input
-                        disabled={!!(userInfo && userInfo.p_idx)}
+                        disabled={true}
                         autoComplete="off"
                         type="text"
                         name="ca_department"
                         id="ca_department"
                         className="input"
-                        value={chartInfo.ca_department || ""}
-                        onChange={handleInputChange}
+                        value={
+                          getMedicalDeptName(chartInfo.ca_department) || "-"
+                        }
+                        onChange={() => {}}
                       />
                     </div>
                   </div>

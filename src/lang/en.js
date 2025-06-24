@@ -237,7 +237,7 @@ const lang = {
   CHART_RECENT_UPDATE_TEXT: "Recent updates",
   CHART_REGISTER_DATE_TEXT: "Created on",
   CHART_TABLE_BUTTON_TEXT: "Manage",
-  CHART_VIDEO_BUTTON_TEXT: "Download",
+  CHART_VIDEO_BUTTON_TEXT: "Check",
 
   // 영상정보
   VIDEO_NUM_TEXT: "No.",
@@ -276,13 +276,21 @@ const lang = {
   VIDEO_MODAL_SELECT: "Select",
   VIDEO_MODAL_VIDEO_TYPE_ALERT: "Select video type",
   VIDEO_MODAL_VIDEO_ALERT: "Upload at least one video",
+  VIDEO_MODAL_DELETE_VIDEO_ALERT_TITLE: "Delete video",
+  VIDEO_MODAL_DELETE_VIDEO_ALERT_DESC:
+    "Are you sure you want to delete the video?",
+  VIDEO_MODAL_ADD_VIDEO_ALERT_TITLE: "Add video",
+  VIDEO_MODAL_ADD_VIDEO_ALERT_DESC: "Video information has been added.",
+  VIDEO_MODAL_EDIT_VIDEO_ALERT_TITLE: "Edit video",
+  VIDEO_MODAL_EDIT_VIDEO_ALERT_DESC: "Video information has been edited.",
+  VIDEO_MODAL_DELETE_VIDEO_ALERT_TITLE: "Delete video",
 
   // 진료 워크플로우 모달
   WORKFLOW_MODAL_TITLE: "Chart Workflow",
 
   WORKFLOW_MODAL_TAB_PATIENT: "Patient",
   WORKFLOW_MODAL_TAB_OPINION: "Opinion",
-  WORKFLOW_MODAL_TAB_PRELIMINARY: "Preliminary Questionnaire",
+  WORKFLOW_MODAL_TAB_PRELIMINARY: "Preliminary",
   WORKFLOW_MODAL_TAB_TELECONSULTING: "Teleconsultation",
   WORKFLOW_MODAL_TAB_CARE_PLANS: "Care plan",
   WORKFLOW_MODAL_TAB_VISIT_FORM: "Visit form",
@@ -524,7 +532,7 @@ const lang = {
   APPOINTMENTS_CHART_TYPE_TEXT: "Reservation Type",
   APPOINTMENTS_PT_NAME_TEXT: "Patient Name",
   APPOINTMENTS_DATE_TEXT: "Reservation date",
-  MN_APPOINTMENTS_DATE_TEXT: "Mongolia time",
+  MN_APPOINTMENTS_DATE_TEXT: "Local time",
   KR_APPOINTMENTS_DATE_TEXT: "Korean time",
   APPOINTMENTS_TABLE_ROW_BUTTON_TEXT: "Entering",
   APPOINTMENTS_TABLE_ROW_BUTTON_TEXT2: "Confirm",

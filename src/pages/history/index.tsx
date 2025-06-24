@@ -346,8 +346,8 @@ export default function HistoryPage() {
     if (status.length > 0) {
       filtered = filtered.filter((workflow) => {
         // 상태를 매핑: 0=대기, 1=완료, 2=처방완료
-        const workflowStatus = workflow.vii_vi_yn === "Y" ? "1" : "0";
-        return status.includes(workflowStatus);
+        const workflowStatus = getStatus(workflow);
+        return status.includes(workflowStatus.toString());
       });
     }
 

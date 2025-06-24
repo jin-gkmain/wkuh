@@ -6,15 +6,15 @@ type Video = {
 
   di_hospital: string; // 진단 병원명
   di_doctor: string; // 진단 의사명
-  di_date: string; // 진단 날짜
+  di_date: Date; // 진단 날짜
   di_memo: string | null; // 진단 메모
-
+  registdate_utc: Date; // 등록일
   videos: VideoFile[];
 };
 
 type VideoFile = {
-  f_idx: number; // 파일 일련번호
-  f_name: string; // 파일명
+  vf_idx: number; // 파일 일련번호
+  file_name: string; // 파일명
   f_path: string; // 파일 경로
   f_type: string; // 파일 타입
   f_size: number; // 파일 크기

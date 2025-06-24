@@ -26,6 +26,7 @@ import { editVideo, registVideo, getVideo } from "@/data/video";
 import { getPatient } from "@/data/patient";
 import { videoActions } from "@/store/modules/videoSlice";
 import DropVideoFileInput from "../common/inputs/DropVideoFileInput";
+import useAlertModal from "@/hooks/useAlertModal";
 
 type Props = {
   item: Video | null;
@@ -45,10 +46,11 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
       p_idx: 0,
       di_hospital: "",
       di_doctor: "",
-      di_date: "",
+      di_date: new Date(),
       di_memo: "",
       v_sep: "",
       videos: [],
+      registdate_utc: new Date(),
     },
     patient: {
       p_idx: 0,
@@ -267,12 +269,12 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
         p_idx,
         di_hospital: di_hospital || "-",
         di_doctor: di_doctor || "-",
-        di_date: dayjs().format("YYYY-MM-DD"),
+        di_date: di_date || dayjs().format("YYYY-MM-DD"),
         di_memo: di_memo || "-",
         v_sep: v_sep,
       };
-      console.log("body:", body, dayjs().format("YYYY-MM-DD"));
 
+      console.log("body:", body);
       const editResult = await editVideo(v_idx, body);
       if (editResult === "SUCCESS") {
         if (videos.length > 0) {
@@ -317,12 +319,14 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   // item이 변경될 때 modalInfo 업데이트
   useEffect(() => {
     if (item?.p_idx) {
-      getVideoFiles(item.v_idx).then((files) => {
-        if (files !== "ServerError" && files) {
-          console.log("가져온 files:", files);
-          setVideos(files);
-        }
-      });
+      if (type !== "new") {
+        getVideoFiles(item.v_idx).then((files) => {
+          if (files !== "ServerError" && files) {
+            console.log("가져온 files:", files);
+            setVideos(files);
+          }
+        });
+      }
       getPatient(item.p_idx).then((patient) => {
         if (patient !== "ServerError" && patient) {
           setModalInfo({
@@ -487,7 +491,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
               </label>
               <input
                 autoComplete="off"
-                value={modalInfo.video.di_date}
+                value={modalInfo.video.di_date.toISOString().split("T")[0]}
                 onChange={handleOnChange}
                 type="date"
                 className="input"

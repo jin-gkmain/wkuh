@@ -268,10 +268,6 @@ function OrganizationModalBox({ closeModal, type, onComplete, item }: Props) {
     }
   };
 
-  const getCountry = useCallback((country: string) => {
-    return countrySelectOptions.find((i) => i.value === country).key;
-  }, []);
-
   // 기관수정의 경우 page에서 props로 기관 정보를 받아와 초기 설정
   useEffect(() => {
     if (item) {

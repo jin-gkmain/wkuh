@@ -194,7 +194,7 @@ export function PreliminaryView({
             <input
               readOnly
               autoComplete="off"
-              value={preliminary?.pain_degree || "-"}
+              value={preliminary?.pain_degree / 10 || "-"}
               disabled={true}
               type="text"
               className="input input-disabled"

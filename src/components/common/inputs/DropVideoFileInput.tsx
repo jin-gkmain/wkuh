@@ -162,7 +162,6 @@ type ItemProps = React.HtmlHTMLAttributes<HTMLDivElement> & {
 
 function FileItem({ file, length, onRemove, disabled }: ItemProps) {
   const { webLang } = useContext(LanguageContext);
-  console.log("file:", file);
   const handleRemove = (ev?: MouseEvent<HTMLDivElement>) => {
     ev?.stopPropagation();
     if (isVideoFile(file)) {
@@ -178,7 +177,6 @@ function FileItem({ file, length, onRemove, disabled }: ItemProps) {
   };
 
   const handleDownload = async () => {
-    console.log("file:", file);
     if (isVideoFile(file)) {
       const res = await downloadVideoFile(
         (file as any).vf_idx || (file as any).f_idx

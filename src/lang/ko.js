@@ -243,7 +243,7 @@ const lang = {
   CHART_RECENT_UPDATE_TEXT: "최근 업데이트일",
   CHART_REGISTER_DATE_TEXT: "진료 생성일",
   CHART_TABLE_BUTTON_TEXT: "진행관리",
-  CHART_VIDEO_BUTTON_TEXT: "다운로드",
+  CHART_VIDEO_BUTTON_TEXT: "정보확인",
 
   // 영상정보
   VIDEO_NUM_TEXT: "No.",
@@ -524,7 +524,7 @@ const lang = {
   APPOINTMENTS_CHART_TYPE_TEXT: "진료유형",
   APPOINTMENTS_PT_NAME_TEXT: "환자명",
   APPOINTMENTS_DATE_TEXT: "진행일자",
-  MN_APPOINTMENTS_DATE_TEXT: "몽골 진행일자",
+  MN_APPOINTMENTS_DATE_TEXT: "현지 진행일자",
   KR_APPOINTMENTS_DATE_TEXT: "한국 진행일자",
   APPOINTMENTS_TABLE_ROW_BUTTON_TEXT: "입장하기",
   APPOINTMENTS_TABLE_ROW_BUTTON_TEXT2: "확인하기",
@@ -638,6 +638,15 @@ const lang = {
   DELETE_PATIENT_ALERT_DESC: "삭제 버튼을 클릭하시면 환자가 삭제됩니다.",
   CP_DELETE_PATIENT_ALERT_TITLE: "환자 삭제 완료",
   CP_DELETE_PATIENT_ALERT_DESC: "환자 삭제가 완료되었습니다.",
+
+  ADD_VIDEO_ALERT_TITLE: "영상 정보 등록 완료",
+  ADD_VIDEO_ALERT_DESC: "영상 정보 등록이 완료되었습니다.",
+  EDIT_VIDEO_ALERT_TITLE: "영상 정보 수정 완료",
+  EDIT_VIDEO_ALERT_DESC: "영상 정보 수정이 완료되었습니다.",
+  DELETE_VIDEO_ALERT_TITLE: "영상을 삭제하시겠습니까?",
+  DELETE_VIDEO_ALERT_DESC: "삭제 버튼을 클릭하시면 영상이 삭제됩니다.",
+  CP_DELETE_VIDEO_ALERT_TITLE: "영상 삭제 완료",
+  CP_DELETE_VIDEO_ALERT_DESC: "영상 삭제가 완료되었습니다.",
 
   DELETE_WORKFLOW_ALERT_TITLE: "진료를 삭제하시겠습니까?",
   DELETE_WORKFLOW_ALERT_DESC: "삭제 버튼을 클릭하시면 진료가 삭제됩니다.",

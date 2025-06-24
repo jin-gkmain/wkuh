@@ -58,14 +58,18 @@ export default function DiagnosisPage() {
     closeModal: closeDeleteModal,
   } = useModal();
   const { AlertModalPortal, openAlertModal, closeAlertModal } = useAlertModal();
+  const {
+    AlertModalPortal: VideoDeleteAlertModalPortal,
+    openAlertModal: openVideoDeleteAlertModal,
+    closeAlertModal: closeVideoDeleteAlertModal,
+  } = useAlertModal();
+  const {
+    AlertModalPortal: VideoAddAlertModalPortal,
+    openAlertModal: openVideoAddAlertModal,
+    closeAlertModal: closeVideoAddAlertModal,
+  } = useAlertModal();
   const selectedChart = useRef(0);
   const selectedVideoId = useRef(0);
-
-  const {
-    ModalPortal: VideoModalPortal,
-    openModal: openVideoModal,
-    closeModal: closeVideoModal,
-  } = useModal();
 
   const {
     ModalPortal: DeleteVideoModalPortal,
@@ -139,13 +143,15 @@ export default function DiagnosisPage() {
       // Redux store에서 삭제된 비디오 제거
       dispatch(videoActions.removeVideo(selectedVideoId.current));
       closeDeleteVideoModal();
-      openAlertModal();
+      openVideoDeleteAlertModal();
 
       // 비디오 목록 새로고침
       if (patientInfo) {
         const v = await getVideosByPatient(patientInfo.p_idx);
         if (v !== "ServerError") {
-          dispatch(videoActions.setVideos(v));
+          const newV = v.filter((item) => item.p_idx === patientInfo.p_idx);
+          newV.map((item) => (item.di_date = dayjs(item.di_date).toDate()));
+          dispatch(videoActions.setVideos(newV));
         }
       }
     } else {
@@ -200,8 +206,9 @@ export default function DiagnosisPage() {
       v_sep: "",
       di_hospital: "",
       di_doctor: "",
-      di_date: dayjs().format("YYYY-MM-DD"),
+      di_date: dayjs().toDate(),
       di_memo: "",
+      registdate_utc: dayjs().toDate(),
       videos: [],
     };
 
@@ -259,9 +266,15 @@ export default function DiagnosisPage() {
       }
 
       const v = await getVideosByPatient(parseInt(p_idx));
+
       if (v !== "ServerError") {
-        v.map((item) => (item.di_date = dayjs().format("YYYY-MM-DD")));
-        dispatch(videoActions.setVideos(v));
+        let newV = v.filter((item) => item.p_idx === parseInt(p_idx));
+        console.log("v:", newV);
+        debugger;
+        let newVV = newV.map((item) => (item.di_date = dayjs().toDate()));
+        console.log("v:", newV);
+        console.log("newV:", newVV);
+        dispatch(videoActions.setVideos(newV));
       }
     };
 
@@ -357,12 +370,20 @@ export default function DiagnosisPage() {
       <DeleteVideoModalPortal>
         <ConfirmAlertBox
           handleClose={closeDeleteVideoModal}
-          title="영상 삭제"
-          desc="선택한 영상을 삭제하시겠습니까?"
+          title={langFile[webLang].VIDEO_MODAL_DELETE_VIDEO_ALERT_TITLE}
+          desc={langFile[webLang].VIDEO_MODAL_DELETE_VIDEO_ALERT_DESC}
           iconType="remove"
           handleMainClick={deleteVideoHandler}
         />
       </DeleteVideoModalPortal>
+
+      <VideoDeleteAlertModalPortal>
+        <CheckAlertbox
+          handleClose={closeVideoDeleteAlertModal}
+          title={langFile[webLang].VIDEO_MODAL_DELETE_VIDEO_ALERT_TITLE}
+          desc={langFile[webLang].VIDEO_MODAL_DELETE_VIDEO_ALERT_DESC}
+        />
+      </VideoDeleteAlertModalPortal>
 
       <AlertModalPortal>
         <CheckAlertbox
@@ -372,6 +393,13 @@ export default function DiagnosisPage() {
         />
       </AlertModalPortal>
 
+      <VideoAddAlertModalPortal>
+        <CheckAlertbox
+          handleClose={closeVideoAddAlertModal}
+          title={langFile[webLang].VIDEO_MODAL_ADD_VIDEO_ALERT_TITLE}
+          desc={langFile[webLang].VIDEO_MODAL_ADD_VIDEO_ALERT_DESC}
+        />
+      </VideoAddAlertModalPortal>
       {isModalOpen &&
         (() => {
           const modalRoot = document.querySelector("#root-modal");
@@ -389,10 +417,18 @@ export default function DiagnosisPage() {
                   type={selectedVideo?.v_idx === 0 ? "new" : "manage"}
                   onComplete={async () => {
                     // 비디오 목록 새로고침
+                    openVideoAddAlertModal();
                     if (patientInfo) {
                       const v = await getVideosByPatient(patientInfo.p_idx);
                       if (v !== "ServerError") {
-                        dispatch(videoActions.setVideos(v));
+                        const newV = v.filter(
+                          (item) => item.p_idx === patientInfo.p_idx
+                        );
+                        newV.map(
+                          (item) =>
+                            (item.di_date = dayjs(item.di_date).toDate())
+                        );
+                        dispatch(videoActions.setVideos(newV));
                       }
                     }
                     dispatch(videoActions.closeModal());
@@ -546,13 +582,17 @@ export default function DiagnosisPage() {
           <tbody>
             {videos.map(
               (
-                { v_idx, v_sep, di_hospital, di_doctor, di_memo, di_date },
+                {
+                  v_idx,
+                  v_sep,
+                  di_hospital,
+                  di_doctor,
+                  di_memo,
+                  di_date,
+                  registdate_utc,
+                },
                 index
               ) => {
-                console.log(
-                  "비디오 테이블 렌더링 - videoTableDropOptions:",
-                  videoTableDropOptions
-                );
                 return (
                   <TableRow<TableMenuOption>
                     key={`video-${v_idx}-${index}`}
@@ -561,7 +601,6 @@ export default function DiagnosisPage() {
                         (v) => v.v_idx === v_idx
                       );
                       if (currentVideo) {
-                        console.log("currentVideo:", currentVideo);
                         dispatch(
                           videoActions.openModal({
                             video: currentVideo,
@@ -579,7 +618,7 @@ export default function DiagnosisPage() {
                     tableRowOptionType={videoTableDropOptions}
                     lang={webLang}
                   >
-                    <td>{v_idx}</td>
+                    <td>{videos.length - index}</td>
                     <td>{v_sep || "-"}</td>
                     <td>{di_hospital || "-"}</td>
                     <td>{di_doctor || "-"}</td>
@@ -588,7 +627,9 @@ export default function DiagnosisPage() {
                       {di_date ? dayjs(di_date).format("YYYY-MM-DD") : "-"}
                     </td>
                     <td>
-                      {di_date ? dayjs(di_date).format("YYYY-MM-DD") : "-"}
+                      {registdate_utc
+                        ? dayjs(registdate_utc).format("YYYY-MM-DD")
+                        : "-"}
                     </td>
                   </TableRow>
                 );
