@@ -44,7 +44,7 @@ export default function MobileHosIndexPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          minHeight: "100%",
+          minHeight: "calc(100vh - 80px)", // 헤더 높이를 고려한 최소 높이
           m: 2,
           mt: 5,
           pb: "100px",

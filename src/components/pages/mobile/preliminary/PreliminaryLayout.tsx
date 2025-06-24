@@ -308,8 +308,9 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
           .paperweight-layout-container .bottom-button-container {
             padding-bottom: max(35px, env(safe-area-inset-bottom)) !important;
           }
-          .slick-list {
+          .slick-list .slick-current {
             overflow-y: auto;
+            padding-top: 130px;
           }
           
           .slick-track {
@@ -466,6 +467,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
             minHeight: "160px", // 최소 높이 증가
             position: "relative",
             zIndex: 10, // 다른 요소들 위에 표시
+            marginBottom: "30px",
           }}
         >
           <Button

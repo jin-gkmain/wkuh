@@ -26,6 +26,9 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   const router = useRouter();
   const { lang, setLang } = useContext(LanguageContext);
 
+  // 현재 경로가 메인 페이지인지 확인 (예: /mobile/102)
+  const isMainPage = router.asPath && /^\/mobile\/\d+$/.test(router.asPath);
+
   useEffect(() => {
     const setAppHeight = () => {
       const doc = document.documentElement;
@@ -44,8 +47,35 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="mobile-layout">
-        <div className="mobile-layout-content">
+      <div
+        className="mobile-layout"
+        style={{
+          minWidth: "360px",
+          maxWidth: "428px",
+          minHeight: "740px",
+          height: "var(--app-height, 100vh)",
+          margin: "auto",
+          position: "relative",
+          overflow: isMainPage ? "hidden" : "auto",
+          background: "white",
+          paddingBottom: "env(safe-area-inset-bottom)",
+          display: isMainPage ? "flex" : "block",
+          flexDirection: isMainPage ? "column" : "initial",
+        }}
+      >
+        <div
+          className="mobile-layout-content"
+          style={{
+            position: "relative",
+            zIndex: 1,
+            flex: isMainPage ? 1 : "initial",
+            display: isMainPage ? "flex" : "block",
+            flexDirection: isMainPage ? "column" : "initial",
+            overflow: isMainPage ? "hidden" : "visible",
+            minHeight: isMainPage ? 0 : "auto",
+            height: isMainPage ? "auto" : "100%",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -93,7 +123,28 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
               </FormControl>
             </Box>
           </Box>
-          <div className="mobile-content-wrapper">{children}</div>
+          <div
+            className="mobile-content-wrapper"
+            style={{
+              flex: isMainPage ? 1 : "initial",
+              overflow: isMainPage ? "hidden" : "visible",
+              display: isMainPage ? "flex" : "block",
+              flexDirection: isMainPage ? "column" : "initial",
+              minHeight: isMainPage ? 0 : "auto",
+            }}
+          >
+            <div
+              style={{
+                minHeight: isMainPage ? "calc(100vh - 60px)" : "auto",
+                paddingBottom: isMainPage ? "100px" : "0",
+                overflowY: isMainPage ? "auto" : "visible",
+                flex: isMainPage ? 1 : "initial",
+                WebkitOverflowScrolling: isMainPage ? "touch" : "auto",
+              }}
+            >
+              {children}
+            </div>
+          </div>
         </div>
       </div>
     </ThemeProvider>

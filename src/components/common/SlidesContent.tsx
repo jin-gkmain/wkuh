@@ -345,7 +345,7 @@ const MyButtonGroup = ({
                 onClick={() => handleButtonClick(option.id, option.type)}
                 onKeyDown={onKeyDown}
                 sx={{
-                  padding: "15px 10px",
+                  padding: "10px 10px",
                   fontSize: lang === "ko" ? "1.3rem" : "1rem",
                   borderRadius: "25px",
                   border:
@@ -454,7 +454,7 @@ const MySelectButtonGroup = ({
             onKeyDown={onKeyDown}
             sx={{
               padding: "15px 10px",
-              fontSize: "1.3rem",
+              fontSize: lang === "ko" ? "1.3rem" : "1rem",
               borderRadius: "25px",
               border:
                 selectedOption === option.id

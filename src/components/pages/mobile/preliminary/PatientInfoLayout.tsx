@@ -25,7 +25,9 @@ export default function PatientInfoLayout({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "20px",
+        padding: "30px",
+        paddingTop: "100px",
+        overflowY: "auto",
       }}
     >
       <Grid container spacing={2} sx={{ width: "90%" }}>
