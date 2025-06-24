@@ -213,7 +213,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
         p_idx,
         di_hospital,
         di_doctor,
-        di_date: di_date,
+        di_date: di_date || dayjs().format("YYYY-MM-DD"),
         di_memo,
         v_sep: v_sep,
         regist_u_idx: userInfo.u_idx,
@@ -264,12 +264,14 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
     } else {
       // 수정하는 경우
       let body: any = {
-        di_hospital,
-        di_doctor,
-        di_date: di_date,
-        di_memo,
+        p_idx,
+        di_hospital: di_hospital || "-",
+        di_doctor: di_doctor || "-",
+        di_date: dayjs().format("YYYY-MM-DD"),
+        di_memo: di_memo || "-",
         v_sep: v_sep,
       };
+      console.log("body:", body, dayjs().format("YYYY-MM-DD"));
 
       const editResult = await editVideo(v_idx, body);
       if (editResult === "SUCCESS") {
@@ -485,7 +487,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
               </label>
               <input
                 autoComplete="off"
-                value={modalInfo.video.di_date || ""}
+                value={modalInfo.video.di_date}
                 onChange={handleOnChange}
                 type="date"
                 className="input"

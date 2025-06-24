@@ -260,6 +260,7 @@ export default function DiagnosisPage() {
 
       const v = await getVideosByPatient(parseInt(p_idx));
       if (v !== "ServerError") {
+        v.map((item) => (item.di_date = dayjs().format("YYYY-MM-DD")));
         dispatch(videoActions.setVideos(v));
       }
     };
@@ -560,6 +561,7 @@ export default function DiagnosisPage() {
                         (v) => v.v_idx === v_idx
                       );
                       if (currentVideo) {
+                        console.log("currentVideo:", currentVideo);
                         dispatch(
                           videoActions.openModal({
                             video: currentVideo,
