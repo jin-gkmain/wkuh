@@ -5,6 +5,7 @@ type Preliminary = {
   p_serial_no: string;
   p_birthday: string;
   pl_data: PreliminaryData;
+  registdate_utc: Date;
 };
 
 type PreliminaryData = {

@@ -18,7 +18,10 @@ import dayjs from "dayjs";
 import { useAppSelector, useAppDispatch } from "@/store";
 import { editOrg, registOrg } from "@/data/org";
 import getFiles, { deleteFile, uploadFiles } from "@/data/file";
-import getVideoFiles, { uploadVideoFiles } from "@/data/video_file";
+import getVideoFiles, {
+  deleteVideoFile,
+  uploadVideoFiles,
+} from "@/data/video_file";
 import { editVideo, registVideo, getVideo } from "@/data/video";
 import { getPatient } from "@/data/patient";
 import { videoActions } from "@/store/modules/videoSlice";
@@ -86,7 +89,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
 
   const handleRemove = async (id: string) => {
     if (videos.length > 0 && isSavedFile(videos[0])) {
-      const res = await deleteFile(parseInt(id));
+      const res = await deleteVideoFile(parseInt(id));
       if (res === "SUCCESS") {
         setVideos((prev) =>
           prev.filter((file) => {

@@ -122,7 +122,7 @@ export function PreliminaryView({
   view,
 }: PreliminaryViewProps) {
   const preliminaryRaw = preliminaryInfo?.pl_data;
-
+  console.log("preliminaryInfo >", preliminaryInfo);
   // pl_data 자체가 JSON 문자열이므로 파싱해야 함
   const preliminary = parseJsonString(preliminaryRaw);
 

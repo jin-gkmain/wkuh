@@ -44,7 +44,7 @@ export default function MobileHosIndexPage() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          minHeight: "100%",
           m: 2,
           mt: 5,
           pb: "100px",

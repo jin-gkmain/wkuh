@@ -94,7 +94,7 @@ export default function WorkflowModal({ closeModal }: Props) {
     getTableRowMenuOptions("remove", webLang)
   );
   const [preliminaryTab, setPreliminaryTab] = useState<number>(0);
-  const [preliminaryTabs, setPreliminaryTabs] = useState<number[]>([]);
+  const [preliminaryTabs, setPreliminaryTabs] = useState<string[]>([]);
   const tabs = getTabs(webLang);
   const selectedId = useRef<string>();
   const [loading, setLoading] = useState(false);
@@ -1165,10 +1165,12 @@ export default function WorkflowModal({ closeModal }: Props) {
           setPreliminaryInfo(preliminary);
           const tabIds = preliminary.map((item) => {
             console.log("preliminaryItem >", item);
-            return item.pl_idx;
+            return item.registdate_utc.toString();
           });
           setPreliminaryTabs(tabIds);
           console.log("preliminary 탭 설정됨:", tabIds);
+          // 가장 최신 데이터(첫 번째 탭)를 기본 선택값으로 설정
+          setPreliminaryTab(preliminary.length - 1);
           isPreliminary.current = true;
         } else {
           console.log("preliminary 데이터 없음");
@@ -1523,17 +1525,27 @@ export default function WorkflowModal({ closeModal }: Props) {
               </div>
 
               <ul className="tabs flex gap-10 relative">
-                {preliminaryInfo.map((item, idx) => (
-                  <li
-                    key={idx}
-                    data-tab={idx}
-                    onClick={handlePreliminaryTab}
-                    className={preliminaryTab === idx ? "selected" : ""}
-                  >
-                    {langFile[webLang].WORKFLOW_MODAL_PR_TAB_TITLE} {idx + 1}
-                    {/* 문진 */}
-                  </li>
-                ))}
+                {preliminaryInfo
+                  .slice()
+                  .reverse()
+                  .map((item, reversedIdx) => {
+                    const originalIdx =
+                      preliminaryInfo.length - 1 - reversedIdx;
+                    return (
+                      <li
+                        key={originalIdx}
+                        data-tab={originalIdx}
+                        onClick={handlePreliminaryTab}
+                        className={
+                          preliminaryTab === originalIdx ? "selected" : ""
+                        }
+                      >
+                        {langFile[webLang].WORKFLOW_MODAL_PR_TAB_TITLE} (
+                        {dayjs(item.registdate_utc).format("MM-DD")})
+                        {/* 문진 */}
+                      </li>
+                    );
+                  })}
               </ul>
 
               {/* 선택된 사전문진 내용 */}

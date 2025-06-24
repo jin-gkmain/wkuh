@@ -53,6 +53,11 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
               justifyContent: "space-between",
               p: 2,
               pb: 0,
+              flexShrink: 0, // 헤더 영역이 줄어들지 않도록
+              position: "sticky",
+              top: 0,
+              backgroundColor: "white",
+              zIndex: 10,
             }}
           >
             <Box>
@@ -88,7 +93,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
               </FormControl>
             </Box>
           </Box>
-          {children}
+          <div className="mobile-content-wrapper">{children}</div>
         </div>
       </div>
     </ThemeProvider>

@@ -188,6 +188,7 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
         allergy: answers["userAllergy"] || [],
         todoc: answers["userTodoc"] || "",
       },
+      registdate_utc: new Date(),
     };
     const res = await registPreliminary(preliminary);
     if (res === "SUCCESS") {
@@ -306,6 +307,14 @@ function PreliminaryLayout({ slidesContent }: PreliminaryLayoutProps) {
           /* iOS Safe Area 지원 */
           .paperweight-layout-container .bottom-button-container {
             padding-bottom: max(35px, env(safe-area-inset-bottom)) !important;
+          }
+          .slick-list {
+            overflow-y: hidden !important;
+          }
+          
+          .slick-track {
+            display: flex;
+            align-items: stretch;
           }
         `}
       </style>

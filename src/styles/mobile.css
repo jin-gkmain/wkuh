@@ -21,7 +21,7 @@ body::-webkit-scrollbar {
   height: var(--app-height, 100vh);
   margin: auto;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
   background: white;
   padding-bottom: env(safe-area-inset-bottom); /* iOS Safe Area 지원 */
 }
@@ -54,15 +54,36 @@ body::-webkit-scrollbar {
 
 .mobile-layout-content {
   position: relative;
-  overflow-y: auto;
   z-index: 1;
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* 상위 컨테이너는 스크롤 비활성화 */
 }
 
-.mobile-layout-content::-webkit-scrollbar {
-  display: none;
+.mobile-content-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
+  height: 100%;
+}
+
+.mobile-content-wrapper::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mobile-content-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mobile-content-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.mobile-content-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
 }
 
 /* 모바일 input 컴포넌트 스타일 개선 */
@@ -86,4 +107,27 @@ body::-webkit-scrollbar {
 .bottom-button-container .MuiStack-root {
   width: 100% !important;
   max-width: 400px !important;
+}
+
+/* 모바일 전용 스크롤 설정 */
+.mobile-layout {
+  scroll-behavior: smooth;
+}
+
+.mobile-content-wrapper {
+  /* 터치 스크롤 최적화 */
+  touch-action: pan-y;
+  scroll-behavior: smooth;
+}
+
+/* 버튼카드 컨테이너 스타일 */
+.mobile-button-cards-container {
+  padding-bottom: 50px !important;
+}
+
+/* iOS Safe Area 지원 개선 */
+@supports (padding: max(0px)) {
+  .mobile-layout {
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
 }
