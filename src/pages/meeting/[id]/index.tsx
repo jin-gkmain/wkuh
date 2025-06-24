@@ -1,5 +1,5 @@
 import MeetingRoom from "@/components/pages/meeting/MeetingRoom";
-import { LanguageContext } from "@/context/LanguageContext";
+import { LangType, LanguageContext } from "@/context/LanguageContext";
 import { getPatients, getPatient } from "@/data/patient";
 import { getWorkflow } from "@/data/workflow";
 import useMe from "@/hooks/useMe";
@@ -25,6 +25,7 @@ export default function MeetingPage() {
     startDate: "",
     endDate: "",
   });
+  const { setLang, setWebLang } = useContext(LanguageContext);
   const [meetingId, setMeetingId] = useState("");
   const [meetingInfo, setMeetingInfo] = useState<MeetingInfo | null>(null);
 
@@ -67,6 +68,12 @@ export default function MeetingPage() {
       const meetingId = router.query.id as string;
       const p_idx = router.query.p as string;
       const w_idx = router.query.w as string;
+      const lang = router.query.lang as LangType;
+
+      if (lang) {
+        setLang(lang);
+        setWebLang(lang);
+      }
 
       if (p_idx && w_idx) {
         const fetchData = async () => {

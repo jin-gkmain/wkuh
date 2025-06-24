@@ -1661,7 +1661,10 @@ export default function WorkflowModal({ closeModal }: Props) {
                   {/* 참여링크 */}
                 </span>
                 <div className="copy-link input input-disabled flex align-center justify-between">
-                  <a href={chartInfo.te_link} target="_blank">
+                  <a
+                    href={chartInfo.te_link + "?lang=" + webLang}
+                    target="_blank"
+                  >
                     {chartInfo.te_link}
                   </a>
                   <button onClick={copyTeleLink} type="button">
