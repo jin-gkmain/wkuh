@@ -21,11 +21,12 @@ const initialState: VideoSliceState = {
   edit: [0],
 };
 
-// Date 객체를 string으로 변환하는 헬퍼 함수
+// Date를 ISO 문자열로 변환하는 헬퍼 함수
 const normalizeVideo = (video: Video): Video => {
   return {
     ...video,
-    di_date: dayjs(video.di_date).toDate(),
+    di_date: dayjs(video.di_date).toISOString(),
+    registdate_utc: dayjs(video.registdate_utc).toISOString(),
   };
 };
 

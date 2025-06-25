@@ -46,11 +46,11 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
       p_idx: 0,
       di_hospital: "",
       di_doctor: "",
-      di_date: new Date(),
+      di_date: dayjs().toISOString(),
       di_memo: "",
       v_sep: "",
       videos: [],
-      registdate_utc: new Date(),
+      registdate_utc: dayjs().toISOString(),
     },
     patient: {
       p_idx: 0,
@@ -65,8 +65,8 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
       tel: "",
       address: "",
       note: "",
-      registdate_locale: new Date(),
-      registdate_utc: new Date(),
+      registdate_locale: dayjs().toISOString(),
+      registdate_utc: dayjs().toISOString(),
       visit_paths: "",
       p_serial_no: "",
 
@@ -215,7 +215,9 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
         p_idx,
         di_hospital,
         di_doctor,
-        di_date: di_date || dayjs().format("YYYY-MM-DD"),
+        di_date: di_date
+          ? dayjs(di_date).format("YYYY-MM-DD")
+          : dayjs().format("YYYY-MM-DD"),
         di_memo,
         v_sep: v_sep,
         regist_u_idx: userInfo.u_idx,
@@ -269,7 +271,9 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
         p_idx,
         di_hospital: di_hospital || "-",
         di_doctor: di_doctor || "-",
-        di_date: di_date || dayjs().format("YYYY-MM-DD"),
+        di_date: di_date
+          ? dayjs(di_date).format("YYYY-MM-DD")
+          : dayjs().format("YYYY-MM-DD"),
         di_memo: di_memo || "-",
         v_sep: v_sep,
       };
@@ -310,9 +314,16 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
   ) => {
     const target = ev.target;
     const { name, value } = target;
+
+    // 날짜 필드의 경우 ISO 문자열로 변환
+    let processedValue = value;
+    if (name === "di_date" && value) {
+      processedValue = dayjs(value).toISOString();
+    }
+
     setModalInfo((prev) => ({
       ...prev,
-      video: { ...prev.video, [name]: value },
+      video: { ...prev.video, [name]: processedValue },
     }));
   };
 
@@ -491,7 +502,7 @@ function VideoModalBox({ closeModal, type, onComplete, item }: Props) {
               </label>
               <input
                 autoComplete="off"
-                value={modalInfo.video.di_date.toISOString().split("T")[0]}
+                value={dayjs(modalInfo.video.di_date).format("YYYY-MM-DD")}
                 onChange={handleOnChange}
                 type="date"
                 className="input"

@@ -150,7 +150,6 @@ export default function DiagnosisPage() {
         const v = await getVideosByPatient(patientInfo.p_idx);
         if (v !== "ServerError") {
           const newV = v.filter((item) => item.p_idx === patientInfo.p_idx);
-          newV.map((item) => (item.di_date = dayjs(item.di_date).toDate()));
           dispatch(videoActions.setVideos(newV));
         }
       }
@@ -206,9 +205,9 @@ export default function DiagnosisPage() {
       v_sep: "",
       di_hospital: "",
       di_doctor: "",
-      di_date: dayjs().toDate(),
+      di_date: dayjs().toISOString(),
       di_memo: "",
-      registdate_utc: dayjs().toDate(),
+      registdate_utc: dayjs().toISOString(),
       videos: [],
     };
 
@@ -269,7 +268,6 @@ export default function DiagnosisPage() {
 
       if (v !== "ServerError") {
         let newV = v.filter((item) => item.p_idx === parseInt(p_idx));
-        newV.map((item) => (item.di_date = dayjs(item.di_date).toDate()));
         dispatch(videoActions.setVideos(newV));
       }
     };
@@ -419,10 +417,6 @@ export default function DiagnosisPage() {
                       if (v !== "ServerError") {
                         const newV = v.filter(
                           (item) => item.p_idx === patientInfo.p_idx
-                        );
-                        newV.map(
-                          (item) =>
-                            (item.di_date = dayjs(item.di_date).toDate())
                         );
                         dispatch(videoActions.setVideos(newV));
                       }

@@ -12,8 +12,8 @@ type Patient = {
   tel: string | null; // 연락처
   address: string | null; // 집주소
   note: string | null; // 메모
-  registdate_locale: Date; // local 등록시간
-  registdate_utc: Date; // utc 등록시간
+  registdate_locale: string | Date; // local 등록시간 (Redux store에서는 string, UI에서는 Date)
+  registdate_utc: string | Date; // utc 등록시간 (Redux store에서는 string, UI에서는 Date)
   visit_paths: string | null; // 내원 경로
   p_serial_no: string | null; // 환자 일련번호(사용자 입력)
 

@@ -6,9 +6,9 @@ type Video = {
 
   di_hospital: string; // 진단 병원명
   di_doctor: string; // 진단 의사명
-  di_date: Date; // 진단 날짜
+  di_date: string | Date; // 진단 날짜 (Redux store에서는 string, UI에서는 Date)
   di_memo: string | null; // 진단 메모
-  registdate_utc: Date; // 등록일
+  registdate_utc: string | Date; // 등록일 (Redux store에서는 string, UI에서는 Date)
   videos: VideoFile[];
 };
 
@@ -18,7 +18,7 @@ type VideoFile = {
   f_path: string; // 파일 경로
   f_type: string; // 파일 타입
   f_size: number; // 파일 크기
-  f_registdate: Date; // 파일 등록일
+  f_registdate: string | Date; // 파일 등록일 (Redux store에서는 string, UI에서는 Date)
 };
 
 type VideoModal = {
