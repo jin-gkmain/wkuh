@@ -25,10 +25,7 @@ const initialState: VideoSliceState = {
 const normalizeVideo = (video: Video): Video => {
   return {
     ...video,
-    di_date:
-      typeof video.di_date === "string"
-        ? video.di_date
-        : dayjs(video.di_date).format("YYYY-MM-DD"),
+    di_date: dayjs(video.di_date).toDate(),
   };
 };
 

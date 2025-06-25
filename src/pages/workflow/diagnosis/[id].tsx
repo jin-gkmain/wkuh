@@ -269,11 +269,7 @@ export default function DiagnosisPage() {
 
       if (v !== "ServerError") {
         let newV = v.filter((item) => item.p_idx === parseInt(p_idx));
-        console.log("v:", newV);
-        debugger;
-        let newVV = newV.map((item) => (item.di_date = dayjs().toDate()));
-        console.log("v:", newV);
-        console.log("newV:", newVV);
+        newV.map((item) => (item.di_date = dayjs(item.di_date).toDate()));
         dispatch(videoActions.setVideos(newV));
       }
     };
