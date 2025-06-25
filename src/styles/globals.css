@@ -830,7 +830,7 @@
 
 .modal-small {
   width: 70dvh;
-  height: 70dvh;
+  height: 90dvh;
 }
 
 .modal-frame .title {
@@ -2262,7 +2262,11 @@ thead th .fc-scroller {
 /* OrganizationModalBox component */
 
 .org-modal-box .modal-frame {
-  height: 871px;
+  height: 70dvh;
+}
+.org-modal-box .modal-frame .contents-box {
+  max-height: calc(70dvh - (130px + 80px));
+  overflow-y: auto;
 }
 
 @media screen and (max-height: 871px) {
