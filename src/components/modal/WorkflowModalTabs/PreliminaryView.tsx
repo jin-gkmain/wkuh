@@ -89,6 +89,14 @@ const getKeyDisplayText = (key: string, lang: LangType) => {
     smoke2: { ko: "과거에 피웠지만 끊었음", en: "Quit smoking" },
     smoke3: { ko: "아니요", en: "Non-smoker" },
 
+    // 수술
+    surgery1: { ko: "맹장 수술", en: "Appendectomy" },
+    surgery2: { ko: "제왕절개", en: "Cesarean section" },
+    surgery3: { ko: "담낭 제거 수술", en: "Gallbladder removal" },
+    surgery4: { ko: "정형외과 수술", en: "Orthopedic" },
+    surgery5: { ko: "심장 수술", en: "Heart" },
+    surgery6: { ko: "종양 제거 수술", en: "Cancer" },
+
     // 음주
     drink1: { ko: "음주", en: "Drinker" },
     drink2: { ko: "과거에 마셨지만 끊었음", en: "Quit drinking" },
@@ -132,9 +140,7 @@ export function PreliminaryView({
   const familyHistory = getSelectedOptions(preliminary?.family_history);
   const allergies = getSelectedOptions(preliminary?.allergy);
   const diagnosis = getDiagnosisText(preliminary?.diagnosis, lang);
-  const pastSurgeries = Array.isArray(preliminary?.past_surgeries)
-    ? preliminary.past_surgeries
-    : [];
+  const pastSurgeries = getSelectedOptions(preliminary?.past_surgeries);
 
   return (
     <div className={`preliminary-content ${view ? "paperweight-view" : ""}`}>
@@ -194,7 +200,7 @@ export function PreliminaryView({
             <input
               readOnly
               autoComplete="off"
-              value={preliminary?.pain_degree / 10 || "-"}
+              value={preliminary?.pain_degree || "-"}
               disabled={true}
               type="text"
               className="input input-disabled"
@@ -351,10 +357,10 @@ export function PreliminaryView({
             </Typography>
             {pastSurgeries.length > 0 ? (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                {pastSurgeries.map((surgery, index) => (
+                {pastSurgeries.map(({ key, value }) => (
                   <Chip
-                    key={index}
-                    label={surgery}
+                    key={key}
+                    label={getKeyDisplayText(key, lang)}
                     variant="outlined"
                     size="small"
                     color="warning"

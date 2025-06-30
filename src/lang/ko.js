@@ -344,7 +344,7 @@ const lang = {
   WORKFLOW_MODAL_OPINION_CONTENTS: "소견내용",
 
   WORKFLOW_MODAL_PR_TITLE: "사전 문진표",
-  WORKFLOW_MODAL_PR_TAB_TITLE: "문진",
+  WORKFLOW_MODAL_PR_TAB_TITLE: "사전문진\n",
   WORKFLOW_MODAL_FIRST_QUESTION: "1. 입원 또는 수술을 진행 한 적이 있습니까?",
   WORKFLOW_MODAL_SECOND_QUESTION:
     "2. 아래 질환 중 과거의 진단받은 적이 있다면 표시 해주세요.",

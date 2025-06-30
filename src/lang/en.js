@@ -339,7 +339,7 @@ const lang = {
   WORKFLOW_MODAL_OPINION_CONTENTS: "Contents",
 
   WORKFLOW_MODAL_PR_TITLE: "Preliminary Questionnaire",
-  WORKFLOW_MODAL_PR_TAB_TITLE: "Questionnaire",
+  WORKFLOW_MODAL_PR_TAB_TITLE: "Preliminary\n",
 
   WORKFLOW_MODAL_REQUEST_SCHEDULING_BUTTON_TEXT: "Request scheduling",
   WORKFLOW_MODAL_TELE_INFO: "Teleconsultation info",

@@ -299,7 +299,7 @@ export default function HistorySearchBox({
         {hospitals.length > 1 && (
           <>
             <Grid size={1}>
-              <Typography variant="body1">
+              <Typography variant="body1" sx={{ fontSize: "13px" }}>
                 {langFile[webLang].HISTORY_SEARCH_HOSPITAL_NAME}
               </Typography>
             </Grid>

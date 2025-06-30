@@ -1552,13 +1552,17 @@ export default function WorkflowModal({ closeModal }: Props) {
                         className={
                           preliminaryTab === originalIdx ? "selected" : ""
                         }
-                        style={
-                          webLang === "en" ? { whiteSpace: "pre-line" } : {}
-                        }
+                        style={{
+                          whiteSpace: "pre-line",
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
                       >
                         {langFile[webLang].WORKFLOW_MODAL_PR_TAB_TITLE}
                         {webLang === "en" ? "\n" : ""}(
-                        {dayjs(item.registdate_utc).format("MM-DD")})
+                        {dayjs(item.registdate_utc).format("YYYY-MM-DD")})
                         {/* 문진 */}
                       </li>
                     );
