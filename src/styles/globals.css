@@ -833,6 +833,18 @@
   height: 90dvh;
 }
 
+.modal-extra-small {
+  width: 25dvw;
+  height: 45dvh;
+}
+
+@media screen and (max-width: 1920px) {
+  .modal-extra-small {
+    width: 35dvw;
+    height: 70dvh;
+  }
+}
+
 .modal-frame .title {
   margin-bottom: 20px;
   height: 110px;

@@ -80,7 +80,7 @@ const QRCodeModal: React.FC<Props> = ({
       title={langFile[webLang].QR_CODE_MODAL_TITLE}
       onClose={closeModal}
       hideBtns={true}
-      width="small"
+      width="extra-small"
     >
       <div className="qr-code-modal-container">
         <div className="qr-code-wrapper flex flex-col items-center">

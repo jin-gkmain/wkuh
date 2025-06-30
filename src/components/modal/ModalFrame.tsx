@@ -9,7 +9,7 @@ type Props = {
   onClose: () => void;
   onComplete?: (ev: FormEvent<HTMLFormElement>) => void;
   onCancel?: () => void;
-  width?: "small" | "basic" | "large" | "extra-large";
+  width?: "extra-small" | "small" | "basic" | "large" | "extra-large";
   hideBtns?: boolean;
   chatting?: ReactNode;
   view?: boolean;
@@ -37,6 +37,8 @@ export default function ModalFrame({
           ? "flex modal-extra-large"
           : width === "small"
           ? "flex modal-small"
+          : width === "extra-small"
+          ? "flex modal-extra-small"
           : ""
       }`}
     >

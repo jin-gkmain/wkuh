@@ -281,6 +281,7 @@ export default function UsersPage() {
                 }
               : undefined
           }
+          lang={webLang}
         />
 
         <section className="organizations-contents">

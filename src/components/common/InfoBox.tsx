@@ -15,6 +15,7 @@ import Qr from "./icons/Qr";
 import Download from "./icons/Download";
 import { GoNumber } from "react-icons/go";
 import { MdNumbers } from "react-icons/md";
+import { LangType } from "@/context/LanguageContext";
 
 export type InfoBoxIconType =
   | "patient"
@@ -42,9 +43,10 @@ export type InfoBoxType = {
 type Props<T> = {
   keys: InfoBoxType[];
   data?: { [key: string]: string | number | null };
+  lang?: LangType;
 };
 
-export default function InfoBox<T>({ keys, data }: Props<T>) {
+export default function InfoBox<T>({ keys, data, lang }: Props<T>) {
   const keysArr = keys.map((keyObj) => {
     switch (keyObj.iconType) {
       case "patient":
@@ -95,11 +97,11 @@ export default function InfoBox<T>({ keys, data }: Props<T>) {
                   onClick={() => onDownload(value)}
                   className="primary-btn flex align-center font-semi-bold"
                   style={{
-                    padding: "5px 25px",
+                    padding: "5px 10px",
                     fontSize: "12px",
                   }}
                 >
-                  <Download />
+                  {lang === "en" ? "Download" : "다운로드"}
                 </button>
               ) : (
                 <span>{value ?? "-"}</span>
