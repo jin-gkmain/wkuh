@@ -299,7 +299,7 @@ export default function HistorySearchBox({
         {hospitals.length > 1 && (
           <>
             <Grid size={1}>
-              <Typography variant="body1" sx={{ fontSize: "13px" }}>
+              <Typography variant="body1">
                 {langFile[webLang].HISTORY_SEARCH_HOSPITAL_NAME}
               </Typography>
             </Grid>
@@ -308,6 +308,11 @@ export default function HistorySearchBox({
                 <FormGroup aria-label="hospital" row={true}>
                   {hospitals.map((hospital, i) => (
                     <FormControlLabel
+                      sx={{
+                        "& .MuiFormControlLabel-label": {
+                          fontSize: "14px",
+                        },
+                      }}
                       key={i}
                       value={hospital}
                       control={
@@ -336,6 +341,11 @@ export default function HistorySearchBox({
           <FormControl>
             <FormGroup aria-label="status" row={true}>
               <FormControlLabel
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "14px",
+                  },
+                }}
                 value="0"
                 control={
                   <Checkbox
@@ -346,6 +356,11 @@ export default function HistorySearchBox({
                 label={langFile[webLang].HISTORY_SEARCH_STATUS_WAITING}
               />
               <FormControlLabel
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "14px",
+                  },
+                }}
                 value="1"
                 control={
                   <Checkbox
@@ -356,6 +371,11 @@ export default function HistorySearchBox({
                 label={langFile[webLang].HISTORY_SEARCH_STATUS_COMPLETED}
               />
               <FormControlLabel
+                sx={{
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "14px",
+                  },
+                }}
                 value="2"
                 control={
                   <Checkbox
