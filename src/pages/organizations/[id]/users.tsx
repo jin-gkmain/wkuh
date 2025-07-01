@@ -153,9 +153,9 @@ export default function UsersPage() {
   };
 
   // QR 코드 모달 열기 함수
-  const handleDownloadQr = (qrData: string) => {
+  const handleDownloadQr = () => {
     // QR 코드 모달을 열기 위한 설정
-    setQrString(qrData);
+    setQrString("https://dev.koihealth-live.com/mobilechat");
     setQrFileName(
       `${organization.o_name_eng || organization.o_name_kor}_qrcode`
     );
