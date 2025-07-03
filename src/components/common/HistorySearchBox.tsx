@@ -47,7 +47,6 @@ export default function HistorySearchBox({
   const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchParam, setSearchParam] = useState<string>("doctor");
-  const [isSelectingEndDate, setIsSelectingEndDate] = useState<boolean>(false);
   const [startDatePickerOpen, setStartDatePickerOpen] =
     useState<boolean>(false);
   const [endDatePickerOpen, setEndDatePickerOpen] = useState<boolean>(false);
@@ -176,7 +175,6 @@ export default function HistorySearchBox({
     setSelectedHospitals([]);
     setSelectedStatus([]);
     setSearchValue("");
-    setIsSelectingEndDate(false);
     setStartDatePickerOpen(false);
     setEndDatePickerOpen(false);
   };
@@ -237,6 +235,7 @@ export default function HistorySearchBox({
             ]}
             onSelect={handlePeriodSelect}
             defaultValue={"1"}
+            lang={webLang}
           />
         </Grid>
         <Grid
@@ -246,6 +245,7 @@ export default function HistorySearchBox({
             gap: 1,
             alignItems: "center",
             justifyContent: "flex-end",
+            fontSize: "14px !important",
           }}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -259,6 +259,15 @@ export default function HistorySearchBox({
               onClose={() => setStartDatePickerOpen(false)}
               maxDate={today}
               format="YYYY-MM-DD"
+              sx={{
+                "& .MuiInputLabel-root": { fontSize: "14px !important" },
+                "& .MuiInputBase-input": { fontSize: "14px !important" },
+                "& .MuiPickersInputBase-root": { fontSize: "14px !important" },
+                "& .MuiPickersOutlinedInput-root": {
+                  fontSize: "14px !important",
+                },
+                "& div[role='group']": { fontSize: "14px !important" },
+              }}
               slotProps={{
                 textField: {
                   size: "small",
@@ -266,6 +275,17 @@ export default function HistorySearchBox({
                   onClick: () => handleDatePickerClick(),
                   inputProps: {
                     readOnly: true,
+                    style: { fontSize: "14px" },
+                  },
+                },
+                popper: {
+                  sx: {
+                    "& .MuiPickersDay-root": { fontSize: "14px" },
+                    "& .MuiPickersCalendarHeader-label": { fontSize: "14px" },
+                    "& .MuiPickersArrowSwitcher-button": { fontSize: "14px" },
+                    "& .MuiDayCalendar-weekDayLabel": { fontSize: "14px" },
+                    "& .MuiPickersYear-yearButton": { fontSize: "14px" },
+                    "& .MuiPickersMonth-monthButton": { fontSize: "14px" },
                   },
                 },
               }}
@@ -278,6 +298,15 @@ export default function HistorySearchBox({
               onAccept={handleEndDateAccept}
               ref={endDatePickerRef}
               open={endDatePickerOpen}
+              sx={{
+                "& .MuiInputLabel-root": { fontSize: "14px !important" },
+                "& .MuiInputBase-input": { fontSize: "14px !important" },
+                "& .MuiPickersInputBase-root": { fontSize: "14px !important" },
+                "& .MuiPickersOutlinedInput-root": {
+                  fontSize: "14px !important",
+                },
+                "& div[role='group']": { fontSize: "14px !important" },
+              }}
               onOpen={() => setEndDatePickerOpen(true)}
               onClose={() => setEndDatePickerOpen(false)}
               minDate={startDate || undefined}
@@ -290,6 +319,17 @@ export default function HistorySearchBox({
                   onClick: () => handleDatePickerClick(),
                   inputProps: {
                     readOnly: true,
+                    style: { fontSize: "14px" },
+                  },
+                },
+                popper: {
+                  sx: {
+                    "& .MuiPickersDay-root": { fontSize: "14px" },
+                    "& .MuiPickersCalendarHeader-label": { fontSize: "14px" },
+                    "& .MuiPickersArrowSwitcher-button": { fontSize: "14px" },
+                    "& .MuiDayCalendar-weekDayLabel": { fontSize: "14px" },
+                    "& .MuiPickersYear-yearButton": { fontSize: "14px" },
+                    "& .MuiPickersMonth-monthButton": { fontSize: "14px" },
                   },
                 },
               }}
@@ -337,7 +377,7 @@ export default function HistorySearchBox({
             {langFile[webLang].HISTORY_SEARCH_STATUS}
           </Typography>
         </Grid>
-        <Grid size={6} sx={{ pl: 1 }}>
+        <Grid size={5} sx={{ pl: 1 }}>
           <FormControl>
             <FormGroup aria-label="status" row={true}>
               <FormControlLabel
@@ -389,7 +429,7 @@ export default function HistorySearchBox({
           </FormControl>
         </Grid>
         <Grid
-          size={5}
+          size={6}
           sx={{
             display: "flex",
             gap: 1,
@@ -400,12 +440,22 @@ export default function HistorySearchBox({
           <Select
             size="small"
             value={searchParam}
+            MenuProps={{
+              sx: {
+                "& .MuiMenu-list": {
+                  fontSize: "14px",
+                },
+              },
+            }}
             onChange={(e) => setSearchParam(e.target.value)}
+            sx={{
+              "& .MuiSelect-select": { fontSize: "14px", padding: "7px 8px" },
+            }}
           >
-            <MenuItem value="doctor">
+            <MenuItem value="doctor" sx={{ fontSize: "14px" }}>
               {langFile[webLang].HISTORY_SEARCH_DOCTOR}
             </MenuItem>
-            <MenuItem value="specialty">
+            <MenuItem value="specialty" sx={{ fontSize: "14px" }}>
               {langFile[webLang].HISTORY_SEARCH_SPECIALTY}
             </MenuItem>
           </Select>
@@ -415,14 +465,21 @@ export default function HistorySearchBox({
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             size="small"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& .MuiInputBase-input": { fontSize: "14px" },
+              },
+            }}
           />
           <Button
             variant="contained"
             onClick={handleSearch}
             sx={{
               backgroundColor: "#049EB8",
-              padding: "8px 10px",
+              padding: "6px 8px",
+              fontSize: "14px",
               "&:hover": { backgroundColor: "rgba(4, 158, 184, 0.8)" },
+              textTransform: "none",
             }}
           >
             {langFile[webLang].HISTORY_SEARCH_SEARCH}
@@ -431,11 +488,13 @@ export default function HistorySearchBox({
             variant="contained"
             onClick={handleReset}
             sx={{
-              padding: "8px 10px",
+              padding: "6px 8px",
               backgroundColor: "rgba(188, 188, 188, 1)",
+              fontSize: "14px",
               "&:hover": {
                 backgroundColor: "rgba(188, 188, 188, 0.8)",
               },
+              textTransform: "none",
             }}
           >
             {langFile[webLang].HISTORY_SEARCH_RESET}

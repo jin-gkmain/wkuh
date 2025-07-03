@@ -347,8 +347,9 @@ export function PatientView({
               disabled={view}
               autoComplete="off"
               name="pa_symptoms"
+              rows={2}
               id="pa_symptoms"
-              className="input"
+              className="input textarea-m"
               onChange={handleInputChange}
               value={chartInfo.pa_symptoms || ""}
             />
@@ -382,7 +383,7 @@ export function PatientView({
               onChange={handleInputChange}
               name="pa_care_sofar"
               id="pa_care_sofar"
-              className="input"
+              className="input textarea-m"
             />
           </div>
 
@@ -398,7 +399,7 @@ export function PatientView({
               onChange={handleInputChange}
               name="pa_care_korea"
               id="pa_care_korea"
-              className="input"
+              className="input textarea-m"
             />
           </div>
 
@@ -606,7 +607,7 @@ export function PatientView({
               autoComplete="off"
               name="pa_surgical_history"
               id="pa_surgical_history"
-              className="input"
+              className="input textarea-m"
               value={chartInfo.pa_surgical_history || ""}
               onChange={handleInputChange}
             />
@@ -622,7 +623,7 @@ export function PatientView({
               autoComplete="off"
               name="pa_medicine_history"
               id="pa_medicine_history"
-              className="input"
+              className="input textarea-m"
               value={chartInfo.pa_medicine_history || ""}
               onChange={handleInputChange}
             />
@@ -638,7 +639,7 @@ export function PatientView({
               autoComplete="off"
               name="pa_allergy"
               id="pa_allergy"
-              className="input"
+              className="input textarea-m"
               value={chartInfo.pa_allergy || ""}
               onChange={handleInputChange}
             />

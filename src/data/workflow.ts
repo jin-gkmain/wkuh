@@ -1,11 +1,11 @@
-import instance from '@/utils/myAxios';
+import instance from "@/utils/myAxios";
 
 export default async function getWorkflows(p_idx: number) {
   try {
-    const res = await instance.post('/workflow_list', {
+    const res = await instance.post("/workflow_list", {
       p_idx: p_idx.toString(),
-      search: '',
-      search_key: '',
+      search: "",
+      search_key: "",
     });
 
     const data: MyResponse<ListRes<Diagnosis>> = res.data;
@@ -15,13 +15,31 @@ export default async function getWorkflows(p_idx: number) {
       return [];
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
+  }
+}
+
+async function getWorkflowsByOrg(o_idx: number) {
+  try {
+    const res = await instance.post("/workflow_list", {
+      search: "o_idx",
+      search_key: o_idx.toString(),
+    });
+
+    const data: MyResponse<ListRes<Diagnosis>> = res.data;
+    if (data.result) {
+      return data.result;
+    } else {
+      return [];
+    }
+  } catch (err) {
+    return "ServerError";
   }
 }
 
 async function getWorkflow(w_idx: number) {
   try {
-    const res = await instance.post('/workflow_detail', {
+    const res = await instance.post("/workflow_detail", {
       w_idx,
     });
 
@@ -32,24 +50,24 @@ async function getWorkflow(w_idx: number) {
       return null;
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
 async function deleteWorkflow(w_idx: number) {
   try {
-    const res = await instance.post('/workflow_delete', {
+    const res = await instance.post("/workflow_delete", {
       w_idx,
     });
     const data: MyResponse<SimpleRes> = res.data;
 
-    if (data.result === 'OK') {
-      return 'SUCCESS';
+    if (data.result === "OK") {
+      return "SUCCESS";
     } else {
-      return 'FAIL';
+      return "FAIL";
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
@@ -60,20 +78,20 @@ async function registWorkflow(
   body?: { [key: string]: any }
 ) {
   try {
-    const res = await instance.post('/workflow_regist', {
+    const res = await instance.post("/workflow_regist", {
       o_idx,
       p_idx,
       regist_u_idx,
     });
     const data: MyResponse<SimpleRes> & { w_idx: number } = res.data;
 
-    if (data.result === 'OK') {
-      return { message: 'SUCCESS', w_idx: data.w_idx };
+    if (data.result === "OK") {
+      return { message: "SUCCESS", w_idx: data.w_idx };
     } else {
-      return { message: 'FAIL' };
+      return { message: "FAIL" };
     }
   } catch (err) {
-    return { message: 'ServerError' };
+    return { message: "ServerError" };
   }
 }
 
@@ -83,29 +101,29 @@ async function editWorkflow(
   body?: { [key: string]: any }
 ) {
   try {
-    const res = await instance.post('/workflow_edit', {
+    const res = await instance.post("/workflow_edit", {
       w_idx,
       regist_u_idx,
       ...body,
     });
     const data: MyResponse<SimpleRes> = res.data;
 
-    if (data.result === 'OK') {
-      return 'SUCCESS';
+    if (data.result === "OK") {
+      return "SUCCESS";
     } else {
-      return 'FAIL';
+      return "FAIL";
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
 async function getPostPrescriptions(w_idx: number) {
   try {
-    const res = await instance.post('/workflow_pp_list', {
+    const res = await instance.post("/workflow_pp_list", {
       w_idx,
-      search: '',
-      search_key: '',
+      search: "",
+      search_key: "",
     });
     const data: MyResponse<ListRes<PostPrescription>> = res.data;
 
@@ -115,13 +133,13 @@ async function getPostPrescriptions(w_idx: number) {
       return [];
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
 async function getPostPrescription(pp_idx: number) {
   try {
-    const res = await instance.post('/workflow_pp_detail', {
+    const res = await instance.post("/workflow_pp_detail", {
       pp_idx,
     });
     const data: MyResponse<ListRes<PostPrescriptionDetail>> = res.data;
@@ -132,7 +150,7 @@ async function getPostPrescription(pp_idx: number) {
       return null;
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
@@ -143,7 +161,7 @@ async function registPostPrescription(
   body: { [key: string]: any }
 ) {
   try {
-    const res = await instance.post('/workflow_pp_regist', {
+    const res = await instance.post("/workflow_pp_regist", {
       w_idx,
       regist_u_idx,
       o_idx,
@@ -151,13 +169,13 @@ async function registPostPrescription(
     });
     const data: MyResponse<SimpleRes> & { pp_idx: number } = res.data;
 
-    if (data.result === 'OK') {
-      return { message: 'SUCCESS', pp_idx: data.pp_idx };
+    if (data.result === "OK") {
+      return { message: "SUCCESS", pp_idx: data.pp_idx };
     } else {
-      return { message: 'FAIL' };
+      return { message: "FAIL" };
     }
   } catch (err) {
-    return { message: 'ServerError' };
+    return { message: "ServerError" };
   }
 }
 
@@ -166,37 +184,37 @@ async function editPostPrescription(
   body?: { [key: string]: any }
 ) {
   try {
-    const res = await instance.post('/workflow_pp_edit', {
+    const res = await instance.post("/workflow_pp_edit", {
       pp_idx,
       ...body,
     });
     const data: MyResponse<SimpleRes> = res.data;
 
-    if (data.result === 'OK') {
-      return 'SUCCESS';
+    if (data.result === "OK") {
+      return "SUCCESS";
     } else {
-      return 'FAIL';
+      return "FAIL";
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
 async function deletePostPrescription(pp_idx: number) {
   try {
-    const res = await instance.post('/workflow_pp_delete', {
+    const res = await instance.post("/workflow_pp_delete", {
       pp_idx,
     });
 
     const data: MyResponse<SimpleRes> = res.data;
 
-    if (data.result === 'OK') {
-      return 'SUCCESS';
+    if (data.result === "OK") {
+      return "SUCCESS";
     } else {
-      return 'FAIL';
+      return "FAIL";
     }
   } catch (err) {
-    return 'ServerError';
+    return "ServerError";
   }
 }
 
@@ -210,4 +228,5 @@ export {
   registPostPrescription,
   editPostPrescription,
   deletePostPrescription,
+  getWorkflowsByOrg,
 };

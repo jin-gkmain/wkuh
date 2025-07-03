@@ -68,16 +68,14 @@ export default function HistoryPage() {
 
   // 진료과 변환 헬퍼 함수
   const getMedicalDeptName = (medicalDept: string | null | number): string => {
-    if (!medicalDept) return langFile[webLang].HISTORY_TABLE_DONT_KNOW;
+    if (!medicalDept) return "-";
 
     const medicalDeptOptions = getMedicalDeptOptions(webLang, "doctor");
     const deptOption = medicalDeptOptions.find(
       (option) => option.value === String(medicalDept)
     );
 
-    return deptOption
-      ? deptOption.key
-      : langFile[webLang].HISTORY_TABLE_DONT_KNOW;
+    return deptOption ? deptOption.key : "-";
   };
 
   // 사용자 정보 가져오기 (캐시 사용)
@@ -255,6 +253,7 @@ export default function HistoryPage() {
           sortedWorkflows.forEach((workflow) => {
             const org = localOrgCache.get(workflow.o_idx);
             if (org) {
+              console.log("org:", org);
               const orgName =
                 webLang === "ko"
                   ? org.o_name_kor || org.o_name_eng || "알 수 없음"
@@ -279,7 +278,7 @@ export default function HistoryPage() {
     };
 
     fetchWorkflows();
-  }, [userInfo]);
+  }, [userInfo, webLang]);
 
   // 필터링된 데이터가 변경될 때 페이지네이션 업데이트
   useEffect(() => {
@@ -355,12 +354,12 @@ export default function HistoryPage() {
     if (selectedHospitals.length > 0) {
       filtered = filtered.filter((workflow) => {
         const org = orgCache.get(workflow.o_idx);
-        let orgName = "알 수 없음";
+        let orgName = "-";
         if (org) {
           orgName =
             webLang === "ko"
-              ? org.o_name_kor || org.o_name_eng || "알 수 없음"
-              : org.o_name_eng || org.o_name_kor || "알 수 없음";
+              ? org.o_name_kor || org.o_name_eng || "-"
+              : org.o_name_eng || org.o_name_kor || "-";
         }
         return selectedHospitals.includes(orgName);
       });
@@ -908,16 +907,12 @@ export default function HistoryPage() {
                       {workflow.o_idx === userInfo.o_idx
                         ? // o_idx가 동일한 경우: doctor1을 doctor로 표시
                           webLang === "ko"
-                          ? workflow.doctor1_name_kor ||
-                            langFile[webLang].HISTORY_TABLE_DONT_KNOW
-                          : workflow.doctor1_name_eng ||
-                            langFile[webLang].HISTORY_TABLE_DONT_KNOW
+                          ? workflow.doctor1_name_kor || "-"
+                          : workflow.doctor1_name_eng || "-"
                         : // doctor2_idx가 동일한 경우: doctor2를 doctor로 표시
                         webLang === "ko"
-                        ? workflow.doctor2_name_kor ||
-                          langFile[webLang].HISTORY_TABLE_DONT_KNOW
-                        : workflow.doctor2_name_eng ||
-                          langFile[webLang].HISTORY_TABLE_DONT_KNOW}
+                        ? workflow.doctor2_name_kor || "-"
+                        : workflow.doctor2_name_eng || "-"}
                     </td>
                     <td style={{ padding: "12px 8px", textAlign: "center" }}>
                       {workflow.o_idx === userInfo.o_idx
@@ -940,16 +935,12 @@ export default function HistoryPage() {
                       {workflow.o_idx === userInfo.o_idx
                         ? // o_idx가 동일한 경우: doctor2를 co-doctor로 표시
                           webLang === "ko"
-                          ? workflow.doctor2_name_kor ||
-                            langFile[webLang].HISTORY_TABLE_DONT_KNOW
-                          : workflow.doctor2_name_eng ||
-                            langFile[webLang].HISTORY_TABLE_DONT_KNOW
+                          ? workflow.doctor2_name_kor || "-"
+                          : workflow.doctor2_name_eng || "-"
                         : // doctor2_idx가 동일한 경우: doctor1을 co-doctor로 표시
                         webLang === "ko"
-                        ? workflow.doctor1_name_kor ||
-                          langFile[webLang].HISTORY_TABLE_DONT_KNOW
-                        : workflow.doctor1_name_eng ||
-                          langFile[webLang].HISTORY_TABLE_DONT_KNOW}
+                        ? workflow.doctor1_name_kor || "-"
+                        : workflow.doctor1_name_eng || "-"}
                     </td>
                     <td style={{ padding: "12px 8px", textAlign: "center" }}>
                       {workflow.o_idx === userInfo.o_idx
@@ -974,10 +965,10 @@ export default function HistoryPage() {
                         const org = orgCache.get(workflow.o_idx);
                         if (org) {
                           return webLang === "ko"
-                            ? org.o_name_kor || org.o_name_eng || "알 수 없음"
-                            : org.o_name_eng || org.o_name_kor || "알 수 없음";
+                            ? org.o_name_kor || org.o_name_eng || "-"
+                            : org.o_name_eng || org.o_name_kor || "-";
                         }
-                        return "알 수 없음";
+                        return "-";
                       })()}
                     </td>
                     <td style={{ padding: "12px 8px", textAlign: "center" }}>
@@ -1053,6 +1044,7 @@ export default function HistoryPage() {
                     backgroundColor: "#ccc",
                     color: "#999",
                   },
+                  textTransform: "none",
                 }}
               >
                 {langFile[webLang].HISTORY_TABLE_DOWNLOAD_BUTTON_TEXT} (

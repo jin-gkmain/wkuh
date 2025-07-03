@@ -51,4 +51,4 @@ type TodayViiPateintResType = TodayAppointmentPatientResType & {
   vii_tad: string;
 };
 
-type ChartType = 'te' | 'vir' | 'pp'; // 협진사용현황, 내원완료현황, 처방전현황
+type ChartType = "te" | "post" | "vir" | "pp"; // 협진사용현황, 사전상담현황, 내원완료현황, 처방전현황

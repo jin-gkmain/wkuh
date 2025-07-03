@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from "react";
 
 // 개별 버튼의 스타일을 결정하는 함수
-const getButtonStyle = (isSelected, isHovered) => {
+const getButtonStyle = (isSelected, isHovered, lang) => {
   const baseStyle = {
-    padding: "3px 14px", // 버튼 내부 여백 (상하, 좌우)
+    padding: lang === "ko" ? "3px 14px" : "3px 8px", // 버튼 내부 여백 (상하, 좌우)
     borderRadius: "10px", // 알약 모양을 위한 충분한 값
+    minWidth: lang === "ko" ? "65px" : "80px",
     cursor: "pointer",
     borderWidth: "1px", // 테두리 두께
     borderStyle: "solid", // 테두리 스타일
@@ -57,6 +58,7 @@ function SegmentedPillButtonsGroup({
   onSelect,
   defaultValue = null,
   style = {},
+  lang = "ko",
 }) {
   const [selectedOption, setSelectedOption] = useState(defaultValue);
   const [hoveredOption, setHoveredOption] = useState(null); // 마우스 호버 상태 추적
@@ -78,7 +80,14 @@ function SegmentedPillButtonsGroup({
   }
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", ...style, gap: 1 }}>
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        ...style,
+        gap: 2,
+      }}
+    >
       {options.map((option) => {
         // 옵션이 객체 형태일 수도, 문자열일 수도 있음
         const optionValue = typeof option === "object" ? option.value : option;
@@ -90,7 +99,11 @@ function SegmentedPillButtonsGroup({
         return (
           <button
             key={optionValue}
-            style={getButtonStyle(isSelected, !isSelected && isButtonHovered)} // 선택되지 않았을 때만 호버 스타일 적용
+            style={getButtonStyle(
+              isSelected,
+              !isSelected && isButtonHovered,
+              lang
+            )} // 선택되지 않았을 때만 호버 스타일 적용
             onClick={() => handleSelect(optionValue)}
             onMouseEnter={() => setHoveredOption(optionValue)}
             onMouseLeave={() => setHoveredOption(null)}

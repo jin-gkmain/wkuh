@@ -1174,7 +1174,11 @@ export default function WorkflowModal({ closeModal }: Props) {
         }
         const preliminary = await getPreliminariesByPIdx(patientId);
         console.log("getPreliminaryByPIdx >", preliminary);
-        if (preliminary !== "ServerError" && preliminary) {
+        if (
+          preliminary !== "ServerError" &&
+          preliminary &&
+          preliminary.length > 0
+        ) {
           setPreliminaryInfo(preliminary);
           const tabIds = preliminary.map((item) => {
             console.log("preliminaryItem >", item);
@@ -1399,7 +1403,7 @@ export default function WorkflowModal({ closeModal }: Props) {
             handleSetFiles={handleSetFiles}
           />
         )}
-        {tabType === "preliminary" && isPreliminary.current && (
+        {tabType === "preliminary" && (
           <div className="preliminary-tab relative">
             {/* 환자 기본정보 - 고정 */}
             <div className="patient-info-container">
@@ -1536,57 +1540,62 @@ export default function WorkflowModal({ closeModal }: Props) {
                   {/*사전 문진표*/}
                 </h3>
               </div>
-
-              <ul className="tabs flex gap-10 relative">
-                {preliminaryInfo
-                  .slice()
-                  .reverse()
-                  .map((item, reversedIdx) => {
-                    const originalIdx =
-                      preliminaryInfo.length - 1 - reversedIdx;
-                    return (
-                      <li
-                        key={originalIdx}
-                        data-tab={originalIdx}
-                        onClick={handlePreliminaryTab}
-                        className={
-                          preliminaryTab === originalIdx ? "selected" : ""
-                        }
-                        style={{
-                          whiteSpace: "pre-line",
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        {langFile[webLang].WORKFLOW_MODAL_PR_TAB_TITLE}
-                        {webLang === "en" ? "\n" : ""}(
-                        {dayjs(item.registdate_utc).format("YYYY-MM-DD")})
-                        {/* 문진 */}
-                      </li>
-                    );
-                  })}
-              </ul>
-
-              {/* 선택된 사전문진 내용 */}
-              <div className="preliminary-content">
-                <PreliminaryView
-                  preliminaryInfo={preliminaryInfo[preliminaryTab]}
-                  patientInfo={patientInfo}
-                  lang={webLang}
-                  userInfo={userInfo}
-                  handleTopBtnClick={handleTopBtnClick}
-                  handleInputChange={handleInputChange}
-                  chartInfo={undefined}
-                  view={true}
-                />
-              </div>
+              {isPreliminary.current && (
+                <>
+                  <ul className="tabs flex gap-10 relative">
+                    {preliminaryInfo
+                      .slice()
+                      .reverse()
+                      .map((item, reversedIdx) => {
+                        const originalIdx =
+                          preliminaryInfo.length - 1 - reversedIdx;
+                        return (
+                          <li
+                            key={originalIdx}
+                            data-tab={originalIdx}
+                            onClick={handlePreliminaryTab}
+                            className={
+                              preliminaryTab === originalIdx ? "selected" : ""
+                            }
+                            style={{
+                              whiteSpace: "pre-line",
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            {langFile[webLang].WORKFLOW_MODAL_PR_TAB_TITLE}
+                            {webLang === "en" ? "\n" : ""}(
+                            {dayjs(item.registdate_utc).format("YYYY-MM-DD")})
+                            {/* 문진 */}
+                          </li>
+                        );
+                      })}
+                  </ul>
+                  {/* 선택된 사전문진 내용 */}
+                  <div className="preliminary-content">
+                    <PreliminaryView
+                      preliminaryInfo={preliminaryInfo[preliminaryTab]}
+                      patientInfo={patientInfo}
+                      lang={webLang}
+                      userInfo={userInfo}
+                      handleTopBtnClick={handleTopBtnClick}
+                      handleInputChange={handleInputChange}
+                      chartInfo={undefined}
+                      view={true}
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
         {tabType === "preliminary" && !isPreliminary.current && (
-          <div>불러올 수 있는 사전문진 정보가 없습니다.</div>
+          <div>
+            {/* 불러올 수 있는 사전문진 정보가 없습니다. */}
+            {langFile[webLang].WORKFLOW_MODAL_PRELIMINARY_NON_DATA}
+          </div>
         )}
 
         {tabType === "opinion" && (
@@ -1666,14 +1675,24 @@ export default function WorkflowModal({ closeModal }: Props) {
                 </div>
 
                 <div className="input-col-wrap flex-1">
-                  <span className="label flex gap-3 align-center">
-                    {langFile[webLang].WORKFLOW_MODAL_TELE_DATE} {"  "}
-                    {/* 협진일시 */}
-                    <span className="desc">
+                  <div
+                    className="label flex gap-3 align-center"
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}
+                  >
+                    <span>
+                      {langFile[webLang].WORKFLOW_MODAL_TELE_DATE} {"  "}
+                      {/* 협진일시 */}
+                    </span>
+
+                    <span className="desc" style={{ maxWidth: "150px" }}>
                       ({langFile[webLang].WORKFLOW_MODAL_TELE_DATE_META_INFO})
                       {/* (*한국 협진일시 등록시 자동 등록됩니다.) */}
                     </span>
-                  </span>
+                  </div>
                   {/* TODO 시간 포맷 추가 필요 */}
                   <div className="input input-disabled">
                     {chartInfo.te_date
@@ -1916,7 +1935,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                       autoComplete="off"
                       name="ca_period_cost"
                       id="ca_period_cost"
-                      className="textarea-s"
+                      className="textarea-m"
                       value={chartInfo.ca_period_cost || ""}
                       onChange={handleInputChange}
                     ></textarea>
@@ -2864,7 +2883,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                   <textarea
                     disabled={!!(userInfo && userInfo.p_idx)}
                     autoComplete="off"
-                    className="textarea-s"
+                    className="textarea-m"
                     name="vii_other"
                     id="vii_other"
                     value={chartInfo.vii_other || ""}
@@ -3319,7 +3338,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     autoComplete="off"
                     name="poc_current_status"
                     id="poc_current_status"
-                    className="input textarea-s"
+                    className="input textarea-m"
                     value={chartInfo.poc_current_status || ""}
                     onChange={handleInputChange}
                   />
@@ -3351,7 +3370,7 @@ export default function WorkflowModal({ closeModal }: Props) {
                     autoComplete="off"
                     name="poc_needed"
                     id="poc_needed"
-                    className="input textarea-s"
+                    className="input textarea-m"
                     value={chartInfo.poc_needed || ""}
                     onChange={handleInputChange}
                   />
@@ -4288,12 +4307,12 @@ function getTabs(lang: LangType) {
       value: "patient",
     },
     {
-      key: langFile[lang].WORKFLOW_MODAL_TAB_OPINION, // 소견서정보
-      value: "opinion",
-    },
-    {
       key: langFile[lang].WORKFLOW_MODAL_TAB_PRELIMINARY, // 사전문진
       value: "preliminary",
+    },
+    {
+      key: langFile[lang].WORKFLOW_MODAL_TAB_OPINION, // 소견서정보
+      value: "opinion",
     },
     {
       key: langFile[lang].WORKFLOW_MODAL_TAB_TELECONSULTING, // 원격협진

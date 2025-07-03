@@ -47,6 +47,9 @@ export default function DashBoardPage() {
   const [teleChartInfo, setTeleChartInfo] = useState<DefaultChartInfo[] | null>(
     null
   );
+  const [postChartInfo, setPostChartInfo] = useState<DefaultChartInfo[] | null>(
+    null
+  );
   const [patientChartInfo, setPatientChartInfo] = useState<
     DefaultChartInfo[] | null
   >(null);
@@ -105,6 +108,10 @@ export default function DashBoardPage() {
   };
 
   const getDataNew = () => {
+    let post = postChartInfo?.map(({ data }) => ({
+      label: langFile[webLang].DASHBOARD_CURRENT_POST_STATUS_TITLE, // '사전상담 현황'
+      data,
+    }));
     let te = teleChartInfo?.map(({ data }) => ({
       label: langFile[webLang].DASHBOARD_CURRENT_TELE_USAGE_STATUS_TITLE, // '원격 협진 사용 현황'
       data,
@@ -121,7 +128,7 @@ export default function DashBoardPage() {
     }));
 
     let result = [];
-
+    if (post) result = [...result, ...post];
     if (te) result = [...result, ...te];
     if (vir) result = [...result, ...vir];
     if (pp) result = [...result, ...pp];
@@ -318,6 +325,20 @@ export default function DashBoardPage() {
       }
     };
 
+    const fetchPostChartInfo = async () => {
+      const res = await getChartInfo("post", parseInt(selectedOrg));
+      console.log("res", res);
+      let body;
+      if (res !== "ServerError") {
+        if (res.length) {
+          body = res;
+        } else {
+          body = fillEmptyBody("post");
+        }
+        setPostChartInfo(converTotDefaultChartType(body));
+      }
+    };
+
     const fetchPpChartInfo = async () => {
       const res = await getChartInfo("pp", parseInt(selectedOrg));
       let body;
@@ -333,6 +354,7 @@ export default function DashBoardPage() {
 
     fetchTeleChartInfo();
     fetchVisitChartInfo();
+    fetchPostChartInfo();
     fetchPpChartInfo();
   }, [selectedOrg]);
 

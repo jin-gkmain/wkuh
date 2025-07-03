@@ -1,4 +1,5 @@
 import instance from "@/utils/myAxios";
+import { getWorkflowsByOrg } from "./workflow";
 
 async function getTeleUsageList(o_idx?: number) {
   try {
@@ -110,7 +111,7 @@ async function getChartInfo(type: ChartType, o_idx?: number) {
       return resData.result;
     } else return [];
   } catch (err) {
-    console.log("대시보드 내원완료 목록 불러오기 실패...");
+    console.log("대시보드 차트 목록 불러오기 실패...");
     return "ServerError";
   }
 }
