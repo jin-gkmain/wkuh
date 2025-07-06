@@ -1,30 +1,28 @@
-import React from "react";
-import langFile from "@/lang";
-import { LangType } from "@/context/LanguageContext";
-import { ChangeEvent, ReactNode } from "react";
-import Send from "../../common/icons/Send";
-import dayjs from "dayjs";
-import { Input, Stack, Typography, Chip, Box } from "@mui/material";
+import { LangType } from '@/context/LanguageContext';
+import langFile from '@/lang';
+import { Box, Chip, Stack, Typography } from '@mui/material';
+import { ChangeEvent } from 'react';
+import Send from '../../common/icons/Send';
 
 // 유틸리티 함수들
 const parseJsonString = (jsonString: string | any) => {
   console.log(
-    "🔍 parseJsonString 입력:",
+    '🔍 parseJsonString 입력:',
     jsonString,
-    "타입:",
+    '타입:',
     typeof jsonString
   );
-  if (typeof jsonString === "string") {
+  if (typeof jsonString === 'string') {
     try {
       const parsed = JSON.parse(jsonString);
-      console.log("🔍 JSON 파싱 성공:", parsed);
+      console.log('🔍 JSON 파싱 성공:', parsed);
       return parsed;
     } catch (e) {
-      console.warn("JSON 파싱 실패:", jsonString, e);
+      console.warn('JSON 파싱 실패:', jsonString, e);
       return {};
     }
   }
-  console.log("🔍 문자열이 아님, 그대로 반환:", jsonString);
+  console.log('🔍 문자열이 아님, 그대로 반환:', jsonString);
   return jsonString || {};
 };
 
@@ -34,73 +32,79 @@ const getSelectedOptions = (data: any) => {
   return Object.entries(parsed)
     .filter(
       ([key, value]) =>
-        value === true || (typeof value === "string" && value.trim() !== "")
+        value === true || (typeof value === 'string' && value.trim() !== '')
     )
     .map(([key, value]) => ({ key, value }));
 };
 
 const getDiagnosisText = (diagnosis: any, lang: LangType) => {
-  if (typeof diagnosis === "object" && diagnosis !== null) {
-    return diagnosis[lang] || diagnosis.ko || diagnosis.en || "알 수 없음";
+  if (typeof diagnosis === 'object' && diagnosis !== null) {
+    return diagnosis[lang] || diagnosis.ko || diagnosis.en || '알 수 없음';
   }
-  return diagnosis || "알 수 없음";
+  return diagnosis || '알 수 없음';
 };
 
 // 키-값 매핑
 const getKeyDisplayText = (key: string, lang: LangType) => {
   const keyMappings: { [key: string]: { [key: string]: string } } = {
     // 증상
-    sym1: { ko: "두통", en: "Headache" },
-    sym2: { ko: "가슴 통증", en: "Chest pain" },
-    sym3: { ko: "복통", en: "Abdominal pain" },
-    sym4: { ko: "기침", en: "Cough" },
-    sym5: { ko: "열", en: "Fever" },
-    sym6: { ko: "매스꺼움/구토", en: "Nausea" },
-    sym7: { ko: "설사/변비", en: "Diarrhea" },
-    sym8: { ko: "피부 발진", en: "Skin rash" },
-    sym9: { ko: "생리 이상", en: "Menstrual irregularities" },
-    sym10: { ko: "우울 불안", en: "Depression/Anxiety" },
+    sym1: { ko: '두통', en: 'Headache' },
+    sym2: { ko: '가슴 통증', en: 'Chest pain' },
+    sym3: { ko: '복통', en: 'Abdominal pain' },
+    sym4: { ko: '기침', en: 'Cough' },
+    sym5: { ko: '열', en: 'Fever' },
+    sym6: { ko: '매스꺼움/구토', en: 'Nausea' },
+    sym7: { ko: '설사/변비', en: 'Diarrhea' },
+    sym8: { ko: '피부 발진', en: 'Skin rash' },
+    sym9: { ko: '생리 이상', en: 'Menstrual irregularities' },
+    sym10: { ko: '우울 불안', en: 'Depression/Anxiety' },
+
+    spec1: { ko: '영상검사 (CT, MRI)', en: 'Imaging (CT, MRI)' },
+    spec2: { ko: '수술', en: 'Surgery' },
+    spec3: { ko: '내시경(위, 대장)', en: 'Endoscopy (stomach, colon)' },
+    spec4: { ko: '약처방', en: 'Prescription' },
+    spec5: { ko: '기타', en: 'Others' },
 
     // 기왕력
-    past1: { ko: "고혈압", en: "Hypertension" },
-    past2: { ko: "당뇨병", en: "Diabetes" },
-    past3: { ko: "결핵", en: "Tuberculosis" },
-    past4: { ko: "암", en: "Cancer" },
-    past5: { ko: "기타", en: "Others" },
+    past1: { ko: '고혈압', en: 'Hypertension' },
+    past2: { ko: '당뇨병', en: 'Diabetes' },
+    past3: { ko: '결핵', en: 'Tuberculosis' },
+    past4: { ko: '암', en: 'Cancer' },
+    past5: { ko: '기타', en: 'Others' },
 
     // 가족력
-    family1: { ko: "고혈압", en: "Hypertension" },
-    family2: { ko: "당뇨병", en: "Diabetes" },
-    family3: { ko: "결핵", en: "Tuberculosis" },
-    family4: { ko: "암", en: "Cancer" },
-    family5: { ko: "기타", en: "Others" },
+    family1: { ko: '고혈압', en: 'Hypertension' },
+    family2: { ko: '당뇨병', en: 'Diabetes' },
+    family3: { ko: '결핵', en: 'Tuberculosis' },
+    family4: { ko: '암', en: 'Cancer' },
+    family5: { ko: '기타', en: 'Others' },
 
     // 알레르기
-    allergy1: { ko: "약물", en: "Medication" },
-    allergy2: { ko: "음식", en: "Food" },
-    allergy3: { ko: "꽃가루", en: "Pollens" },
-    allergy4: { ko: "동물 털", en: "Animal hair" },
-    allergy5: { ko: "먼지", en: "Dust" },
-    allergy6: { ko: "금속", en: "Metals" },
-    allergy7: { ko: "기타", en: "Others" },
+    allergy1: { ko: '약물', en: 'Medication' },
+    allergy2: { ko: '음식', en: 'Food' },
+    allergy3: { ko: '꽃가루', en: 'Pollens' },
+    allergy4: { ko: '동물 털', en: 'Animal hair' },
+    allergy5: { ko: '먼지', en: 'Dust' },
+    allergy6: { ko: '금속', en: 'Metals' },
+    allergy7: { ko: '기타', en: 'Others' },
 
     // 흡연
-    smoke1: { ko: "흡연", en: "Smoker" },
-    smoke2: { ko: "과거에 피웠지만 끊었음", en: "Quit smoking" },
-    smoke3: { ko: "아니요", en: "Non-smoker" },
+    smoke1: { ko: '흡연', en: 'Smoker' },
+    smoke2: { ko: '과거에 피웠지만 끊었음', en: 'Quit smoking' },
+    smoke3: { ko: '아니요', en: 'Non-smoker' },
 
     // 수술
-    surgery1: { ko: "맹장 수술", en: "Appendectomy" },
-    surgery2: { ko: "제왕절개", en: "Cesarean section" },
-    surgery3: { ko: "담낭 제거 수술", en: "Gallbladder removal" },
-    surgery4: { ko: "정형외과 수술", en: "Orthopedic" },
-    surgery5: { ko: "심장 수술", en: "Heart" },
-    surgery6: { ko: "종양 제거 수술", en: "Cancer" },
+    surgery1: { ko: '맹장 수술', en: 'Appendectomy' },
+    surgery2: { ko: '제왕절개', en: 'Cesarean section' },
+    surgery3: { ko: '담낭 제거 수술', en: 'Gallbladder removal' },
+    surgery4: { ko: '정형외과 수술', en: 'Orthopedic' },
+    surgery5: { ko: '심장 수술', en: 'Heart' },
+    surgery6: { ko: '종양 제거 수술', en: 'Cancer' },
 
     // 음주
-    drink1: { ko: "음주", en: "Drinker" },
-    drink2: { ko: "과거에 마셨지만 끊었음", en: "Quit drinking" },
-    drink3: { ko: "아니요", en: "Non-drinker" },
+    drink1: { ko: '음주', en: 'Drinker' },
+    drink2: { ko: '과거에 마셨지만 끊었음', en: 'Quit drinking' },
+    drink3: { ko: '아니요', en: 'Non-drinker' },
   };
 
   return keyMappings[key]?.[lang] || keyMappings[key]?.ko || key;
@@ -130,12 +134,13 @@ export function PreliminaryView({
   view,
 }: PreliminaryViewProps) {
   const preliminaryRaw = preliminaryInfo?.pl_data;
-  console.log("preliminaryInfo >", preliminaryInfo);
+  console.log('preliminaryInfo >', preliminaryInfo);
   // pl_data 자체가 JSON 문자열이므로 파싱해야 함
   const preliminary = parseJsonString(preliminaryRaw);
 
   // 데이터 파싱
   const symptoms = getSelectedOptions(preliminary?.symptoms);
+  const specific = getSelectedOptions(preliminary?.specific);
   const pastHistory = getSelectedOptions(preliminary?.past_history);
   const familyHistory = getSelectedOptions(preliminary?.family_history);
   const allergies = getSelectedOptions(preliminary?.allergy);
@@ -143,17 +148,16 @@ export function PreliminaryView({
   const pastSurgeries = getSelectedOptions(preliminary?.past_surgeries);
 
   return (
-    <div className={`preliminary-content ${view ? "paperweight-view" : ""}`}>
+    <div className={`preliminary-content ${view ? 'paperweight-view' : ''}`}>
       {!view && (
         <div className="flex gap-5 header-buttons">
-          {userInfo && userInfo.country !== "korea" && (
+          {userInfo && userInfo.country !== 'korea' && (
             <button
               className="primary-btn"
               type="button"
               onClick={() => {
-                handleTopBtnClick("confirm");
-              }}
-            >
+                handleTopBtnClick('confirm');
+              }}>
               {langFile[lang].WORKFLOW_MODAL_CONFIRM_PT_INFO} <Send />
               {/* 환자정보 확인요청 */}
             </button>
@@ -166,10 +170,10 @@ export function PreliminaryView({
         <Stack sx={{ mt: 2 }} direction="column" spacing={2}>
           {/* 증상 */}
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_SYMPTOMS_DESC}
             </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {symptoms.length > 0 ? (
                 symptoms.map(({ key, value }) => (
                   <Chip
@@ -194,24 +198,22 @@ export function PreliminaryView({
 
           {/* 통증 정도 */}
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_PAIN_DESC}
             </Typography>
             <input
               readOnly
               autoComplete="off"
-              value={preliminary?.pain_degree || "-"}
+              value={preliminary?.pain_degree || '-'}
               disabled={true}
               type="text"
               className="input input-disabled"
-              name="u_name_eng"
-              id="u_name_eng"
             />
           </Box>
 
           {/* 진단명 */}
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_DIAGNOSIS_DESC}
             </Typography>
             <input
@@ -226,40 +228,69 @@ export function PreliminaryView({
 
           {/* 치료내역 */}
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_TREATMENT_DESC}
             </Typography>
             <input
               readOnly
               autoComplete="off"
-              value={preliminary?.treatment || "-"}
+              value={preliminary?.treatment || '-'}
               disabled={true}
               type="text"
               className="input input-disabled"
             />
           </Box>
 
-          {/* 원하는 치료 */}
+          {/* 원하는 치료
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_SPECIFIC_DESC}
             </Typography>
             <input
               readOnly
               autoComplete="off"
-              value={preliminary?.specific || "-"}
+              value={preliminary?.specific || '-'}
               disabled={true}
               type="text"
               className="input input-disabled"
             />
+          </Box> */}
+
+          {/* 원하는 치료 */}
+          <Box>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
+              {langFile[lang].MOBILE_PRELIMINARY_SPECIFIC_DESC}
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {specific.length > 0 ? (
+                specific.map(({ key, value }) => (
+                  <Chip
+                    key={key}
+                    label={getKeyDisplayText(key, lang)}
+                    variant="outlined"
+                    size="small"
+                    color="secondary"
+                  />
+                ))
+              ) : (
+                <input
+                  readOnly
+                  autoComplete="off"
+                  value="-"
+                  disabled={true}
+                  type="text"
+                  className="input input-disabled"
+                />
+              )}
+            </Box>
           </Box>
 
           {/* 기왕력 */}
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_PAST_HISTORY_DESC}
             </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {pastHistory.length > 0 ? (
                 pastHistory.map(({ key, value }) => (
                   <Chip
@@ -285,10 +316,10 @@ export function PreliminaryView({
 
           {/* 가족력 */}
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_FAMILY_HISTORY_DESC}
             </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {familyHistory.length > 0 ? (
                 familyHistory.map(({ key, value }) => (
                   <Chip
@@ -313,9 +344,9 @@ export function PreliminaryView({
           </Box>
 
           {/* 흡연/음주 */}
-          <Box sx={{ display: "flex", gap: 4 }}>
+          <Box sx={{ display: 'flex', gap: 4 }}>
             <Box>
-              <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+              <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
                 {langFile[lang].MOBILE_PRELIMINARY_SMOKE_DESC}
               </Typography>
               <input
@@ -324,7 +355,7 @@ export function PreliminaryView({
                 value={
                   preliminary?.smoke
                     ? getKeyDisplayText(preliminary.smoke, lang)
-                    : "-"
+                    : '-'
                 }
                 disabled={true}
                 type="text"
@@ -332,7 +363,7 @@ export function PreliminaryView({
               />
             </Box>
             <Box>
-              <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+              <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
                 {langFile[lang].MOBILE_PRELIMINARY_DRINK_DESC}
               </Typography>
               <input
@@ -341,7 +372,7 @@ export function PreliminaryView({
                 value={
                   preliminary?.drink
                     ? getKeyDisplayText(preliminary.drink, lang)
-                    : "-"
+                    : '-'
                 }
                 disabled={true}
                 type="text"
@@ -352,11 +383,11 @@ export function PreliminaryView({
 
           {/* 수술력 */}
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_PAST_SURGERIES_DESC}
             </Typography>
             {pastSurgeries.length > 0 ? (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 {pastSurgeries.map(({ key, value }) => (
                   <Chip
                     key={key}
@@ -381,13 +412,13 @@ export function PreliminaryView({
 
           {/* 약물 복용력 */}
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_PAST_MEDICINE_DESC}
             </Typography>
             <input
               readOnly
               autoComplete="off"
-              value={preliminary?.medical_history || "-"}
+              value={preliminary?.medical_history || '-'}
               disabled={true}
               type="text"
               className="input input-disabled"
@@ -396,10 +427,10 @@ export function PreliminaryView({
 
           {/* 알레르기 */}
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_ALLERGY_DESC}
             </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {allergies.length > 0 ? (
                 allergies.map(({ key, value }) => (
                   <Chip
@@ -425,7 +456,7 @@ export function PreliminaryView({
 
           {/* 의사에게 전달할 말 */}
           <Box>
-            <Typography sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography sx={{ fontWeight: 'bold', mb: 1 }}>
               {langFile[lang].MOBILE_PRELIMINARY_TODOCTOR_DESC}
             </Typography>
             <input
